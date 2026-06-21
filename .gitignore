@@ -1,0 +1,49 @@
+# Local runtime and generated output
+.runtime/
+scratch/
+tmp/
+logs/
+*.log
+*.err
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Node / media builds
+node_modules/
+dist/
+out/
+
+# Scientific artifacts that should be fetched or generated, not committed
+*.ckpt
+*.pt
+*.pth
+*.safetensors
+*.pdbqt
+*_H.sdf
+data/building_blocks/
+
+# Demo regenerated directories
+demos/kras-glue/prep/
+demos/kras-glue/dock/
+demos/kras-glue/cofold_chai/
+demos/kras-glue/cofold_boltz/
+demos/kras-glue/perturb/decoys/
+
+# Local secrets
+.env
+.env.*
+!.env.example
+
+# macOS / editors
+.DS_Store
+.vscode/
+.idea/
+*.swp

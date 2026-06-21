@@ -1,0 +1,7 @@
+# Optional dependencies for the KRAS public demo scripts.
+# Install into an isolated environment.
+gemmi
+numpy
+rdkit
+scipy
+spyrmsd

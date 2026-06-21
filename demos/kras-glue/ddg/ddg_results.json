@@ -1,0 +1,98 @@
+{
+ "reference": "wt (G12V crystal)",
+ "rows": [
+  {
+   "system": "wt",
+   "label": "G12V (crystal)",
+   "dG_bind": -62.96,
+   "ddG": 0.0
+  },
+  {
+   "system": "g12d",
+   "label": "G12D",
+   "dG_bind": -62.17,
+   "ddG": 0.79
+  },
+  {
+   "system": "g12c",
+   "label": "G12C",
+   "dG_bind": -64.64,
+   "ddG": -1.68
+  },
+  {
+   "system": "g12g",
+   "label": "G12 (true WT)",
+   "dG_bind": -64.0,
+   "ddG": -1.04
+  },
+  {
+   "system": "q61h",
+   "label": "Q61H",
+   "dG_bind": -64.24,
+   "ddG": -1.28
+  },
+  {
+   "system": "m67r",
+   "label": "M67R (disruptor ctrl)",
+   "dG_bind": -58.61,
+   "ddG": 4.35
+  }
+ ],
+ "method": "single-trajectory MM-GBSA (GBn2/igb8, mbondi3 radii), ff14SB + GAFF2; AM1-BCC GppNHp(4-), Gasteiger drug (cancels in relative ddG); 1.6 nm cutoff; single minimized snapshot, no entropy",
+ "raw": {
+  "wt": {
+   "system": "wt",
+   "E_com": -15486.02,
+   "E_rec": -10602.03,
+   "E_lig": -4821.04,
+   "dG_bind": -62.96,
+   "n_first_block": 2714,
+   "platform": "CPU"
+  },
+  "g12d": {
+   "system": "g12d",
+   "E_com": -15628.38,
+   "E_rec": -10751.01,
+   "E_lig": -4815.2,
+   "dG_bind": -62.17,
+   "n_first_block": 2710,
+   "platform": "CPU"
+  },
+  "g12g": {
+   "system": "g12g",
+   "E_com": -15462.53,
+   "E_rec": -10579.49,
+   "E_lig": -4819.03,
+   "dG_bind": -64.0,
+   "n_first_block": 2705,
+   "platform": "CPU"
+  },
+  "q61h": {
+   "system": "q61h",
+   "E_com": -15401.73,
+   "E_rec": -10517.42,
+   "E_lig": -4820.07,
+   "dG_bind": -64.24,
+   "n_first_block": 2714,
+   "platform": "CPU"
+  },
+  "g12c": {
+   "system": "g12c",
+   "E_com": -15518.62,
+   "E_rec": -10629.96,
+   "E_lig": -4824.03,
+   "dG_bind": -64.64,
+   "n_first_block": 2709,
+   "platform": "CPU"
+  },
+  "m67r": {
+   "system": "m67r",
+   "E_com": -15743.58,
+   "E_rec": -10857.02,
+   "E_lig": -4827.95,
+   "dG_bind": -58.61,
+   "n_first_block": 2721,
+   "platform": "CPU"
+  }
+ }
+}
