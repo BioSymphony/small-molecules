@@ -18,6 +18,14 @@ The demo is intentionally small. It keeps scripts and result summaries in the re
 
 The lesson for agents is concrete: choose the method by the physical problem. A standard pocket workflow fits the 7RPZ control. The daraxonrasib system needs the ternary structure and follow-up scoring on that scaffold.
 
+## Decision Rules
+
+- Use the 7RPZ redock as the standard-pocket control before reading the glue cases.
+- For molecular glues, split the presenter side from the target side. Docking can test a real presenter pocket, but the target interface may only exist in the ternary assembly.
+- When a public ternary structure exists, prefer perturb-and-score on that scaffold over blind assembly prediction: mutation effects, analog ranking, MM-GBSA triage, then RBFE/FEP if the setup justifies it.
+- When no ternary structure exists, calibrate co-folding on a related public glue structure first. Align on the presenter protein and measure target-chain and ligand displacement in that frame.
+- Read the perturbation and MM-GBSA outputs as triage. The useful signal is separation of tolerated variants from disruptors, not fine-grained ranking inside a tolerated set.
+
 ## Run Order
 
 Optional local dependencies:
