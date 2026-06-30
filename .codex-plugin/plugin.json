@@ -1,0 +1,23 @@
+{
+  "name": "small-molecule-design-tools",
+  "version": "0.1.0",
+  "description": "BioSymphony small-molecule design skills for public-safe tool routing and evaluation.",
+  "author": {
+    "name": "BioSymphony",
+    "url": "https://github.com/BioSymphony"
+  },
+  "homepage": "https://github.com/BioSymphony/small-molecules",
+  "repository": "https://github.com/BioSymphony/small-molecules",
+  "license": "MIT",
+  "keywords": ["small-molecules", "drug-discovery", "docking"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Small-Molecule Design Tools",
+    "shortDescription": "Small-molecule tool routing",
+    "longDescription": "Public-safe small-molecule design skills for choosing and applying open synthesis-planning, docking, affinity, QSAR, ADMET, pocket-finding, and ligand-generation tools.",
+    "developerName": "BioSymphony",
+    "category": "Research",
+    "capabilities": ["Skills"],
+    "defaultPrompt": ["Use $small-molecule-design-tools to choose open small-molecule design tools."]
+  }
+}

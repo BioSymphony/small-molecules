@@ -1,0 +1,22 @@
+{
+  "name": "biosymphony-small-molecules",
+  "owner": {
+    "name": "BioSymphony"
+  },
+  "metadata": {
+    "version": "0.1.0",
+    "description": "Public-safe small-molecule design skills for open tool routing."
+  },
+  "plugins": [
+    {
+      "name": "small-molecule-design-tools",
+      "displayName": "Small-Molecule Design Tools",
+      "source": "./",
+      "description": "Route public-safe small-molecule design tool choices.",
+      "category": "life-sciences",
+      "tags": ["small-molecules", "drug-discovery", "docking"],
+      "strict": false,
+      "skills": ["./skills/small-molecule-design-tools"]
+    }
+  ]
+}

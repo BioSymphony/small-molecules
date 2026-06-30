@@ -1,0 +1,11 @@
+{
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
+  "name": "small-molecule-design-tools",
+  "version": "0.1.0",
+  "description": "BioSymphony small-molecule design skills for public-safe tool routing and evaluation.",
+  "author": {
+    "name": "BioSymphony",
+    "url": "https://github.com/BioSymphony"
+  },
+  "skills": ["./skills/small-molecule-design-tools"]
+}

@@ -1,0 +1,41 @@
+<svg viewBox="0 0 720 420" xmlns="http://www.w3.org/2000/svg" font-family="ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif" role="img" aria-label="MM-GBSA ddG of KRAS mutations relative to the G12V crystal">
+<rect x="70" y="159.9" width="630" height="137.6" fill="#15a34a" opacity="0.07"/>
+<text x="76" y="155.9" fill="#15a34a" font-size="10.5">tolerated window (|&#916;&#916;G| &lt; 2)</text>
+<line x1="70" y1="338.8" x2="700" y2="338.8" stroke="#e9ecf2" stroke-width="1"/>
+<text x="62" y="341.8" fill="#8a94a6" font-size="11" text-anchor="end">-4</text>
+<line x1="70" y1="283.8" x2="700" y2="283.8" stroke="#e9ecf2" stroke-width="1"/>
+<text x="62" y="286.8" fill="#8a94a6" font-size="11" text-anchor="end">-2</text>
+<line x1="70" y1="228.7" x2="700" y2="228.7" stroke="#e9ecf2" stroke-width="1"/>
+<text x="62" y="231.7" fill="#8a94a6" font-size="11" text-anchor="end">+0</text>
+<line x1="70" y1="173.7" x2="700" y2="173.7" stroke="#e9ecf2" stroke-width="1"/>
+<text x="62" y="176.7" fill="#8a94a6" font-size="11" text-anchor="end">+2</text>
+<line x1="70" y1="118.7" x2="700" y2="118.7" stroke="#e9ecf2" stroke-width="1"/>
+<text x="62" y="121.7" fill="#8a94a6" font-size="11" text-anchor="end">+4</text>
+<line x1="70" y1="63.6" x2="700" y2="63.6" stroke="#e9ecf2" stroke-width="1"/>
+<text x="62" y="66.6" fill="#8a94a6" font-size="11" text-anchor="end">+6</text>
+<line x1="70" y1="228.7" x2="700" y2="228.7" stroke="#9aa3b2" stroke-width="1.4"/>
+<rect x="70" y="54" width="630" height="276" fill="none" stroke="#d7dce6" stroke-width="1.2"/>
+<rect x="93.9" y="207.0" width="78.1" height="21.7" rx="3" fill="#15a34a" opacity="0.85"/>
+<text x="133.0" y="201.0" fill="#15a34a" font-size="11.5" font-weight="700" text-anchor="middle">+0.8</text>
+<text x="133.0" y="350.0" fill="#5c6675" font-size="11.5" font-weight="600" text-anchor="middle">G12D</text>
+<text x="133.0" y="364.0" fill="#8a94a6" font-size="9.5" text-anchor="middle">pan-RAS</text>
+<rect x="219.9" y="228.7" width="78.1" height="46.2" rx="3" fill="#15a34a" opacity="0.85"/>
+<text x="259.0" y="289.0" fill="#15a34a" font-size="11.5" font-weight="700" text-anchor="middle">-1.7</text>
+<text x="259.0" y="350.0" fill="#5c6675" font-size="11.5" font-weight="600" text-anchor="middle">G12C</text>
+<text x="259.0" y="364.0" fill="#8a94a6" font-size="9.5" text-anchor="middle">pan-RAS</text>
+<rect x="345.9" y="228.7" width="78.1" height="28.6" rx="3" fill="#15a34a" opacity="0.85"/>
+<text x="385.0" y="271.4" fill="#15a34a" font-size="11.5" font-weight="700" text-anchor="middle">-1.0</text>
+<text x="385.0" y="350.0" fill="#5c6675" font-size="11.5" font-weight="600" text-anchor="middle">G12</text>
+<text x="385.0" y="364.0" fill="#8a94a6" font-size="9.5" text-anchor="middle">true WT</text>
+<rect x="471.9" y="228.7" width="78.1" height="35.2" rx="3" fill="#15a34a" opacity="0.85"/>
+<text x="511.0" y="278.0" fill="#15a34a" font-size="11.5" font-weight="700" text-anchor="middle">-1.3</text>
+<text x="511.0" y="350.0" fill="#5c6675" font-size="11.5" font-weight="600" text-anchor="middle">Q61H</text>
+<text x="511.0" y="364.0" fill="#8a94a6" font-size="9.5" text-anchor="middle">pan-RAS</text>
+<rect x="597.9" y="109.0" width="78.1" height="119.7" rx="3" fill="#dc2626" opacity="0.85"/>
+<text x="637.0" y="103.0" fill="#dc2626" font-size="11.5" font-weight="700" text-anchor="middle">+4.3</text>
+<text x="637.0" y="350.0" fill="#5c6675" font-size="11.5" font-weight="600" text-anchor="middle">M67R</text>
+<text x="637.0" y="364.0" fill="#8a94a6" font-size="9.5" text-anchor="middle">disruptor ctrl</text>
+<text x="16" y="192.0" fill="#5c6675" font-size="12" text-anchor="middle" transform="rotate(-90 16 192.0)">&#916;&#916;G binding vs G12V (kcal/mol)</text>
+<text x="70" y="24" fill="#161b26" font-size="13.5" font-weight="700">MM-GBSA mutation scan: pan-RAS mutations tolerated, disruptor destabilizing</text>
+<text x="70" y="39" fill="#5c6675" font-size="11">single-trajectory MM-GBSA (GBn2) on the daraxonrasib&#183;CypA&#183;KRAS&#183;GppNHp&#183;Mg scaffold &#183; ddG vs the G12V crystal</text>
+</svg>
