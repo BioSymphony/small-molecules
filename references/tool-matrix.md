@@ -1,235 +1,296 @@
 # Tool Matrix
 
-Master index of every tool in this compilation, by category. All facts verified against live repos, papers, and HuggingFace cards on **2026-06-11** (target-based layer **2026-06-13**). **Verify licenses and data terms yourself before commercial use** — see [licensing-and-data.md](licensing-and-data.md). "Commercial?" below is a quick read of the *most restrictive* layer (code/weights/data), not legal advice. The compilation has **two layers**: **"can-I-make-it?" (synthesizability / route planning)** — the categories above the divider below — and **"will-it-work-on-the-target?" (target-based design)** — receptor structure, docking & co-folding, binding affinity, QSAR/property, ADMET, off-target/selectivity, and structure-based generation.
+This matrix indexes tools by task category. Broad source checks were recorded
+on **2026-06-11** for synthesizability entries and **2026-06-13** for
+target-based entries. Changed cards were checked against primary sources on
+**2026-08-30**. These dates do not mean that every unchanged row was rechecked.
+Check primary repository, model-card, and data terms before use;
+[Licensing and Data Terms](licensing-and-data.md) explains the separate layers.
 
-Legend: ✅ yes · ⚠️ conditional/caution · ❌ no / blocked · — n/a
+The **License signal** column summarizes the reviewed artifacts. ✅ marks MIT,
+Apache-2.0, BSD, CC BY 4.0, or CC0 labels; ⚠️ marks LGPL, other copyleft
+licenses, additional terms, or unverified terms; and ❌ marks non-commercial
+terms, a missing license grant, or no open release. The signal does not
+say whether a specific use is permitted.
+The matrix first covers synthesizability and route planning, then target-based
+design.
 
-## Synthesizable generation, projection & analogs → [synthesizable-generation.md](synthesizable-generation.md)
+Status legend: ✅ active · ⚠️ limited or uncertain · ❌ archived, superseded, or
+unreleased · — not applicable
+
+## Synthesizable Generation, Projection, and Analogs
+
+See [synthesizable-generation.md](synthesizable-generation.md).
 
 Output = molecule **with a synthesis route**, or a makeable analog + how to make it. All depend on Enamine building blocks.
 
-| Tool | Repo | Code | Weights | Commercial? | Status |
+| Tool | Repository | Code | Weights | License signal | Status |
 |---|---|---|---|---|---|
-| **PrexSyn** | `luost26/prexsyn` | MIT | MIT (auto-DL) | ⚠️ Enamine data terms | ✅ Active (current pick) |
+| **PrexSyn** | `luost26/prexsyn` | MIT | MIT-labeled data/model records | ⚠️ Enamine-derived data | ✅ v1.1.3 (2026-08-08) |
 | **SynFormer** | `wenhao-gao/synformer` | Apache-2.0 | Apache-2.0 | ⚠️ data "research only" | ⚠️ Quiet; author-deprecated |
 | **ChemProjector** | `luost26/ChemProjector` | MIT | (Google Drive) | ⚠️ Enamine, archived | ❌ Archived → PrexSyn |
 | **ReaSyn** | `NVIDIA-BioNeMo/ReaSyn` | Apache-2.0 | **NVIDIA Open Model** | ⚠️ weights+Enamine | ✅ Active |
 | **SynCoGen** | `andreirekesh/SynCoGen` | **none** | HF MIT | ⚠️ code unlicensed | ✅ Active (3D) |
 | **SynTwins** | `snu-micc/SynTwins` | **none** | — | ❌ no license | ⚠️ Minimal (training-free) |
 | **SynLlama** | `THGLab/SynLlama` | **UC non-commercial** | Figshare | ❌ non-commercial | ✅ Maintained (research) |
-| **SyntheMol** | `swansonk14/SyntheMol` | MIT | CC BY 4.0 | ✅ (+vendor catalog) | ✅ Active (make-on-demand) |
-| **APEX** | `NumerionLabs/apex` | **CC BY-NC 4.0** | Zenodo | ❌ non-commercial | ✅ New (billions-scale search) |
+| **SyntheMol** | `swansonk14/SyntheMol` | MIT | Zenodo terms not stated | ⚠️ artifact + vendor terms | ✅ v_2.0.0 (2025-05-12) |
+| **APEX** | `NumerionLabs/apex` | **no `LICENSE` file** | Zenodo terms not stated | ❌ no license grant | ⚠️ 2025 preprint |
 
-## General molecular generation (validity, not synthesizability) → [molecular-generation.md](molecular-generation.md)
+## General Molecular Generation
 
-| Tool | Repo | Code | Weights | Commercial? | Status |
+These tools address validity rather than synthesizability. See
+[molecular-generation.md](molecular-generation.md).
+
+| Tool | Repository | Code | Weights | License signal | Status |
 |---|---|---|---|---|---|
-| **GenMol** | `NVIDIA-Digital-Bio/genmol` | Apache-2.0 | **NVIDIA Open Model** | ⚠️ usable w/ conditions | ✅ Active (SAFE diffusion) |
+| **GenMol** | `NVIDIA-BioNeMo/genmol` | Apache-2.0 | **NVIDIA Open Model** | ⚠️ separate weight terms | ✅ V2 dated 2025-10-15 |
 | **MolReactGen** | `hogru/MolReactGen` | MIT | HF (MIT) | ✅ | ⚠️ Dormant (thesis) |
 | **SmiSelf** | `wentao228/SmiSelf` | **none** | — (rule-based) | ❌ no license | ⚠️ Utility (EMNLP 2025) |
-| **GVT** | `zzccppp/GVT` | **none** | README links | ❌ no license | ⚠️ Brand-new preprint |
+| **GVT** | `zzccppp/GVT` | **none** | README links | ❌ no license | ⚠️ 2025 preprint |
 
-## Multi-step retrosynthesis / route planning → [retrosynthesis-planning.md](retrosynthesis-planning.md)
+## Multi-Step Retrosynthesis and Route Planning
 
-| Tool | Repo | Code | Weights/model | Commercial? | Status |
+See [retrosynthesis-planning.md](retrosynthesis-planning.md).
+
+| Tool | Repository | Code | Weights/model | License signal | Status |
 |---|---|---|---|---|---|
-| **AiZynthFinder** | `MolecularAI/aizynthfinder` | MIT | USPTO model (free) | ✅ cleanest | ✅ Very active (v4.4.1) |
-| **ASKCOS** | `gitlab…/askcosv2` | MIT (v2) | mostly MIT; Reaxys NC; CAS gated | ⚠️ avoid gated models | ✅ Active (heavy deploy) |
-| **Syntheseus** | `microsoft/syntheseus` | MIT | wraps others | ✅ (code) | ✅ Active (benchmark fwk) |
-| **SynPlanner** | `Laboratoire-de-Chemoinformatique/SynPlanner` | MIT | presets (MIT) | ✅ | ✅ Active (CASP + GUI) |
-| **InterRetro** | `MianchuWang/InterRetro` | **none** | — | ❌ no license | ⚠️ New (NeurIPS 2025) |
+| **AiZynthFinder** | `MolecularAI/aizynthfinder` | MIT | USPTO model (free) | ✅ MIT stack | ✅ v4.4.1 |
+| **RENKIN** | `kent-tokyo/renkin` | MIT | — | ✅ MIT | ✅ v0.47.0 (2026-08-28) |
+| **ASKCOS** | `mlpds_mit/askcosv2` (GitLab) | MIT (v2) | mostly MIT; Reaxys NC; CAS gated | ⚠️ model-specific terms | ✅ Active (heavy deployment) |
+| **Syntheseus** | `microsoft/syntheseus` | MIT | wraps others | ✅ code | ✅ v0.8.0 (2026-08-03) |
+| **SynPlanner** | `Laboratoire-de-Chemoinformatique/SynPlanner` | MIT | separate data record | ⚠️ data terms | ✅ v1.7.0 (2026-08-25) |
+| **InterRetro** | `MianchuWang/InterRetro` | **none** | — | ❌ no stated license | ⚠️ NeurIPS 2025 |
 | **RetroCast / SynthArena** | `ischemist/project-procrustes` (+`/syntharena`) | MIT | wraps others | ✅ | ✅ Active (2026; route validation) |
 
-## Single-step retrosynthesis models → [singlestep-retrosynthesis.md](singlestep-retrosynthesis.md)
+## Single-Step Retrosynthesis Models
 
-| Tool | Repo | Code | Weights | USPTO-50K top-1 | Status |
+See [singlestep-retrosynthesis.md](singlestep-retrosynthesis.md).
+
+| Tool | Repository | Code | Weights | USPTO-50K top-1 | Status |
 |---|---|---|---|---|---|
 | **ReactionT5v2** | `sagawatatsuya/ReactionT5v2` | MIT | HF (MIT) | 71.2% (ft) | ✅ Maintained |
-| **RXNGraphormer** | `licheng-xu-echo/RXNGraphormer` | MIT | Figshare | (in paper) | ✅ Very active |
+| **RXNGraphormer** | `licheng-xu-echo/RXNGraphormer` | MIT | Figshare | (in paper) | ✅ Active |
 | **GDiffRetro** | `sunshy-1/GDiffRetro` | MIT | SharePoint | (in paper) | ⚠️ Dormant (AAAI 2025) |
-| **RetroDFM-R** | `OpenDFM/RetroDFM-R` | Apache-2.0 | **GPL-3.0** (8B) | 65.0% | ⚠️ Single release |
-| **RetroDiT** | `zzhnomorebugs/RetroDiT` | MIT | ❌ not yet | 61.2/71.1% (claim) | ⚠️ New, no weights |
-| **RxnNano** | `rlisml/RxnNano` | MIT | ❌ not yet | (claims > 7B LLMs) | ⚠️ New 2026, 0.5B, no weights |
-| **ConRetroBert** | `JahidBasher/ConRetroBert` | **none** | Google Drive | 62.4% (claim) | ⚠️ New, no license |
-| **TempRe** | — (no repo) | — | — | (PaRoutes only) | ❌ Preprint only |
+| **RetroDFM-R** | `OpenDFM/RetroDFM-R` | MIT | Apache-2.0-tagged Qwen3 checkpoint | 60.4% (claim) | ⚠️ base/data terms |
+| **RetroDiT** | `LOGO-CUHKSZ/RetroDiT` | MIT | ❌ not released | 61.2/71.1% (claim) | ⚠️ 2026 preprint |
+| **RxnNano** | `rlisml/RxnNano` | MIT | ❌ not released | (reported in paper) | ⚠️ 2026; no weights |
+| **ConRetroBert** | `JahidBasher/ConRetroBert` | **none** | Google Drive | 62.4% (claim) | ⚠️ No stated license |
+| **TempRe** | — (no repository) | — | — | (PaRoutes only) | ❌ Preprint only |
 
-## Agentic / LLM retrosynthesis → [agentic-retrosynthesis.md](agentic-retrosynthesis.md)
+## Agentic and LLM-Assisted Retrosynthesis
 
-All need a paid LLM API; treat as chemist-in-the-loop.
+See [agentic-retrosynthesis.md](agentic-retrosynthesis.md).
 
-| Tool | Repo | Code | LLM backend | Commercial? | Status |
+The reviewed workflows use external LLM backends. Check the selected provider's
+terms and require chemistry review of generated routes.
+
+| Tool | Repository | Code | LLM backend | License signal | Status |
 |---|---|---|---|---|---|
-| **DeepRetro** | `deepforestsci/DeepRetro` | MIT | Claude + DeepSeek | ✅ (code; +API) | ✅ Peer-reviewed + GUI |
-| **Synthelite** | `schwallergroup/synthelite` | MIT | Claude/Gemini/GPT | ✅ (code; +API) | ✅ Active (preprint) |
-| **LLM-Syn-Planner** | `zoom-wang112358/LLM-Syn-Planner` | MIT | GPT-4o + DeepSeek | ✅ (code; +API) | ⚠️ Lightly maintained |
-| **LARC** | `ninglab/LARC` | **none** | Claude / Mistral | ❌ no license | ⚠️ Watchlist |
-| **Retro-Expert** | — (no repo) | — | Qwen2.5-7B | ❌ no code | ❌ Preprint only |
-| **ReTriP** | — (no repo) | — | Qwen3-8B | ❌ no code | ❌ Preprint only |
+| **DeepRetro** | `deepforestsci/DeepRetro` | MIT | Configurable external backend | ⚠️ backend terms vary | ✅ Peer-reviewed; GUI |
+| **Synthelite** | `schwallergroup/synthelite` | MIT | Configurable external backend | ⚠️ backend terms vary | ✅ Active preprint |
+| **LLM-Syn-Planner** | `zoom-wang112358/LLM-Syn-Planner` | MIT | Configurable external backend | ⚠️ backend terms vary | ⚠️ Limited maintenance |
+| **LARC** | `ninglab/LARC` | **none** | Configurable external backend | ❌ no stated license | ⚠️ Watchlist |
+| **RetroAgent** | `SXKDZ/RetroAgent` | MIT | Apache-2.0-tagged Qwen3 checkpoint | ⚠️ base/data terms | ✅ COLM 2026 |
+| **Retro-Expert** | — (no repository) | — | Qwen2.5-7B | ❌ no code | ❌ Preprint only |
+| **ReTriP** | — (no repository) | — | Qwen3-8B | ❌ no code | ❌ Preprint only |
 
-## Forward reaction & mechanism prediction → [forward-and-reaction-modeling.md](forward-and-reaction-modeling.md)
+## Forward Reaction and Mechanism Prediction
 
-| Tool | Repo | Code | Weights | Commercial? | Status |
+See [forward-and-reaction-modeling.md](forward-and-reaction-modeling.md).
+
+| Tool | Repository | Code | Weights | License signal | Status |
 |---|---|---|---|---|---|
-| **DeepMech** | `alhqlearn/DeepMech` | MIT | Zenodo (CC-BY/MIT) | ✅ | ✅ Usable (mechanism) |
-| **ReaDISH** | `Meteor-han/ReaDISH` | MIT | in-repo ckpt | ✅ | ✅ 2026 (yield/selectivity) |
+| **DeepMech** | `alhqlearn/DeepMech` | MIT | Zenodo (CC-BY/MIT) | ✅ | ✅ Released (mechanism) |
+| **ReaDISH** | `Meteor-han/ReaDISH` | MIT | in-repository checkpoint | ✅ | ✅ 2026 (yield and selectivity) |
 | **ProPreT5** | `DerinOzer/ProPreT5` | MIT | ❌ train yourself | ✅ (code) | ⚠️ No weights |
-| **ChemDual** | `JacklinGroup/ChemDual` | Apache-2.0 | ❌ "coming soon" | ⚠️ no model yet | ⚠️ Watchlist |
-| **Reactron** | — (no repo) | — | — | ❌ no code | ❌ Paper only |
-| *ReactionT5v2 / RXNGraphormer* | *(see single-step)* | MIT | yes | ✅ | also do forward |
+| **ChemDual** | `JacklinGroup/ChemDual` | Apache-2.0 | ❌ pending | ⚠️ no model released | ⚠️ Watchlist |
+| **Reactron** | — (no repository) | — | — | ❌ no code | ❌ Paper only |
+| *ReactionT5v2 and RXNGraphormer* | *(see single-step section)* | MIT | See the one-step rows | ✅ | Cross-reference |
 
-## Reaction-template & rule infrastructure → [template-and-rule-infrastructure.md](template-and-rule-infrastructure.md)
+## Reaction-Template and Rule Infrastructure
 
-CPU; permissively licensed. pip-name ≠ import-name traps noted in the file.
+See [template-and-rule-infrastructure.md](template-and-rule-infrastructure.md).
 
-| Tool | Repo | Code | pip name | Status |
+These CPU tools state MIT or Apache-2.0 terms. The detailed reference records
+cases where the package name differs from the import name.
+
+| Tool | Repository | Code | pip name | Status |
 |---|---|---|---|---|
-| **RDChiral** | `connorcoley/rdchiral` | MIT | `rdchiral` | ✅ Stable/mature (foundation) |
-| **rdchiral_plus** | `denovochem/rdchiral_plus` | MIT | `rdchiral-plus` | ✅ New, active (drop-in) |
+| **RDChiral** | `connorcoley/rdchiral` | MIT | `rdchiral` | ✅ Stable |
+| **rdchiral_plus** | `denovochem/rdchiral_plus` | MIT | `rdchiral-plus` | ✅ v0.5.0 (2026-08-14) |
 | **rxnutils** | `MolecularAI/reaction_utils` | Apache-2.0 | `reaction-utils` | ✅ Active (curation pipelines) |
 | **SynTemp** | `TieuLongPhan/SynTemp` | MIT | `syntemp` | ✅ Moderate (ITS/DPO rules) |
 
-## Synthesizability scoring → [synthesizability-scoring.md](synthesizability-scoring.md)
+## Synthesizability Scoring
 
-| Tool | Repo | Code | Notes |
+See [synthesizability-scoring.md](synthesizability-scoring.md).
+
+| Tool | Repository | Code | Notes |
 |---|---|---|---|
 | **RetroScore** | `Snowgao320/RetroScore` | MIT (weights unspecified) | route-aware SA score + GED |
 | **shallow-tree** | `Arhs99/shallow-tree` | **GPL-3.0** | fast depth-limited AiZynthFinder screen (2026) |
 | **round-trip score** | — (concept) | — | retro→forward recovery check; cheapest validation |
-| **RetroTrim** | — (no repo) | — | hallucination-ensemble; preprint only |
+| **RetroTrim** | — (no repository) | — | hallucination-ensemble; preprint only |
 
 ---
 
-> **▼ TARGET-BASED DESIGN LAYER ("will it work on the target?")** — everything from here down: receptor structure → docking/affinity → QSAR/ADMET/selectivity → structure-based generation. Verified 2026-06-13.
+The remaining sections cover receptor structure, docking, affinity, QSAR,
+ADMET, selectivity, and structure-based generation.
 
-## Protein structure prediction (receptor prep) → [protein-structure-prediction.md](protein-structure-prediction.md)
+## Protein Structure Prediction and Receptor Preparation
 
-You need the target's 3D structure before docking. Code and weights diverge constantly here.
+See [protein-structure-prediction.md](protein-structure-prediction.md).
 
-| Tool | Repo | Code | Weights | Commercial? | Status |
+Docking requires a target structure. Check the code and model-weight terms
+separately.
+
+| Tool | Repository | Code | Weights | License signal | Status |
 |---|---|---|---|---|---|
 | **ColabFold** | `sokrypton/ColabFold` | MIT | AF2 params CC BY 4.0 | ✅ (attribution) | ✅ Active (fast AF2) |
 | **AlphaFold2** | `google-deepmind/alphafold` | Apache-2.0 | CC BY 4.0 | ✅ (attribution) | ✅ Stable |
 | **ESMFold / ESM-2** | `facebookresearch/esm` | MIT | MIT | ✅ | ⚠️ Archived (read-only) |
 | **OpenFold** | `aqlaboratory/openfold` | Apache-2.0 | CC BY 4.0 | ✅ (trainable) | ✅ Active |
 | **RoseTTAFold All-Atom** | `baker-laboratory/RoseTTAFold-All-Atom` | BSD-3 (code+weights) | BSD-3 | ✅ (pdb100 DB is NC) | ✅ Maintained |
-| **RoseTTAFold** | `RosettaCommons/RoseTTAFold` | MIT | **non-commercial** (Rosetta-DL) | ⚠️→❌ | ❌ Superseded |
-| **ESM3 / ESM-C** | `evolutionaryscale/esm` | MIT | ⚠️ **re-verify** (NC→MIT, recent) | ⚠️ | ✅ Active |
-| **AlphaFold3** | `google-deepmind/alphafold3` | Apache-2.0 | **gated non-commercial** | ❌ | ✅ Active (also co-folds ligands) |
-| **OpenFold3** | `aqlaboratory/openfold-3` | Apache-2.0 | **Apache-2.0** + open data | ✅ fully open | ✅ Active (2026; fully-open AF3) ⭐ |
-| **Protenix** | `bytedance/Protenix` | Apache-2.0 | **Apache-2.0** | ✅ fully open | ✅ Active (v2, 2026) |
-| **IntelliFold-2** | `IntelliGen-AI/IntelliFold` | Apache-2.0 | **Apache-2.0** | ✅ fully open | ✅ Active (2026; +affinity adapters) |
+| **RoseTTAFold** | `RosettaCommons/RoseTTAFold` | MIT | **non-commercial** (Rosetta-DL) | ❌ non-commercial weights | ❌ Superseded |
+| **ESM3 / ESM-C** | `Biohub/esm` | MIT | MIT for listed Biohub releases | ✅ MIT stack | ✅ Active; check exact checkpoint |
+| **AlphaFold3** | `google-deepmind/alphafold3` | Apache-2.0 | **gated non-commercial** | ❌ | ✅ v3.0.2 (2026-04-20) |
+| **OpenFold3 / OpenBind-0** | `aqlaboratory/openfold-3` | Apache-2.0 | **Apache-2.0** + released data/recipes | ✅ Apache-2.0 stack | ⚠️ Preview; OpenBind-0 released 2026-08-21 |
+| **Protenix** | `bytedance/Protenix` | Apache-2.0 | **Apache-2.0** | ✅ Apache-2.0 stack | ✅ v2 (2026-04-08) |
 
-## Docking & co-folding (structure ± affinity) → [docking-and-cofolding.md](docking-and-cofolding.md)
+## Docking and Co-Folding
 
-The pose/affinity layer. Output is **STRUCTURE-ONLY** (pose + a confidence score) unless noted — **confidence ≠ affinity**. Only **Boltz-2** and **TankBind** predict binding affinity. License trap (DL/co-folding): **weights diverging from code** (the mirror of the Enamine trap).
+See [docking-and-cofolding.md](docking-and-cofolding.md).
 
-**Classical / physics-based docking** (mature, mostly permissive; the one weights trap is gnina's CNN):
+Most entries return a pose and confidence score rather than binding affinity.
+Boltz-2, TankBind, and FlowDock also predict affinity. Check model-weight terms
+separately from code terms.
 
-| Tool | Repo | Code | Commercial? | Status |
+**Classical and physics-based docking:**
+
+| Tool | Repository | Code | License signal | Status |
 |---|---|---|---|---|
-| **AutoDock Vina** | `ccsb-scripps/AutoDock-Vina` | Apache-2.0 | ✅ clean | ✅ Active (CPU; default engine) |
+| **AutoDock Vina** | `ccsb-scripps/AutoDock-Vina` | Apache-2.0 | ✅ Apache-2.0 | ✅ Active (CPU; default engine) |
 | **AutoDock-GPU** | `ccsb-scripps/AutoDock-GPU` | GPL-2.0 | ⚠️ copyleft | ✅ Active (GPU; AD4) |
 | **smina** | `mwojcikowski/smina` | Apache+GPL | ⚠️ copyleft | ⚠️ Dormant → gnina |
-| **gnina** | `gnina/gnina` (+`/models`) | Apache+GPL code; **weights no-license** | ⚠️→❌ CNN weights unlicensed | ✅ Active (CNN rescoring) |
+| **gnina** | `gnina/gnina` (+`/models`) | Apache+GPL code; **weights no-license** | ❌ weights lack a stated license | ✅ Active (CNN rescoring) |
 | **QuickVina 2 / -W** | `QVina/qvina` | Apache-2.0 | ✅ | ⚠️ Stable (CPU) |
 | **Vina-GPU 2.1** | `DeltaGroupNJUPT/Vina-GPU-2.1` | Apache-2.0 | ✅ | ✅ Stable (GPU/OpenCL) |
 | **RxDock** | `rxdock/rxdock` (GitLab) | LGPL-3.0 | ✅ weak copyleft | ⚠️ Semi-dormant (RNA+protein) |
 | **DOCK6** | `docking-org/dock6` | BSD-3 (GitHub) / academic EULA (UCSF) | ⚠️ provenance-dependent | ✅ Active |
-| **Meeko** | `forlilab/Meeko` | LGPL-2.1 | ✅ | ✅ Very active (prep) |
+| **Meeko** | `forlilab/Meeko` | LGPL-2.1 | ✅ | ✅ Active (preparation) |
 | **RTMScore** | `sc8668/RTMScore` | MIT (+MIT weights) | ✅ | ⚠️ Dormant (ML rescoring) |
 
 **Deep-learning docking & co-folding** (read weights separately from code):
 
-| Tool | Repo | Code | Weights | Output | Commercial? | Status |
+| Tool | Repository | Code | Weights | Output | License signal | Status |
 |---|---|---|---|---|---|---|
-| **Boltz-2** | `jwohlwend/boltz` | MIT | **MIT** (HF) | **structure + AFFINITY** | ✅ fully open | ✅ Active (FEP-approaching) ⭐ |
-| **Boltz-1** | `jwohlwend/boltz` | MIT | **MIT** (HF) | structure only | ✅ fully open | ✅ Active (AF3-class) |
+| **Boltz-2** | `jwohlwend/boltz` | MIT | **MIT** (HF) | **structure + affinity estimate** | ✅ MIT stack | ✅ Active |
+| **Boltz-1** | `jwohlwend/boltz` | MIT | **MIT** (HF) | structure only | ✅ MIT stack | ✅ Active (AF3-class) |
 | **Chai-1** | `chaidiscovery/chai-lab` | Apache-2.0 | **Apache-2.0** (relaxed Nov-24) | structure only | ✅ (post-Nov-24 release) | ✅ Active |
 | **DiffDock / DiffDock-L** | `gcorso/DiffDock` | MIT | MIT | pose + confidence | ✅ | ✅ Active (diffusion docking) |
-| **Uni-Mol Docking v2** | `deepmodeling/Uni-Mol` | MIT | MIT (Dropbox) | pose | ✅ | ✅ Active (PoseBusters-strong) |
+| **Uni-Mol Docking v2** | `deepmodeling/Uni-Mol` | MIT | MIT (Dropbox) | pose | ✅ | ✅ Active; PoseBusters benchmark |
 | **Umol** | `patrickbryant1/Umol` | Apache-2.0 (README) | **CC BY 4.0** (Zenodo) | structure (from seq) | ✅ (attribution) | ⚠️ Moderate; no LICENSE file |
-| **NeuralPLexer** | `zrqiao/NeuralPLexer` | BSD-3-Clear | **CC BY-NC-SA 4.0** (Zenodo) | structure (from seq) | ❌ weights non-commercial | ⚠️ Active-ish → NP3 closed |
-| **EquiBind** | `HannesStark/EquiBind` | MIT | MIT (in-repo) | pose | ✅ | ❌ Legacy → DiffDock |
-| **TankBind** | `luwei0917/TankBind` | MIT | MIT (in-repo) | **structure + AFFINITY** | ✅ (repo) | ❌ Legacy (dated deps) → Galixir |
+| **NeuralPLexer** | `zrqiao/NeuralPLexer` | BSD-3-Clear | **CC BY-NC-SA 4.0** (Zenodo) | structure from sequence | ❌ weights non-commercial | ⚠️ Limited; NeuralPLexer3 is closed |
+| **EquiBind** | `HannesStark/EquiBind` | MIT | MIT (in-repository) | pose | ✅ | ❌ Legacy → DiffDock |
+| **TankBind** | `luwei0917/TankBind` | MIT | MIT (in-repository) | **structure + AFFINITY** | ✅ (repository) | ❌ Legacy (dated deps) → Galixir |
 | **AlphaFold3** | `google-deepmind/alphafold3` | Apache-2.0 | **gated non-commercial** | structure + confidence | ❌ non-commercial weights | ✅ Active (covered elsewhere) |
-| **SigmaDock** | `alvaroprat97/sigmadock` | BSD-3 | BSD-3 | pose (PoseBusters-leading) | ✅ | ⚠️ New 2026, beta |
+| **SigmaDock** | `alvaroprat97/sigmadock` | BSD-3 | BSD-3 | pose | ✅ | ⚠️ 2026 beta |
 | **FlowDock** | `BioinfoMachineLearning/FlowDock` | MIT | MIT (Zenodo) | **structure + AFFINITY** | ✅ | ⚠️ Quiet (ISMB 2025) |
 
-## Binding affinity & free energy (physics) → [binding-affinity-and-fep.md](binding-affinity-and-fep.md)
+## Binding Affinity and Free Energy
 
-Rigorous affinity from MD. For cheap/fast **ML** affinity, see **Boltz-2** (docking table). FEP is GPU- and expertise-heavy.
+See [binding-affinity-and-fep.md](binding-affinity-and-fep.md).
 
-| Tool | Repo | Code | Method | Commercial? | Status |
+These tools estimate affinity with molecular dynamics and free-energy methods.
+The docking table lists ML affinity predictors. Free-energy workflows require
+specialized setup and compute.
+
+| Tool | Repository | Code | Method | License signal | Status |
 |---|---|---|---|---|---|
-| **OpenFE** | `OpenFreeEnergy/openfe` | MIT | RBFE (OpenMM) | ✅ | ✅ Very active ⭐ |
+| **OpenFE** | `OpenFreeEnergy/openfe` | MIT | RBFE (OpenMM) | ✅ | ✅ Active |
 | **Perses** | `choderalab/perses` | MIT | RBFE/ABFE/mutation | ✅ (pre-alpha) | ✅ Active |
 | **alchemlyb** | `alchemistry/alchemlyb` | BSD-3 | FEP analysis (MBAR/BAR/TI) | ✅ | ✅ Active |
-| **OpenMM** | `openmm/openmm` | MIT/LGPL (GPU=LGPL) | MD engine | ✅ | ✅ Very active |
+| **OpenMM** | `openmm/openmm` | MIT/LGPL (GPU=LGPL) | MD engine | ✅ | ✅ Active |
 | **BAT.py / BAT2** | `GHeinzelmann/BAT.py` | MIT | ABFE (AMBER/OpenMM) | ✅ | ✅ Active |
 | **gmx_MMPBSA** | `Valdes-Tresanco-MS/gmx_MMPBSA` | GPL-3.0 | MM-PBSA/GBSA | ⚠️ copyleft | ✅ Active |
 | **BioSimSpace** | `OpenBioSim/BioSimSpace` | GPL-3.0 | FEP workflow layer | ⚠️ copyleft | ✅ Active |
 | **GROMACS** | `gromacs/gromacs` | LGPL-2.1 | MD engine + FEP | ✅ | ✅ Active |
 | **Yank** | `choderalab/yank` | MIT | ABFE (legacy) | ✅ | ❌ Unmaintained |
-| **LigUnity** | `IDEA-XL/LigUnity` | Apache-2.0 (data NC) | ML ranking (FEP-alt) + active learning | ✅ | ✅ Active (Patterns 2025) ⭐ |
-| **AQAffinity** | `SandboxAQ/AQAffinity` | Apache-2.0 | ML affinity (Boltz-2 head on OpenFold3) | ✅ | ✅ New 2026 |
+| **LigUnity** | `IDEA-XL/LigUnity` | Apache-2.0 (data NC) | ML ranking and active learning | ⚠️ data terms | ✅ Patterns 2025 |
+| **AQAffinity** | `SandboxAQ/AQAffinity` | Apache-2.0 | ML affinity (Boltz-2 head on OpenFold3) | ✅ | ✅ 2026 release |
 | **LamNet** | `RenlingHu/LamNet` | MIT | ML-accelerated FEP (λ-path GNN) | ✅ | ⚠️ Light (NSR 2026) |
 
-## QSAR, bioactivity & property prediction → [property-and-qsar-prediction.md](property-and-qsar-prediction.md)
+## QSAR, Bioactivity, and Property Prediction
 
-Frameworks (bring your own data) + dataset hubs + pretrained representations. Quality depends on YOUR training data; ChEMBL = CC BY-SA 3.0.
+See [property-and-qsar-prediction.md](property-and-qsar-prediction.md).
 
-| Tool | Repo | Code | Type | Commercial? | Status |
+This category includes modeling frameworks, dataset hubs, and pretrained
+representations. Model quality depends on the selected training data. ChEMBL
+states CC BY-SA 3.0 terms.
+
+| Tool | Repository | Code | Type | License signal | Status |
 |---|---|---|---|---|---|
-| **Chemprop** | `chemprop/chemprop` | MIT | D-MPNN framework | ✅ | ✅ Very active ⭐ |
+| **Chemprop** | `chemprop/chemprop` | MIT | D-MPNN framework | ✅ | ✅ Active |
 | **DeepChem** | `deepchem/deepchem` | MIT | toolkit | ✅ (check datasets) | ✅ Active |
 | **PyTDC (TDC)** | `mims-harvard/TDC` | MIT | data/benchmark hub | ⚠️ data per-dataset | ✅ Active |
 | **molfeat** | `datamol-io/molfeat` | Apache-2.0 | featurizers | ✅ | ✅ Active |
-| **scikit-mol** | `EBjerrum/scikit-mol` | **LGPL-3.0** | sklearn transformers | ✅ (copyleft if modified) | ✅ Active |
+| **scikit-mol** | `EBjerrum/scikit-mol` | **LGPL-3.0** | sklearn transformers | ⚠️ LGPL-3.0 terms | ✅ Active |
 | **MolPAL** | `coleygroup/molpal` | MIT | active-learning VS | ✅ | ⚠️ Stale (2021) |
 | **QSARtuna** | `MolecularAI/QSARtuna` | Apache (no LICENSE file) | AutoML QSAR | ⚠️ | ✅ Active |
 | **MoLFormer-XL** | `IBM/molformer` | Apache-2.0 (+weights) | pretrained LM (embeddings) | ✅ | ⚠️ Frozen artifact |
 | **ChemBERTa** | `seyonechithrananda/bert-loves-chemistry` | MIT / weights unstated | pretrained LM | ⚠️ weights | ⚠️ Quiet |
 | **Uni-Mol** | `deepmodeling/Uni-Mol` | MIT | 3D representation | ✅ | ✅ Active |
-| **CheMeleon** | `JacksonBurns/chemeleon` | MIT | foundation encoder (Chemprop plug-in) | ✅ | ✅ Active (2026) ⭐ |
+| **CheMeleon** | `JacksonBurns/chemeleon` | MIT | foundation encoder (Chemprop plug-in) | ✅ | ✅ Active (2026) |
 
-## ADMET prediction → [admet-prediction.md](admet-prediction.md)
+## ADMET Prediction
 
-Triage/flagging, not ground truth. Key split: **deployable local model** vs **web-only (can't embed)**.
+See [admet-prediction.md](admet-prediction.md).
 
-| Tool | Repo / access | Code | Commercial? | Notes |
+Use these tools for triage rather than experimental conclusions. The table
+separates local models from hosted services with separate terms.
+
+| Tool | Repository / access | Code | License signal | Notes |
 |---|---|---|---|---|
-| **ADMET-AI** | `swansonk14/admet_ai` | MIT | ✅ local, CPU | Chemprop+TDC; hERG/BBB/CYP ⭐ |
-| **OpenADMET** | `OpenADMET/openadmet-models` | Apache-2.0 | ✅ local, weights Apache | 2026 consortium; Caco-2/LogD/PPB/CL/CYP/PXR ⭐ |
-| **B3DB** | `theochem/B3DB` | **CC0** | ✅ | BBB dataset (cleanest license) |
+| **ADMET-AI** | `swansonk14/admet_ai` | MIT | ✅ local, CPU | Chemprop+TDC; hERG/BBB/CYP |
+| **OpenADMET** | `OpenADMET/openadmet-models` | Apache-2.0 | ✅ local, weights Apache | 2026 consortium; Caco-2/LogD/PPB/CL/CYP/PXR |
+| **B3DB** | `theochem/B3DB` | **CC0** | ✅ | BBB dataset under CC0 |
 | **TDC** | `mims-harvard/TDC` | MIT | ✅ code / ⚠️ data | ADMET benchmark backbone |
-| **BayeshERG** | `GIST-CSBL/BayeshERG` | MIT code / **NC weights** | ⚠️ retrain | hERG + uncertainty |
+| **BayeshERG** | `GIST-CSBL/BayeshERG` | MIT code / **NC weights** | ⚠️ split terms | hERG + uncertainty |
 | **CardioTox** | `Abdulk084/CardioTox` | **no license** | ❌ | hERG ensemble |
-| **CYP (Ersilia)** | `ersilia-os/eos44zp` | GPL-3.0 | ⚠️ copyleft, archived | or DIY on TDC |
-| **SwissADME** | web `swissadme.ch` | web-only | ⚠️ results CC-BY; not embeddable | physchem/druglikeness |
-| **DeepPK / ADMETlab 3.0 / pkCSM** | web | web-only | ❌ embed (NC / paid) | manual triage only |
+| **CYP (Ersilia)** | `ersilia-os/eos44zp` | GPL-3.0 | ⚠️ copyleft, archived | or train on TDC data |
+| **SwissADME** | web `swissadme.ch` | web-only | ⚠️ hosted; CC BY results | physchem/druglikeness |
+| **DeepPK / ADMETlab 3.0 / pkCSM** | web | web-only | ⚠️ hosted; separate terms | no local artifacts published |
 
-## Target, off-target & selectivity prediction → [target-and-selectivity-prediction.md](target-and-selectivity-prediction.md)
+## Target, Off-Target, and Selectivity Prediction
 
-Off-target / anti-target screening (e.g. catch a 5-HT2B liability) + ligand-based shape/pharmacophore overlay.
+See [target-and-selectivity-prediction.md](target-and-selectivity-prediction.md).
 
-| Tool | Repo / access | Code | Commercial? | Notes |
+This category covers off-target screening and ligand-based shape or
+pharmacophore comparisons.
+
+| Tool | Repository / access | Code | License signal | Notes |
 |---|---|---|---|---|
-| **ChEMBL multitask** | `chembl/chembl_multitask_model` | MIT | ✅ (data CC BY-SA) | embeddable off-target screen ⭐ |
+| **ChEMBL multitask** | `chembl/chembl_multitask_model` | MIT | ⚠️ data CC BY-SA | local ONNX off-target screen |
 | **ESP-Sim** | `hesther/espsim` | MIT | ✅ | 3D shape + electrostatic overlay |
 | **Shape-it** | `silicos-it/shape-it` | MIT | ✅ | Gaussian shape overlay (ROCS-like) |
 | **Align-it** | `OliverBScott/align-it` | **GPL-3.0** | ⚠️ copyleft | pharmacophore alignment |
-| **RDKit (shape/pharm)** | `rdkit/rdkit` | BSD-3 | ✅✅ | permissive baseline |
+| **RDKit (shape/pharm)** | `rdkit/rdkit` | BSD-3 | ✅ BSD-3 | shape/pharmacophore baseline |
 | **OpenPharmacophore** | `uibcdf/OpenPharmacophore` | MIT | ✅ | pharmacophore modeling (stale) |
-| **ROSHAMBO2** | `molecularinformatics/roshambo2` | MIT | ✅ | GPU ROCS-style shape (2026; faster than Shape-it) ⭐ |
+| **ROSHAMBO2** | `molecularinformatics/roshambo2` | MIT | ✅ | GPU shape screening (2026) |
 | **DiffPhore** | `VicFisher/DiffPhore` | MIT | ✅ | ML ligand-pharmacophore mapping (Nat Commun 2025) |
 | **SwissTargetPrediction** | web | web-only | ⚠️ query-only | target fishing |
 | **SEA / PPB2 / PPB3** | web / `reymond-group/PPB3` | none / no-license | ❌ | SEAware proprietary; PPB3 no license |
 
-## Structure-based (pocket-conditioned) generation → [structure-based-generation.md](structure-based-generation.md)
+## Structure-Based Generation
 
-Generate ligands INTO a pocket; outputs almost never synthesizable → project downstream (PrexSyn) / score (AiZynthFinder). Includes pocket detection. Two no-license traps read wrong on GitHub — **TargetDiff, PocketFlow are genuine MIT** (misspelled LICENSE files).
+See [structure-based-generation.md](structure-based-generation.md).
 
-| Tool | Repo | Code | Method | Commercial? | Synth? |
+These tools generate ligands for a pocket or detect pockets. Most generators do
+not guarantee a synthesis route, so follow generation with a makeability or
+route-planning step. TargetDiff and PocketFlow store MIT terms in misspelled
+license filenames.
+
+| Tool | Repository | Code | Method | License signal | Synth? |
 |---|---|---|---|---|---|
 | **PILOT / e3moldiffusion** | `pfizer-opensource/e3moldiffusion` | Apache-2.0 | diffusion + guidance | ✅ | ⚠️ guidance |
 | **REINVENT 4** | `MolecularAI/REINVENT4` | Apache-2.0 | RL (Lib/LinkInvent) | ✅ | ⚠️ configurable |
@@ -244,54 +305,86 @@ Generate ligands INTO a pocket; outputs almost never synthesizable → project d
 | **fpocket** | `Discngine/fpocket` | MIT | pocket detection | ✅ | — |
 | **P2Rank** | `rdk/p2rank` | MIT | ML pocket detection | ✅ | — |
 | **DoGSiteScorer** | web (ProteinsPlus) | web-only | pocket detection | ❌ | — |
-| **PocketXMol** | `pengxingang/PocketXMol` | MIT | multi-task (SBDD+frag/linker+PROTAC+dock) | ✅ (CC-BY-4.0 weights) | ❌ (2026, Cell) ⭐ |
+| **PocketXMol** | `pengxingang/PocketXMol` | MIT | multi-task (SBDD+frag/linker+PROTAC+dock) | ✅ (CC-BY-4.0 weights) | ❌ (2026, Cell) |
 | **OMTRA** | `gnina/OMTRA` | Apache-2.0 | multi-task flow-matching | ✅ | ❌ (2026, gnina lab) |
 | **Saturn** | `schwallergroup/saturn` | Apache-2.0 (detector false-neg) | sample-efficient RL | ✅ | ⚠️ synth-control feature |
 | **RxnFlow** | `SeonghwanSeo/RxnFlow` | MIT | synthesis GFlowNet | ✅ | ✅ **synthesizable by construction** |
 | **CGFlow** | `tsa87/cgflow` | MIT | synthesis pathway + 3D pose | ✅ | ✅ **synthesizable by construction** |
 | **ShEPhERD** | `coleygroup/shepherd` | MIT | shape/ESP/pharmacophore-conditioned gen | ✅ | ❌ |
 
-## Agentic / LLM-orchestrated drug design → [agentic-drug-design.md](agentic-drug-design.md)
+## Agentic and LLM-Orchestrated Drug Design
 
-LLM / multi-agent systems that orchestrate the other tools (generate → dock → ADMET → retro). API-dependent; young; treat as reference architectures + runnable starting points, not turnkey.
+See [agentic-drug-design.md](agentic-drug-design.md).
 
-| Tool | Repo | Code | Backend | Commercial? | Status |
+These LLM and multi-agent systems combine generation, docking, ADMET, and
+retrosynthesis tools. Most entries depend on external model APIs and remain
+early research releases.
+
+| Tool | Repository | Code | Backend | License signal | Status |
 |---|---|---|---|---|---|
-| **AgentD** | `hoon-ock/AgentD` | MIT | GPT-4o (+Claude/DeepSeek) | ✅ (code; +API) | ✅ Most active ⭐ |
-| **CLADD** | `Genentech/CLADD` | Apache-2.0 | model-agnostic | ✅ (code; +API) | ✅ AAAI 2026 (RAG QA) |
-| **delta** | `deltawave-tech/delta` | MIT | Claude/o3/Gemini/GPT | ✅ (code; +API) | ⚠️ One-shot drop (blueprint) |
-| **DrugPilot** | `wzn99/DrugPilot` | MIT | API-driven | ✅ (code; +API) | ⚠️ Notebook-grade |
-| **Mozi** | — (no code yet) | — | open Qwen3/DeepSeek | — | ⚠️ Paper only (watchlist) |
+| **AgentD** | `hoon-ock/AgentD` | MIT | Configurable external model backend | ⚠️ backend terms vary | ✅ Active |
+| **CLADD** | `Genentech/CLADD` | Apache-2.0 | Model-agnostic | ⚠️ backend terms vary | ✅ AAAI 2026 (RAG QA) |
+| **delta** | `deltawave-tech/delta` | MIT | Configurable external model backend | ⚠️ backend terms vary | ⚠️ Reference architecture |
+| **DrugPilot** | `wzn99/DrugPilot` | MIT | Configurable external model backend | ⚠️ backend terms vary | ⚠️ Notebook implementation |
+| **Mozi** | — (no public code) | — | Qwen3 and DeepSeek in paper | — | ⚠️ Paper only |
 
-## Chemical language models → [chemical-language-models.md](chemical-language-models.md)
+## Chemical Language Models
 
-⚠️ Every one has a license trap; none cleanly commercial.
+See [chemical-language-models.md](chemical-language-models.md).
 
-| Tool | Repo | Binding license | Base | Status |
+Each entry has an unresolved or additional license layer.
+
+| Tool | Repository | Recorded terms | Base | Status |
 |---|---|---|---|---|
-| **SynLlama** | `THGLab/SynLlama` | UC **non-commercial** | Llama-3.1/3.2 | research-only |
-| **ChemDFM-R** | (HF only) `OpenDFM/ChemDFM-R-14B` | weights **AGPL-3.0** | Qwen2.5-14B | research |
-| **Mol-LLaMA** | `DongkiKim95/Mol-LLaMA` | **no code license** + Llama | Llama-3.1/2 | research |
-| **ChemMLLM** | `bbsbz/ChemMLLM` | no license; **no weights**; Chameleon NC | Chameleon-7B | research |
-| *ChemDual, RetroDFM-R* | *(see above)* | Apache code / restricted weights | LLaMA-3.1 / Llama-3 | — |
+| **SynLlama** | `THGLab/SynLlama` | UC **non-commercial** | Llama-3.1/3.2 | Non-commercial repository terms |
+| **ChemDFM-R** | (HF only) `OpenDFM/ChemDFM-R-14B` | weights **AGPL-3.0** | Qwen2.5-14B | Check AGPL-3.0 weight terms |
+| **Mol-LLaMA** | `DongkiKim95/Mol-LLaMA` | **no stated code license** plus Llama terms | Llama-3.1/2 | No stated code license |
+| **ChemMLLM** | `bbsbz/ChemMLLM` | no stated license; **no weights**; Chameleon NC | Chameleon-7B | No released weights |
+| *ChemDual, RetroDFM-R* | *(see above)* | separate code, checkpoint, and base terms | LLaMA-3.1 / Qwen3 | — |
 
-## Not ready — watchlist → [watchlist.md](watchlist.md)
+## Watchlist
 
-Paper-only (no code): **Reactron, Retro-Expert, ReTriP, TempRe, RetroTrim**. Code-but-no-license: **InterRetro, ConRetroBert, SynCoGen-code, SynTwins-code, Mol-LLaMA-code, ChemMLLM-code, GVT, SmiSelf, CardioTox, PPB3** (note: **TargetDiff & PocketFlow look no-license on GitHub but are genuine MIT** — misspelled files). Released-but-non-commercial: **SynLlama, ChemDFM-R, APEX, NeuralPLexer-weights, AlphaFold3-weights, RoseTTAFold-weights, DecompDiff, BayeshERG-weights** (and **ChemDual/RetroDiT** = no weights yet; ESM3/ESM-C weights = re-verify). Proprietary / web-only / no open release: **NeuralPLexer3** (Iambic), **Chai-2/Chai-3**, **PLANTS, SEA/SEAware, SPiDER/TIGER, DoGSiteScorer**, the ADMET web tools (**DeepPK, ADMETlab, pkCSM**), and commercial reference points (**Schrödinger FEP+/Glide/Phase, OpenEye ROCS, Cresset Flare**). **2026 arrivals on the watchlist** (non-commercial / missing-LICENSE / paper-only): **MATCHA, FLOWR.root, GatorAffinity, DiffSMol, Suiren, JMM, EDMolGPT** (license blockers); **OmniBind, PIGLET, CREED/ChemCensor, AOT\*, Retro-R1, RetroReasoner, Mozi** (no code) — see [watchlist.md](watchlist.md).
+See [watchlist.md](watchlist.md).
 
-## Lineage notes
+Paper-only or code-pending entries include **Reactron, Retro-Expert, ReTriP,
+TempRe, RetroTrim**, and **SynthEx**. Repositories without an observed license
+include **InterRetro, ConRetroBert, SynCoGen code, SynTwins code, Mol-LLaMA
+code, ChemMLLM code, GVT, SmiSelf, CardioTox,** and **PPB3**. TargetDiff and
+PocketFlow store MIT terms in misspelled license filenames. The detailed
+[watchlist](watchlist.md) records non-commercial releases, hosted services,
+proprietary reference tools, and other 2026 additions.
 
-- **Coley-group synthesizable line:** ChemProjector (ICML 2024, archived) → SynFormer (PNAS 2025, quiet) → **PrexSyn** (2025, active). Shared 115-reaction-template set. Default to PrexSyn.
-- **ReaSyn** (NVIDIA) reuses SynFormer's templates; **SynCoGen** uses RGFN's block vocabulary; **GenMol** is NVIDIA BioNeMo's general generator.
-- **OpenDFM / SJTU line:** ChemDFM → ChemDFM-R (reasoning) and RetroDFM-R (retrosynthesis).
-- **Schwaller group (EPFL):** Synthelite, LLM-Syn-Planner, TempRe; underpins much round-trip-score methodology.
-- **AstraZeneca stack:** AiZynthFinder + rxnutils (which depends on **RDChiral**, the foundational template layer).
-- **MIT docking line (Barzilay/Jaakkola lab):** EquiBind (ICML 2022, Stärk) → **DiffDock** (ICLR 2023, Corso) → **DiffDock-L** (ICLR 2024) for docking; same lab's **Boltz-1/-2** for co-folding (Wohlwend/Corso/Passaro), now also the Boltz PBC spinout. EquiBind is superseded by DiffDock.
-- **AF3-class open co-folders:** **Boltz-1/-2** (MIT), **Chai-1** (Apache), plus Protenix/HelixFold3 — all reimplement/extend **AlphaFold3** (DeepMind, non-commercial) under permissive licenses. Boltz-2 adds the affinity head AF3 lacks.
-- **NeuralPLexer line:** open **NeuralPLexer** (Caltech, Qiao; NMI 2024) → closed **NeuralPLexer3** (Iambic Therapeutics, 2024). Open weights are CC BY-NC-SA; NP3 is proprietary.
-- **AutoDock lineage (Scripps / Forli):** AutoDock4 → **AutoDock Vina** → **smina** → **gnina** (CNN rescoring); GPU forks **QuickVina / Vina-GPU / AutoDock-GPU**; **Meeko** is the shared prep layer. All Vina-family scoring is empirical/physics-based.
-- **Chodera / OpenFF free-energy stack:** **OpenMM** (engine) → **Perses** (research) → **OpenFE** (production RBFE); **Yank** is the legacy ancestor. alchemlyb analyzes any engine's output.
-- **AlphaFold lineage (receptor):** **AlphaFold2** (CC BY 4.0 weights) → **ColabFold** / **OpenFold** reimplementations; **AlphaFold3** (Apache code, gated NC weights) → open co-folders **Boltz-1/-2**, **Chai-1** (cross-listed in docking).
-- **Chemprop / TDC stack (Coley-Barzilay + Harvard Zitnik):** **Chemprop** (D-MPNN) underlies **ADMET-AI** (Swanson — also SyntheMol), **CheMeleon** (the foundation encoder), **OpenADMET**, and most QSAR/ADMET models here; **TDC** is the shared dataset/benchmark backbone (ChEMBL-derived → CC BY-SA data terms).
-- **Open AF3-class co-folders (2026):** AlphaFold3 (DeepMind, NC weights) spawned the permissive reimplementations **Boltz-1/-2** (MIT), **Chai-1** (Apache), and now **OpenFold3 / Protenix / IntelliFold-2** (all Apache code *and* weights) — the commercial-clean AF3 alternatives.
-- **Agentic-DD orchestration layer (2025–26):** **AgentD, CLADD, delta, Mozi** wire the generators / dockers / ADMET / retro tools together — open prototypes of a full design-make-test loop (the layer a `biosymphony`-style platform occupies).
+## Lineage Notes
+
+- **Coley-group synthesizable generation:** ChemProjector, SynFormer, and
+  PrexSyn share a 115-reaction-template set. ChemProjector is archived, and its
+  repository names PrexSyn as the successor.
+- **NVIDIA generation:** ReaSyn reuses SynFormer templates. GenMol is a general
+  molecular generator under NVIDIA BioNeMo.
+- **OpenDFM:** ChemDFM-R covers chemistry reasoning, while RetroDFM-R targets
+  retrosynthesis.
+- **Schwaller group:** Synthelite, LLM-Syn-Planner, TempRe, and SynthEx cover
+  route planning, route evaluation, or synthesis strategy.
+- **AstraZeneca tools:** AiZynthFinder performs route search. rxnutils prepares
+  reaction data and depends on RDChiral for template operations.
+- **MIT learned docking:** EquiBind preceded DiffDock and DiffDock-L. Boltz-1
+  and Boltz-2 cover co-folding; Boltz-2 also returns an affinity estimate.
+- **AlphaFold3-class co-folding:** Boltz-1/-2 state MIT terms, Chai-1 and
+  Protenix state Apache-2.0 terms, and OpenFold3/OpenBind-0 states Apache-2.0
+  terms for its released code, parameters, data, and recipes. AlphaFold 3 code
+  is Apache-2.0, while its released parameters use separate non-commercial
+  terms.
+- **NeuralPLexer:** Open NeuralPLexer weights use CC BY-NC-SA terms.
+  NeuralPLexer3 is proprietary.
+- **AutoDock family:** AutoDock4, AutoDock Vina, smina, and gnina use empirical
+  docking scores. QuickVina, Vina-GPU, and AutoDock-GPU provide accelerated
+  variants, and Meeko prepares inputs.
+- **Open free-energy tools:** OpenMM supplies the simulation engine. Perses and
+  OpenFE build alchemical workflows, and alchemlyb analyzes free-energy output.
+  Yank remains unmaintained.
+- **AlphaFold receptor tools:** AlphaFold2 parameters use CC BY 4.0 terms.
+  ColabFold and OpenFold provide alternative execution or training paths.
+- **Chemprop and TDC:** Chemprop underlies ADMET-AI, CheMeleon, and OpenADMET.
+  TDC provides benchmark datasets whose terms vary by source.
+- **Agentic design:** AgentD, CLADD, delta, and Mozi coordinate generation,
+  docking, ADMET, and retrosynthesis tools.

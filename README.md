@@ -2,23 +2,20 @@
 
 # BioSymphony Small Molecules
 
-BioSymphony Small Molecules is an agent skill for choosing open tools in small-molecule design.
+BioSymphony Small Molecules is an agent skill for choosing open and publicly
+documented tools in small-molecule design.
 
-> Agent skill for routing small-molecule design tasks to open tools, focused references, and license-aware implementation paths.
+Use the skill with Claude Code, Codex, Symphony, or another agent harness to:
 
-It gives Claude Code, Codex, Symphony, and other agent harnesses a structured map for:
+- generate synthesizable molecules and design analogs
+- plan retrosynthesis and assess reactions, templates, and makeability
+- choose protein-structure, docking, co-folding, and affinity methods
+- choose QSAR, ADMET, selectivity, and pocket-conditioned methods
+- check code, model weights, data, and base-model terms
 
-- synthesizable molecule generation and analog design
-- retrosynthesis, reaction prediction, templates, and makeability scoring
-- protein structure prediction, docking, co-folding, and binding affinity
-- QSAR, ADMET, selectivity, and pocket-conditioned generation
-- code, weights, data, and base-model license terms
+## Repository Features
 
-The goal is practical routing. An agent can read the skill, pick the right reference file, choose a starting tool, and keep the licensing and data constraints visible while it works through a long design task.
-
-## What This Improves
-
-| Agent need | What this repo adds |
+| Agent need | What this repository adds |
 |---|---|
 | Pick a starting method | Task routing in [`SKILL.md`](SKILL.md) and the compact tool matrix |
 | Avoid loading too much context | Focused reference files by workflow category |
@@ -54,7 +51,7 @@ flowchart LR
     B --> H
 ```
 
-## How Agents Use It
+## How to Use It
 
 Open [`SKILL.md`](SKILL.md). The skill routes by task:
 
@@ -65,9 +62,10 @@ Open [`SKILL.md`](SKILL.md). The skill routes by task:
 - estimate binding affinity with an ML or free-energy method
 - build QSAR, ADMET, or off-target screens
 - generate molecules into a binding pocket
-- check whether a tool can be used in commercial work
+- check a tool's license and data terms for product-facing work
 
-The reference files are plain Markdown. They work as agent context and as human-readable notes.
+The reference files are plain Markdown. They work as agent context and as
+human-readable notes.
 
 For Claude Code-style skill discovery:
 
@@ -85,11 +83,12 @@ references/tool-matrix.md        compact index of tools by task
 references/licensing-and-data.md code, weights, data, and base-model checklist
 references/*.md                  focused tool cards by category
 demos/kras-glue/                 compact public-data demo on PDB 9BG6
-assets/readme-banner.png         curated README banner image
+assets/readme-banner.png         selected README banner image
 scripts/public_audit.py          public-release scan for local paths, secrets, and links
 ```
 
-The reference layer covers about 130 tools. The synthesizability layer was checked on 2026-06-11. The target-based layer was checked on 2026-06-13.
+The tool matrix contains 152 indexed rows across 18 categories. Grouped entries
+and cross-references count as one row each.
 
 ## Start Points
 
@@ -103,9 +102,12 @@ The reference layer covers about 130 tools. The synthesizability layer was check
 | [references/binding-affinity-and-fep.md](references/binding-affinity-and-fep.md) | OpenFE, OpenMM, MM-GBSA, and related methods |
 | [references/worked-example-kras-glue.md](references/worked-example-kras-glue.md) | Applying the layers to a public KRAS molecular-glue structure |
 
-## Public Repo Boundary
+## Public Repository Boundary
 
-This repo contains docs, skill instructions, compact public-data examples, and small result summaries. It does not include model weights, vendor catalogs, non-public molecules, non-public structures, raw cloud outputs, or large media builds.
+This repository contains documentation, skill instructions, compact public-data
+examples, and small result summaries. It excludes model weights, vendor
+catalogs, non-public scientific data, raw service output, and large generated
+media.
 
 Run the public-release check:
 
@@ -113,8 +115,11 @@ Run the public-release check:
 make release-check
 ```
 
-This compiles the public Python scripts, checks local Markdown links, and scans for local workstation paths, secrets, and oversized files.
+This command compiles the public Python scripts, checks local Markdown links,
+and scans for local workstation paths, secrets, and oversized files.
 
 ## License
 
-The repo content is MIT licensed. Upstream tools keep their own licenses. The reference cards separate source code, model weights, data, and base-model terms because those terms often differ.
+The repository content uses the MIT License. Each upstream project sets its own
+terms. The reference cards track source code, model weights, data, and base
+models separately because one project can apply different terms to each layer.

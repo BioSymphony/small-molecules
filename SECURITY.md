@@ -1,8 +1,11 @@
 # Security
 
-Do not open public issues containing credentials, non-public molecules, non-public
-structures, unpublished biological data, cloud provider identifiers, or raw run
-logs.
+Do not open public issues that contain credentials, non-public scientific data,
+service identifiers, or raw service logs.
 
-For sensitive reports, contact the repository maintainer privately. Public
-issues should use public examples or synthetic reproductions.
+Use [GitHub private vulnerability
+reporting](https://github.com/BioSymphony/small-molecules/security/advisories/new)
+to report a security vulnerability. If the form is unavailable, open a public
+issue that contains no sensitive details and ask the maintainers for a private
+reporting channel. Use only public examples or synthetic reproductions in
+public issues.

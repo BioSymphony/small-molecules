@@ -1,22 +1,24 @@
 # Contributing
 
-Contributions should improve tool selection, licensing clarity, or public-safe
-examples.
+Contributions must improve tool selection, license clarity, or examples that
+use public or synthetic data.
 
 Before opening a change:
 
-- read `AGENTS.md` and `PUBLIC_RELEASE.md`
-- keep examples public-data-only
-- cite upstream repos, papers, model cards, and license files
-- separate code, weights, data, and base-model terms
-- avoid adding model weights, non-public datasets, generated media, or raw run logs
+- Read `AGENTS.md` and `PUBLIC_RELEASE.md`.
+- Use only public or synthetic data in examples.
+- Cite primary repositories, papers, model cards, and license files.
+- Record the source and verification date for status or license changes.
+- Check code, weights, data, and base-model terms separately.
+- Exclude model weights, non-public data, uncurated generated media, and raw
+  service logs.
 
-Run:
+Before you open a pull request, run the public-release check:
 
 ```bash
 make release-check
 ```
 
-License notes in this repo are diligence aids, not legal advice. If a license or
-model-card claim has changed upstream, update the verification date and source
-context in the relevant reference file.
+License notes in this repository support an initial review; they are not legal
+advice. When you change a license or model-card claim, cite the primary source
+and record the date you checked it.

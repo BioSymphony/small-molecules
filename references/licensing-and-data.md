@@ -1,175 +1,230 @@
-# Licensing & Data Terms
+# Licensing and Data Terms
 
-The single biggest gotcha across this space: **the code license, the weights license, and the building-block/data license are often three different things.** A permissive code badge does not mean you can use the model or its data commercially. With the LLM-based tools, a fourth layer — the **base-model license** (Llama, Qwen, Chameleon) — stacks on top. This page is the checklist to run before building anything on these tools.
+A tool can apply different terms to its code, model weights, training data, and
+base model. Check each layer before you select or distribute the tool.
 
-> Not legal advice. Licenses change; verify against the live repo/catalog terms for your actual use case. Facts below verified 2026-06-11.
+> This guide supports preliminary diligence; it is not legal advice. Check the
+> primary terms that apply to your release and use case. The general license
+> descriptions were reviewed on 2026-08-30; tool claims keep their source-check
+> dates in the category references.
 
-## The four layers to check, every time
+## Check four layers
 
-1. **Code license** — the repository source. Read the LICENSE file, not the README badge.
-2. **Weights / model license** — often separate from the code, and sometimes more restrictive (copyleft, non-commercial, vendor-specific). **This is the #1 trap for co-folding/docking models** (Chai-1, AF3, NeuralPLexer) just as Enamine is for synthesizability tools.
-3. **Data license** — for synthesizable-space tools this traces to **Enamine**; for docking/co-folding it traces to **structural data (PDB / PDBBind)**; for LLMs, to the training corpus.
-4. **Base-model license** — for fine-tuned LLMs, the upstream base (Llama/Qwen/Chameleon) carries its own terms that survive into derivatives. (Co-folding models are trained from scratch, so this layer is usually N/A for them.)
+1. **Code:** Read the repository's license file and notices.
+2. **Model weights:** Read the model card, artifact license, and download terms.
+3. **Data:** Check the terms for catalogs, structures, assays, and training sets.
+4. **Base model:** For a fine-tuned model, check the original model's terms and
+   the derivative's terms.
 
-## License types you'll encounter here (and what they mean)
+## Common license labels
 
-- **MIT / Apache-2.0** — permissive; commercial use fine. (AiZynthFinder, PrexSyn, RDChiral, rxnutils, DeepMech, ReactionT5v2, SyntheMol code, …)
-- **No LICENSE file = all rights reserved** — public ≠ open. You have *no* granted right to use/modify/redistribute. Surprisingly common here: **SynTwins, SynCoGen (code), InterRetro, ConRetroBert, LARC, Mol-LLaMA (code), ChemMLLM (code), GVT, SmiSelf.**
-- **GPL-3.0 / AGPL-3.0 (copyleft)** — using/distributing obligates you to release source under the same license. **AGPL** extends this to *network/SaaS* use (serving the model triggers disclosure). **RetroDFM-R weights = GPL-3.0; ChemDFM-R weights = AGPL-3.0.**
-- **CC BY-NC / CC BY-NC-SA / CC BY-NC-ND (non-commercial)** — no commercial use; **-SA** adds share-alike (derivatives under the same license). Unusual on *code*: **APEX code = CC BY-NC 4.0.** Common on **co-folding weights**: **NeuralPLexer weights = CC BY-NC-SA 4.0.** Also several *papers* (SynTwins, RetroScore, SynLlama, Chai-1, Boltz) are CC BY-NC / CC BY — that binds the manuscript, not the code/weights, but signals intent.
-- **CC BY 4.0** — permissive, **commercial OK with attribution.** **AlphaFold2/ColabFold/OpenFold parameters = CC BY 4.0**; **Umol weights** too; SyntheMol & SynCoGen weights too.
-- **CC0 / public domain** — no restrictions at all. **B3DB (BBB dataset) = CC0**; the PDB itself is effectively public-domain.
-- **LGPL (2.1 / 3.0)** — weak copyleft: use/link freely (incl. commercially), but **modifications to the library itself must be shared**. Here: **OpenMM** GPU platforms, **RxDock**, **Meeko**, **GROMACS**, **scikit-mol**.
-- **Web-only / academic-service "license"** — many ADMET and target-prediction tools (DeepPK, ADMETlab 3.0, pkCSM, SEA, SwissTargetPrediction, PPB2/3, DoGSiteScorer) ship **no code** — only a free academic web server. You can query them but **cannot embed them** in a commercial pipeline, and querying sends your structures to a third party. Not an open license.
-- **BSD 3-Clause *Clear*** — like BSD-3 (permissive, commercial OK) **but explicitly grants NO patent rights** — a real consideration for a patentable method. **NeuralPLexer code** uses it.
-- **Gated / request-only model terms** — **AlphaFold3 weights**: access by Google form, **non-commercial only**, no redistribution, outputs can't train competing models. The code is Apache-2.0 but the gated weights block commercial pipelines.
-- **Vendor model licenses** — **NVIDIA Open Model License** (ReaSyn weights, GenMol weights): commercially usable *with conditions* (attribution, revocation clauses, no life-critical use). **Meta Chameleon Research License** (ChemMLLM base): **noncommercial research only**, plus an Illinois/Texas user bar.
-- **University licenses** — **UC Berkeley Regents non-commercial** (SynLlama): educational/research/not-for-profit only; commercial use needs a signed UC OTL agreement. ⚠️ SynLlama's *paper* says "MIT" — that is wrong; the LICENSE file governs.
-- **Meta Llama Community License** (Llama-2/3 bases) — commercial *allowed* with "Built with Llama" attribution, name-prefixing, and a **>700M-MAU** carve-out (very large products need a separate Meta license).
+- **MIT and Apache-2.0:** These licenses grant broad permissions subject to
+  their stated conditions. Read the [MIT License](https://opensource.org/license/mit)
+  or [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0) before
+  distribution.
+- **No license file or grant:** GitHub explains that default copyright applies
+  when a repository has no license. Contact the rights holder before reuse that
+  requires permission. Examples in this guide include SynTwins, SynCoGen code,
+  InterRetro, ConRetroBert, LARC, Mol-LLaMA code, ChemMLLM code, GVT, and
+  SmiSelf. See [GitHub's repository licensing guide](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository).
+- **GPL and AGPL:** These copyleft licenses set conditions for covered copying,
+  modification, and distribution. AGPLv3 also addresses a modified program that
+  users interact with over a network. Read the applicable [GNU license
+  text](https://www.gnu.org/licenses/).
+- **CC BY-NC variants:** The NonCommercial condition restricts use that is
+  primarily intended for commercial advantage or monetary compensation.
+  ShareAlike adds conditions for adapted material. Check the exact
+  [Creative Commons license](https://creativecommons.org/share-your-work/cclicenses/).
+- **CC BY 4.0:** The license permits sharing and adaptation for any purpose,
+  subject to attribution and its other conditions. See the [CC BY 4.0
+  deed](https://creativecommons.org/licenses/by/4.0/).
+- **CC0 1.0:** CC0 waives covered rights to the extent allowed by law and adds a
+  fallback license. The PDB archive applies CC0 to its data files. See the
+  [CC0 legal code](https://creativecommons.org/publicdomain/zero/1.0/legalcode)
+  and [wwPDB usage policy](https://www.wwpdb.org/about/usage-policies).
+- **LGPL:** LGPL terms distinguish the licensed library, modifications, and a
+  larger work that uses the library. Check the applicable version before you
+  distribute software that includes an LGPL component.
+- **Web-only service:** A public website does not grant a software license.
+  Check the service terms, automation policy, and data-handling policy before
+  you submit structures or integrate the service.
+- **BSD 3-Clause Clear:** This license states that it grants no express or
+  implied patent license. NeuralPLexer uses this license for its code.
+- **Gated, vendor, university, and base-model terms:** Read the terms attached
+  to the exact artifact and version. Repository code terms do not replace model
+  download terms or a base-model license.
 
 ## Per-tool license stack
 
-Grouped by how clean they are for **commercial** use.
+The groups provide preliminary routing signals. They do not say whether a
+license permits a specific use.
 
-### ✅ Cleanest (permissive code + permissive/usable weights)
+### ✅ Artifacts labeled MIT, Apache-2.0, BSD, or CC BY
 | Tool | Code | Weights | Data | Notes |
 |---|---|---|---|---|
-| AiZynthFinder | MIT | MIT (USPTO model) | USPTO, eMolecules/ZINC | **Best.** No Enamine. |
-| ASKCOS v2 | MIT | mostly MIT | USPTO/Pistachio/Reaxys/CAS | Use MIT/USPTO models; avoid Reaxys (CC BY-NC) & CAS (member-only). |
-| SyntheMol | MIT | CC BY 4.0 | Enamine REAL / WuXi (vendor) | Permissive; catalog sourcing is vendor-governed. |
-| DeepMech | MIT | CC-BY-4.0/MIT (Zenodo) | ReactMech | Fully usable. |
-| ReactionT5v2 | MIT | MIT (HF) | ORD (CC-BY-SA, data only) | Easy single-step/forward. |
+| AiZynthFinder | MIT | MIT (USPTO model) | USPTO, eMolecules/ZINC | No Enamine layer listed. |
+| ASKCOS v2 | MIT | mostly MIT | USPTO/Pistachio/Reaxys/CAS | Reaxys data states CC BY-NC terms; CAS access is member-only. |
+| DeepMech | MIT | CC-BY-4.0/MIT (Zenodo) | ReactMech | Check the ReactMech data terms. |
+| ReactionT5v2 | MIT | MIT (HF) | ORD (CC-BY-SA, data only) | Supports single-step and forward prediction. |
 | RXNGraphormer | MIT | Figshare (check) | 13M reactions | Confirm Figshare weights license. |
 | GDiffRetro / RetroDiT | MIT | SharePoint / none-yet | USPTO-50K | RetroDiT has no weights yet. |
-| MolReactGen | MIT | HF (MIT) | GuacaMol/USPTO | Dormant but clean. |
+| MolReactGen | MIT | HF (MIT) | GuacaMol/USPTO | Repository activity is limited. |
 | RDChiral, rdchiral_plus, SynTemp | MIT | — | — | Template infra. |
 | rxnutils | Apache-2.0 | — | — | Curation infra. |
-| DeepRetro, Synthelite, LLM-Syn-Planner | MIT | — | — | **But require a paid LLM API** (+ DeepRetro: Pistachio models restricted). |
-| Syntheseus, SynPlanner | MIT | wraps/MIT presets | — | Frameworks. |
-| **Boltz-2** | MIT | **MIT** (HF) | PDB-derived (MIT-released) | **Rare fully-open flagship** — code+weights MIT, **and** predicts binding affinity. |
-| **Boltz-1** | MIT | **MIT** (HF) | PDB-derived (MIT-released) | Fully open AF3-class co-folder (structure only). |
-| **Chai-1** | Apache-2.0 | **Apache-2.0** | PDB-derived | Weights **relaxed Nov-2024** from a non-commercial Community License — use the current release; ignore stale "NC" web results. |
+| DeepRetro, Synthelite, LLM-Syn-Planner | MIT | — | — | Selected model-provider terms apply; DeepRetro also offers Pistachio-based models. |
+| RENKIN | MIT | — | user-supplied templates and stock | Route planner and route validator. |
+| Syntheseus | MIT | wraps external models | benchmark datasets | Model and dataset terms vary. |
+| **Boltz-2** | MIT | **MIT** (HF) | PDB-derived (MIT-released) | Predicts structure and binding affinity. |
+| **Boltz-1** | MIT | **MIT** (HF) | PDB-derived (MIT-released) | Predicts structure. |
+| **Chai-1** | Apache-2.0 | **Apache-2.0** | PDB-derived | Chai changed the weights from its Community License to Apache-2.0 in November 2024. |
 | **DiffDock / DiffDock-L** | MIT | MIT | PDBBind (redistribution caveat) | Weights MIT (stated). ESM2 base = MIT. |
-| **Uni-Mol Docking v2** | MIT | MIT (Dropbox) | PDBBind-style | Confirm the **Bohrium** hosted-service ToS if using DP's API vs self-host. |
-| **Umol** | Apache-2.0 (README) | **CC BY 4.0** (Zenodo) | PDB-derived | Cleanest pure co-folder; attribution required; **no LICENSE file** (README-stated only). |
-| **EquiBind, TankBind** | MIT | MIT (in-repo) | PDBBind | Legacy. TankBind also has an affinity head; "latest version" = commercial Galixir (separate terms). |
+| **Uni-Mol Docking v2** | MIT | MIT (Dropbox) | PDBBind-style | Bohrium hosted-service terms apply to its API separately. |
+| **Umol** | Apache-2.0 (README) | **CC BY 4.0** (Zenodo) | PDB-derived | The repository has no license file; the README states Apache-2.0. |
+| **EquiBind, TankBind** | MIT | MIT (in-repository) | PDBBind | Legacy. TankBind also has an affinity head; the commercial Galixir offering uses its own terms. |
 | AutoDock Vina / QuickVina / Vina-GPU | Apache-2.0 | — (empirical) | — | Classical docking; RTMScore (MIT code+weights) for ML rescoring. |
-| AF2 / ColabFold / OpenFold | Apache-2.0 / MIT | **CC BY 4.0** params | PDB/MSA | Receptor structure; commercial OK w/ attribution. |
-| ESMFold / ESM-2 | MIT | MIT | UniRef/MGnify | Single-sequence; archived but clean. |
-| RoseTTAFold All-Atom | BSD-3 | BSD-3 (code+weights) | PDB | ⚠️ only the pdb100 template DB is CC BY-NC-SA — supply your own. |
+| AF2 / ColabFold / OpenFold | Apache-2.0 / MIT | **CC BY 4.0** params | PDB/MSA | CC BY 4.0 attribution conditions apply to the parameters. |
+| ESMFold / ESM-2 | MIT | MIT | UniRef/MGnify | Single-sequence; repository archived. |
+| RoseTTAFold All-Atom | BSD-3 | BSD-3 (code+weights) | PDB | The optional pdb100 template database states CC BY-NC-SA terms. |
 | OpenFE / OpenMM / alchemlyb / BAT2 | MIT / BSD | — (physics) | — | Open FEP stack (OpenMM GPU platforms = LGPL). |
-| Chemprop / DeepChem / molfeat / Uni-Mol | MIT / Apache | MIT/Apache | your data | QSAR frameworks; quality = your data. |
+| Chemprop / DeepChem / molfeat / Uni-Mol | MIT / Apache | MIT/Apache | your data | QSAR frameworks; model quality depends on the training data and validation design. |
 | MoLFormer-XL | Apache-2.0 | Apache-2.0 | ZINC/PubChem | Embeddings, not generation. |
-| ADMET-AI | MIT | MIT (bundled) | TDC-derived | Deployable ADMET (hERG/BBB/CYP). |
-| B3DB | CC0 | — (dataset) | — | BBB data, public domain. |
-| ChEMBL multitask | MIT | MIT (ONNX) | **ChEMBL CC BY-SA** | Embeddable off-target screen. |
+| ADMET-AI | MIT | MIT (bundled) | TDC-derived | Local ADMET package (hERG/BBB/CYP). |
+| B3DB | CC0 | — (dataset) | — | BBB dataset under CC0. |
+| ChEMBL multitask | MIT | MIT (ONNX) | **ChEMBL CC BY-SA** | ONNX off-target model. |
 | ESP-Sim / Shape-it / RDKit / OpenPharmacophore | MIT / BSD-3 | — | your mols | Shape/pharmacophore overlay. |
 | fpocket / P2Rank | MIT | MIT | — | Pocket detection. |
-| DiffSBDD / Pocket2Mol / TargetDiff / PocketFlow / ResGen / Apo2Mol | MIT | MIT | PDBBind | Pocket generators (TargetDiff/PocketFlow = MIT in *misspelled* files). **Outputs not synthesizable.** |
+| DiffSBDD / Pocket2Mol / TargetDiff / PocketFlow / ResGen / Apo2Mol | MIT | MIT | PDBBind | Pocket generators; TargetDiff and PocketFlow use misspelled license filenames. These tools do not provide synthesis routes. |
 | REINVENT 4 / PILOT (e3moldiffusion) | Apache-2.0 | Apache-2.0 | — | Generative frameworks; REINVENT can add a synthesizability reward. |
 
-### ⚠️ Permissive code, but a restrictive weights/data/base layer
-| Tool | Trap |
+### ⚠️ Additional or unverified weights, data, or base-model terms
+| Tool | Additional term |
 |---|---|
-| PrexSyn | MIT code+weights, but bundled space is **Enamine-derived** — verify Enamine terms. |
+| PrexSyn | MIT-labeled repository and data/model records; Enamine-derived data. |
 | SynFormer | Apache-2.0 code, but data is **"research purposes only, commercial use requires permissions."** |
 | ReaSyn | Apache-2.0 code, **weights = NVIDIA Open Model License**; + Enamine. |
-| GenMol | Apache-2.0 code, **weights = NVIDIA Open Model License** (commercial OK *with conditions*). |
-| RetroDFM-R | Apache-2.0 code, **weights GPL-3.0**, base Llama-3 (extra terms). |
+| GenMol | Apache-2.0 code; the **NVIDIA Open Model License** applies to the weights. Review its conditions. |
+| SyntheMol | MIT code; the reviewed Zenodo data/model record does not state a license; vendor-derived data. |
+| APEX | The reviewed repository and Zenodo records do not state license terms. |
+| SynPlanner | MIT code; separate model/data record. |
+| RetroDFM-R | MIT code; Apache-2.0-tagged checkpoint; Qwen3 base and separate inference data. |
+| RetroAgent | MIT code; Apache-2.0-tagged checkpoint; Qwen3 base and separate search assets. |
 | ChemDual | Apache-2.0 code, **weights unreleased**; base LLaMA-3.1 (Meta terms). |
-| ProPreT5 | MIT code, **no weights** (train yourself). |
-| NeuralPLexer | **BSD-3-*Clear*** code (permissive but **no patent grant**), **weights CC BY-NC-SA 4.0 (non-commercial)** — code is usable commercially, the released weights are not (retrain for commercial). |
-| scikit-mol | **LGPL-3.0** — use/link freely; modifications to scikit-mol itself must be shared (copyleft). |
-| QSARtuna | Apache-2.0 declared in `pyproject` but **no LICENSE file** — permissive intent, diligence gap. |
-| ChemBERTa | MIT code, but **weights license unstated** on HF — confirm or retrain. |
-| gnina | Apache/GPL code, but the **CNN weights (`gnina/models`) have NO LICENSE** (+ CrossDocked provenance) — empirical-only for commercial. |
-| AutoDock-GPU / smina | **GPL-2.0** (smina effectively GPL via OpenBabel) — copyleft on redistribution. |
-| RxDock / Meeko / GROMACS | **LGPL** — commercial use OK; modifications to the library shared under LGPL. |
-| BioSimSpace / gmx_MMPBSA | **GPL-3.0** — internal use fine; distributing a derived product triggers copyleft. |
-| Align-it / Lingo3DMol | **GPL-3.0** — copyleft; run Align-it as a standalone CLI to avoid linking. |
-| Ersilia CYP (eos44zp) | **GPL-3.0** + archived — or DIY a CYP model on TDC (MIT). |
-| BayeshERG | MIT **code**, but trained **weights + data = CC BY-NC-SA** — retrain for commercial. |
-| ESM3 / ESM-C | weights term changed recently (NC→MIT, ~2026) — **re-verify the live model card**. |
-| DOCK6 | **BSD-3 from GitHub** (clean) vs **academic EULA from the UCSF portal** — provenance decides. |
-| SwissADME | web-only; **results are CC-BY 4.0 (usable), but the engine isn't embeddable**; no bulk scraping. |
+| ProPreT5 | MIT code; no released weights. |
+| NeuralPLexer | **BSD-3-Clause-Clear** code; **CC BY-NC-SA 4.0** weights. The code license states that it grants no patent license. |
+| scikit-mol | **LGPL-3.0**. Review the license before distributing the library, a modified version, or a larger work that includes it. |
+| QSARtuna | `pyproject` declares Apache-2.0; the reviewed repository has no license file. |
+| ChemBERTa | MIT code; the reviewed Hugging Face weights do not state a license. |
+| gnina | Apache/GPL code; the reviewed CNN-weights repository has no license file. |
+| AutoDock-GPU / smina | **GPL-2.0** code. |
+| RxDock / Meeko / GROMACS | **LGPL**. Check the version-specific distribution conditions. |
+| BioSimSpace / gmx_MMPBSA | **GPL-3.0**. Check the GPL conditions before distributing covered code or modifications. |
+| Align-it / Lingo3DMol | **GPL-3.0** code. |
+| Ersilia CYP (eos44zp) | **GPL-3.0** code; archived repository. |
+| BayeshERG | MIT code; **CC BY-NC-SA** weights and data. |
+| ESM3 / ESM-C | The reviewed weight terms changed from non-commercial to MIT in 2026. Check the exact model card and version. |
+| DOCK6 | The GitHub source states BSD-3; the UCSF download portal uses an academic EULA. |
+| SwissADME | Hosted service; results state CC BY 4.0 terms. The service prohibits bulk access. |
 
-### ❌ Blocked for commercial use (non-commercial / copyleft-SaaS / no license)
-| Tool | Blocker |
+### ❌ Non-commercial, no-license, or no-open-release status
+| Tool | Reviewed status |
 |---|---|
-| SynLlama | **UC Berkeley non-commercial** (paper's "MIT" is wrong). |
-| ChemDFM-R | **AGPL-3.0 weights** (network copyleft). |
-| APEX | **CC BY-NC 4.0 code.** |
-| ChemMLLM | **No code license; no weights; Chameleon noncommercial base** (+ IL/TX bar). |
+| SynLlama | The repository license states UC Berkeley non-commercial terms; the paper states MIT. Use the repository's primary license file for diligence. |
+| ChemDFM-R | **AGPL-3.0 weights**. |
+| ChemMLLM | No code license or released weights; the Chameleon base has separate research terms. |
 | Mol-LLaMA | **No code license** (+ Llama base). |
-| SynTwins, SynCoGen (code), InterRetro, ConRetroBert, LARC, GVT, SmiSelf | **No LICENSE file = all rights reserved.** (SynCoGen's HF weights/dataset *are* MIT — the artifacts are usable, the code isn't.) |
+| SynTwins, SynCoGen (code), InterRetro, ConRetroBert, LARC, GVT, SmiSelf | No license file. SynCoGen's Hugging Face weights and dataset state MIT terms separately. |
 | ChemProjector | MIT but **archived/deprecated**; Enamine-gated. |
-| AlphaFold3 | Apache-2.0 *code*, but **weights are request-gated + non-commercial** (no redistribution; outputs can't train competing models) → whole pipeline blocked for commercial use. Use Boltz/Chai instead. |
-| NeuralPLexer (weights) | **CC BY-NC-SA 4.0** weights (code is permissive BSD-3-Clear — see ⚠️ above). |
-| NeuralPLexer3, Chai-2/Chai-3 | **Proprietary — no open code/weights** (Iambic; Chai Discovery). Not licensable as software. |
-| RoseTTAFold (original) | **Non-commercial weights** (Rosetta-DL); RFAA relaxed to BSD but the original did not. |
+| AlphaFold3 | Apache-2.0 code; the reviewed weights terms are request-gated and non-commercial. |
+| NeuralPLexer (weights) | **CC BY-NC-SA 4.0** weights; BSD-3-Clause-Clear code. |
+| NeuralPLexer3, Chai-2/Chai-3 | No public code or weights release was available for review. |
+| RoseTTAFold (original) | The original weights state non-commercial terms; RoseTTAFold All-Atom code and weights state BSD-3-Clause terms. |
 | DecompDiff | **CC-BY-NC 4.0** (non-commercial) + archived. |
-| CardioTox | **No LICENSE = all rights reserved** (hERG model). |
-| DeepPK / ADMETlab 3.0 / pkCSM | **Web-only** — non-commercial (DeepPK/ADMETlab) or paid-license (pkCSM); not embeddable. |
+| CardioTox | The reviewed repository has no license file. |
+| DeepPK / ADMETlab 3.0 / pkCSM | Hosted services; DeepPK and ADMETlab state non-commercial terms, and pkCSM offers separate paid terms. |
 | SEA / SEAware | No open code; **SEAware is proprietary** (commercial license). |
-| PPB3 / SPiDER / TIGER | PPB3 = public repo but **NO LICENSE**; SPiDER/TIGER = **no open code**. |
-| DoGSiteScorer / PLANTS | DoGSiteScorer = **academic-only web service**; PLANTS = **closed academic binary** — neither embeddable. |
+| PPB3 / SPiDER / TIGER | PPB3 has a public repository with no stated license. SPiDER and TIGER have no public code. |
+| DoGSiteScorer / PLANTS | DoGSiteScorer is an academic-use service; PLANTS is an academic-use binary. |
 
 ## The Enamine dependency
 
-Every synthesizable-generation tool is built on **Enamine building blocks** (+ a shared ~115-reaction-template set). The catalog (US Stock / Global Stock / REAL Space) is **free to request** but carries Enamine's **own usage terms** distinguishing research from commercial use. No repo restates those terms — you are responsible for licensing the catalog appropriately.
+The nine tools in the synthesizable-generation table use **Enamine building
+blocks** and related reaction templates. Enamine sets separate terms for its
+catalogs. Check the terms for the specific catalog and access method that your
+workflow uses.
 
 - **Request from Enamine** (not redistributed): SynFormer, ReaSyn, ChemProjector.
-- **Bundled in-repo** (redistribution of Enamine-derived structures): PrexSyn (precomputed space), SynTwins (150,560 Global Stock blocks), SynCoGen (93 blocks via RGFN — small), SynLlama (~230K blocks, train).
-- **Make-on-demand vendor space:** SyntheMol & APEX design over Enamine **REAL** (and WuXi GalaXi) — sourcing/synthesis is governed by the vendor, separate from the tool's license.
-- Even with MIT/Apache code, the **outputs** are drawn from Enamine's space. For commercial work, confirm with Enamine that your use of their building-block data is covered.
+- **Bundled in-repository** (redistribution of Enamine-derived structures): PrexSyn (precomputed space), SynTwins (150,560 Global Stock blocks), SynCoGen (93 blocks via RGFN — small), SynLlama (~230K blocks, train).
+- **Make-on-demand vendor space:** SyntheMol and APEX design over Enamine REAL
+  and WuXi GalaXi. Vendor terms apply separately from the tool's license.
+- For product-facing work, confirm that the applicable catalog terms cover your
+  use of the building-block data and resulting candidate space.
 
-## The structural-data layer (docking / co-folding)
+## The Structural-Data Layer for Docking and Co-Folding
 
-The docking/co-folding tools don't touch Enamine — their data layer is **protein-ligand structural data**, almost always **PDB-derived** (the PDB itself is public-domain / CC0).
+Docking and co-folding tools usually rely on protein-ligand structural data.
+The [wwPDB usage policy](https://www.wwpdb.org/about/usage-policies) applies
+CC0 1.0 to PDB archive data files and asks users to attribute the original
+structure authors where possible.
 
-- **PDBBind** (the standard training/benchmark set for docking — DiffDock, Uni-Mol Docking v2, EquiBind, TankBind) carries its own **redistribution terms** that lean academic. The trained *model* is governed by its own weights license (above); the caveat only bites if you **redistribute the PDBBind dataset itself**, not if you run the model.
-- **Co-folding training data** (Boltz, Chai) is PDB/MSA-derived; Boltz explicitly MIT-releases its datasets/benchmarks. Boltz-2 used Recursion's proprietary affinity data for training but the **release** is MIT with no rider found.
-- **MSA generation:** Chai-1, Boltz, Umol default to **public ColabFold / MMseqs2 servers** for MSAs. For a closed commercial pipeline, **self-host MSA generation** rather than sending sequences to a public server (data-egress concern, not a license one).
-- The weights-vs-code split is the real trap here, not the data: see Chai-1 (weights relaxed Nov-2024), NeuralPLexer (NC weights), AlphaFold3 (gated NC weights).
+- **PDBbind:** DiffDock, Uni-Mol Docking v2, EquiBind, and TankBind use PDBbind
+  data. Check the PDBbind download and redistribution terms separately from the
+  model-weights license.
+- **Co-folding training data:** Boltz and Chai use PDB- and MSA-derived data.
+  The Boltz repository states MIT terms for its released datasets and
+  benchmarks. The Boltz-2 paper describes additional Recursion affinity data
+  used during training.
+- **MSA generation:** Chai-1, Boltz, and Umol can use public ColabFold or
+  MMseqs2 servers. Check the service's data policy before submitting a non-public
+  sequence.
+- **Weights:** Chai-1 states Apache-2.0 terms, NeuralPLexer states CC BY-NC-SA
+  terms, and AlphaFold3 states gated non-commercial terms for the reviewed
+  weights.
 
-## The bioactivity-data layer (QSAR / ADMET / target prediction)
+## The Bioactivity-Data Layer for QSAR, ADMET, and Target Prediction
 
-The ligand-based predictors don't depend on Enamine or PDB — their data layer is **bioactivity databases**, and two issues recur:
+Ligand-based predictors commonly use bioactivity databases. Check the database
+terms separately from the training code and weights.
 
-- **ChEMBL = CC BY-SA 3.0 (attribution + share-alike).** Most QSAR/target models train on ChEMBL (Chemprop on your extract, the ChEMBL multitask model, ADMET-AI via TDC). The MIT/Apache code does not launder this: if you **redistribute derived datasets**, attribution + share-alike apply. Running a model you trained is generally fine; redistributing the data/derivatives is the trigger.
-- **TDC datasets are per-dataset licensed** — some non-commercial; vet each before commercial training (see [property-and-qsar-prediction.md](property-and-qsar-prediction.md)).
-- **Web-only tools you can't embed:** the most-used ADMET (DeepPK, ADMETlab 3.0, pkCSM) and target-prediction (SEA, SwissTargetPrediction, PPB2/3) tools are free **academic web servers** — you may query them, but their terms forbid embedding in a commercial pipeline, and you'd be sending proprietary structures to a third-party host (IP/egress risk). Deployable-local exceptions: **ADMET-AI** (MIT), the **ChEMBL multitask model** (MIT), **B3DB** (CC0 data).
+- **ChEMBL:** The ChEMBL download from 2026-08-30 includes a
+  [CC BY-SA 3.0 license](https://ftp.ebi.ac.uk/pub/databases/chembl/ChEMBLdb/latest/LICENSE).
+  Review its attribution and ShareAlike conditions before you distribute ChEMBL
+  data or adaptations.
+- **TDC datasets are per-dataset licensed**; some state non-commercial terms. See [property-and-qsar-prediction.md](property-and-qsar-prediction.md).
+- **Web-only tools:** DeepPK, ADMETlab 3.0, pkCSM, SEA,
+  SwissTargetPrediction, and PPB2/3 require service-specific review. Before you
+  submit a structure, check the service terms and data-handling policy. Local
+  alternatives in this guide include ADMET-AI, the ChEMBL multitask model, and
+  B3DB.
 
-## Decision shortcuts
+## Selected artifact labels by task
 
-- **Need clean commercial licensing today?**
-  - Retrosynthesis: **AiZynthFinder** (MIT + USPTO); **ASKCOS v2** with MIT/USPTO models; **Syntheseus/SynPlanner** frameworks.
-  - Single-step / forward: **ReactionT5v2**, **RXNGraphormer**, **DeepMech** (all MIT, weights released).
-  - Make-on-demand generation: **SyntheMol** (MIT + CC BY) — clear the Enamine REAL catalog with the vendor.
-  - Synthesizable projection: **PrexSyn** (MIT code+weights) — lightest-friction learned generator, still inherits Enamine data terms.
-  - Templates/curation: **RDChiral / rdchiral_plus / rxnutils / SynTemp** (all permissive).
-  - Docking / co-folding (structure): **Boltz-1** (MIT/MIT), **Chai-1** (Apache/Apache, post-Nov-24 release), **Umol** (Apache/CC BY 4.0), **DiffDock-L** & **Uni-Mol Docking v2** (MIT/MIT). **Avoid AlphaFold3** (gated NC weights) and **NeuralPLexer weights** (CC BY-NC-SA) for commercial use.
-  - Binding **affinity** (not just a pose): **Boltz-2** (MIT/MIT — the only fully-open affinity predictor); TankBind has an affinity head but is legacy MIT.
-  - Receptor **structure**: **ColabFold / AF2 / OpenFold** (CC BY 4.0 params), **ESMFold** (MIT), **RoseTTAFold All-Atom** (BSD; swap the NC pdb100 templates). **Avoid AlphaFold3 weights** (gated NC) and **RoseTTAFold-original weights** (NC).
-  - Binding **free energy** (physics): **OpenFE / OpenMM / alchemlyb / BAT2** (MIT/BSD); GPL tools (BioSimSpace, gmx_MMPBSA) are usable but copyleft on redistribution.
-  - **QSAR / property**: **Chemprop, DeepChem, molfeat, MoLFormer-XL, Uni-Mol** (permissive) — clear the **ChEMBL (CC BY-SA)** data terms on what you train/redistribute.
-  - **ADMET**: **ADMET-AI** (MIT, deployable) + **B3DB** (CC0). Web tools (DeepPK/ADMETlab/pkCSM) aren't embeddable.
-  - **Off-target / selectivity**: **ChEMBL multitask model** (MIT) + **ESP-Sim / Shape-it / RDKit** (MIT/BSD). **Align-it** is GPL-3.
-  - **Structure-based generation**: **REINVENT 4 / PILOT** (Apache), **DiffSBDD** (MIT). **Avoid DecompDiff** (CC-BY-NC); **Lingo3DMol** is GPL-3. Outputs aren't makeable → project with PrexSyn.
-- **Doing research / non-commercial?** Almost everything is fair game; pick by capability. The "no license" set still technically needs author contact. For docking/co-folding, **AlphaFold3** (best accuracy) and **NeuralPLexer** weights are fine for non-commercial research.
-- **Building a commercial product on generative design?** Expect to (a) clear **Enamine** terms, (b) check the **weights** license separately (NVIDIA for ReaSyn/GenMol, GPL for RetroDFM-R, AGPL for ChemDFM-R), and (c) for LLM fine-tunes, satisfy the **base-model** license (Llama/Qwen/Chameleon).
-- **Using an LLM/agentic planner?** The code may be MIT, but you'll **pay for a commercial LLM API** (Anthropic/OpenAI/Gemini) and send structures to it — factor in cost and data egress.
+| Task | Reviewed artifact labels | Separate terms recorded in this guide |
+|---|---|---|
+| Retrosynthesis | AiZynthFinder, RENKIN, Syntheseus, and SynPlanner: MIT code | ASKCOS, Syntheseus, and SynPlanner model/data terms vary |
+| Single-step and forward prediction | ReactionT5v2, RXNGraphormer, and DeepMech: MIT code | Dataset and weights terms remain separate |
+| Make-on-demand generation | SyntheMol: MIT code | Reviewed Zenodo record does not state a license; Enamine REAL and WuXi GalaXi vendor terms |
+| Synthesizable projection | PrexSyn: MIT code and weights | Enamine-derived candidate space |
+| Template tools | RDChiral, rdchiral_plus, and SynTemp: MIT; rxnutils: Apache-2.0 | Input reaction-data terms |
+| Docking and co-folding | Boltz-1: MIT; Chai-1 and OpenBind-0: Apache-2.0; DiffDock-L and Uni-Mol Docking v2: MIT | Umol repository lacks a license file; its README states Apache-2.0 |
+| Binding affinity | Boltz-2: MIT code and weights | Training-data provenance described in the tool card |
+| Receptor structure | AlphaFold2 and OpenFold code: Apache-2.0; ColabFold code: MIT; reviewed parameters: CC BY 4.0 | AlphaFold3 and original RoseTTAFold weights state non-commercial terms |
+| Free-energy methods | OpenFE: MIT; OpenMM: MIT/LGPL; alchemlyb: BSD-3; BAT2: MIT | BioSimSpace and gmx_MMPBSA: GPL-3.0 |
+| QSAR and property prediction | Chemprop and DeepChem: MIT; molfeat and MoLFormer-XL: Apache-2.0; Uni-Mol: MIT | ChEMBL: CC BY-SA 3.0; TDC terms vary by dataset |
+| ADMET | ADMET-AI: MIT; B3DB: CC0 | Hosted-service terms for DeepPK, ADMETlab, and pkCSM |
+| Off-target and selectivity | ChEMBL multitask model and ESP-Sim: MIT; RDKit: BSD-3 | ChEMBL data: CC BY-SA 3.0; Align-it: GPL-3.0 |
+| Structure-based generation | REINVENT 4 and PILOT: Apache-2.0; DiffSBDD: MIT | DecompDiff: CC BY-NC; Lingo3DMol: GPL-3.0 |
+| LLM and agentic planning | RetroAgent: MIT code and Apache-2.0-tagged checkpoint; project code terms vary by tool | Provider, base-model, training-data, retention, and data-handling terms |
 
-## "Verify before commercial use" — minimal checklist
+## Terms review checklist
 
-- [ ] Code license read from the **LICENSE file** (not the README badge or the paper's claim — see SynLlama).
-- [ ] Weights/model license checked **separately** from the code.
-- [ ] No **non-commercial** (CC BY-NC*) or **copyleft** (GPL/AGPL) artifact in your dependency path unless you accept its terms (AGPL = disclose your SaaS source).
-- [ ] If Enamine building blocks are involved, your Enamine catalog license covers commercial use.
-- [ ] For fine-tuned LLMs, the **base-model** license (Llama/Qwen/Chameleon) is satisfied, including Llama's >700M-MAU clause.
-- [ ] For LLM/agentic tools, the **commercial API** terms (Anthropic/OpenAI/Gemini) and data-egress are acceptable.
-- [ ] No "all rights reserved" (no-license) repo in your shipped path without written author permission.
-- [ ] For QSAR / target / ADMET models, the **training-data license** (ChEMBL CC BY-SA; TDC per-dataset) is satisfied for your use (especially redistribution).
-- [ ] No **web-only academic tool** (DeepPK, ADMETlab, pkCSM, SEA, SwissTargetPrediction) embedded in a commercial pipeline — and no proprietary structures sent to a third-party server.
-- [ ] For receptor structure, the **parameters** license is clear (AF2/ColabFold/OpenFold = CC BY 4.0 OK; AF3 = gated NC; RoseTTAFold-orig = NC; ESM3/ESM-C = re-verify).
-- [ ] For docking, the **scoring weights** are clear (gnina's CNN weights are unlicensed → use empirical Vina scoring for commercial).
+- [ ] Record the code license, primary source URL, and verification date.
+- [ ] Record the model-weights terms and download conditions separately.
+- [ ] Record each training, benchmark, catalog, and structure dataset license.
+- [ ] Record the exact base model and version for each fine-tuned model.
+- [ ] Record any non-commercial, copyleft, gated-access, or field-of-use terms.
+- [ ] Record any permission grant that covers planned reuse when a repository
+      has no license.
+- [ ] Review hosted-service terms, retention, and data-handling policies before
+      submitting non-public data.
+- [ ] Record attribution, notice, source-offer, and redistribution requirements
+      that apply to the planned release.

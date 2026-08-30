@@ -1,26 +1,26 @@
 # Public Release Checklist
 
-Use this checklist before publishing or refreshing the public repository.
+Use this checklist before you publish or update the public repository.
 
 ## Scope
 
-- Keep `SKILL.md`, `README.md`, and `references/` as the primary public surface.
+- Keep `SKILL.md`, `README.md`, and `references/` as the primary public files.
 - Keep demos compact and public-data-only.
 - Leave non-release artifacts, raw cloud outputs, large media builds, and
-  ignored generated directories out of the public repo.
+  ignored generated directories out of the public repository.
 
 ## Repository Metadata
 
 Repository name:
 
 ```text
-biosymphony-small-molecules
+small-molecules
 ```
 
 GitHub About text:
 
 ```text
-Agent skill for routing small-molecule design tasks to open tools, focused references, and license-aware implementation paths.
+Agent skill for routing small-molecule design tasks to open and publicly documented tools, focused references, and license-aware implementation paths.
 ```
 
 Suggested topics:
@@ -32,18 +32,17 @@ ai-agents, agentic-ai, agent-skills, small-molecules, cheminformatics, drug-disc
 ## Checks
 
 - [ ] No copied `.git` history from another repository.
-- [ ] No `.env`, credentials, tokens, signed URLs, local workstation paths, provider IDs,
-      raw logs, or cost ledgers.
+- [ ] No `.env`, credentials, tokens, signed URLs, local workstation paths, or
+      raw service logs.
 - [ ] No unpublished biological data, non-public structures, non-public molecules,
       non-public assays, raw reads, model weights, or restricted datasets.
-- [ ] No large generated media unless it is intentionally curated for public
-      release.
+- [ ] No large generated media unless it is reviewed for public release.
 - [ ] `make release-check` passes.
-- [ ] Live license-sensitive claims have either been re-verified or still carry
-      their existing verification date.
+- [ ] Each changed license or status claim cites a primary source and records
+      its verification date.
 - [ ] Demo claims are labeled as public-data demos and not drug-discovery output.
 
-## Public Cut
+## Standalone Skill
 
-The public repo should read as a useful tool-selection skill even if the KRAS
-demo is ignored. The demo supports the method boundary; it is not the product.
+The tool-selection skill must remain useful without the KRAS demo. The demo
+illustrates the documented workflow with public inputs.

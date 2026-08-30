@@ -1,91 +1,152 @@
-# Worked Example — KRAS(ON) Molecular Glues (daraxonrasib): which layers apply, which don't, and how to actually run it
+# Worked Example: Route a KRAS(ON) Molecular-Glue Task
 
-A concrete stress-test of this toolkit against a **2026 frontier drug**. It shows where the target-based layer fits, where it breaks, and — the practical core — how an **experimental structure turns an intractable "predict a molecular glue" problem into a tractable "perturb and score" one.** Verified **2026-06-13**.
+This example uses public structure 9BG6 to choose methods for daraxonrasib, a
+KRAS(ON) tri-complex inhibitor. The experimental ternary structure supports
+perturbation and scoring workflows that a binary docking model cannot represent.
+Source status date: **2026-08-30**.
 
-## The molecule
+## Public Starting Point
 
-- **daraxonrasib (RMC-6236)** — Revolution Medicines; first-in-class oral **pan-RAS(ON)** inhibitor. Phase 1/2 in *NEJM* (May 2026); FDA Breakthrough Therapy + expanded-access for previously treated metastatic pancreatic cancer (PDAC). It hits the RAS mutants the G12C drugs miss (G12D/V/S, G13X, Q61X).
-- **Mechanism — a noncovalent *molecular glue*, not a pocket binder.** It binds **cyclophilin A (CypA)** first; the drug·CypA composite then lies on the **flat switch-I/II face of *active, GTP-bound* RAS**, gluing CypA onto RAS and blocking RAF/MEK/ERK. It is a **macrocycle derived from the natural product sanglifehrin A**.
-- **The structure exists — [PDB 9BG6](https://www.rcsb.org/structure/9BG6):** *"Tri-complex of Daraxonrasib (RMC-6236), KRAS G12V, and CypA."* X-ray **1.66 Å**; chains KRAS (A, B) + CypA/PPIA (C, D); ligands daraxonrasib (CCD **A1AHB**), **GNP** (GppNHp — the non-hydrolyzable GTP analog that locks the **ON** state) and **Mg²⁺**. Deposited 2024-04-18, released 2025-03-19.
+- [Daraxonrasib (RMC-6236)](https://www.nejm.org/doi/full/10.1056/NEJMoa2505783)
+  is an oral RAS(ON) multiselective inhibitor under clinical evaluation. The
+  cited May 2026 article reports phase 1/2 results in previously treated
+  RAS-mutated pancreatic cancer.
+- Daraxonrasib forms a noncovalent complex with cyclophilin A (CypA) and active,
+  GTP-bound RAS. The composite complex blocks RAS effector binding.
+- [PDB 9BG6](https://www.rcsb.org/structure/9BG6) contains daraxonrasib, KRAS
+  G12V, CypA, GppNHp, and magnesium at 1.66 Å resolution. RCSB PDB reports a
+  deposit date of 2024-04-18 and a release date of 2025-03-19.
 
-Three facts decide everything downstream: it's a **glue** (no canonical KRAS pocket), it acts on the **ON (GTP) state** (so the nucleotide and Mg²⁺ are not optional), and the complex is a **ternary macrocyclic-NP assembly we already have at 1.66 Å**.
+The method choice follows three properties of the system: the ligand binds a
+ternary interface, the active-state nucleotide and magnesium are part of the
+complex, and an experimental structure is available.
 
-## Which layers apply — and which don't
+## Method Fit
 
-| Task | Our layer | Fit |
+| Task | Method | Fit |
 |---|---|---|
-| Predict the drug + CypA + RAS **tri-complex** | co-folding — **Boltz-2, Chai-1, AF3-class** (OpenFold3/Protenix) | ◐ Right *family* (multi-chain + ligand), but glue/induced-proximity accuracy is **unproven** — and **9BG6 makes prediction unnecessary** |
-| **Dock** daraxonrasib into a KRAS pocket | classical docking — Vina/gnina/smina | ✗ **Wrong model.** It's a glue; no canonical RAS pocket. (You *can* dock the CypA half — a real cyclophilin pocket — but that misses the RAS-selectivity story) |
-| Effect of **G12D/V/Q61X** on binding | FEP — **OpenFE/Perses/OpenMM** on 9BG6 | ◑ **Tractable** via protein-mutation RBFE; ternary setup is advanced but this is what FEP is *for* |
-| **Rank analogs** of daraxonrasib | FEP RBFE + scaffold enumeration (REINVENT 4 / RDKit) | ✓ **Classic lead-opt** on a fixed ternary scaffold — strongest fit |
-| **De novo** new glue chemotypes into the site | pocket-conditioned generators (Pocket2Mol/TargetDiff/PocketXMol) | ✗/◐ macrocycle + composite 2-protein surface is **out of training distribution** |
-| **Can we make the analogs?** | Layer 1 — retro + synthesizability scoring | ✓ Valuable — but ⚠️ macrocyclic NP chemistry is itself out-of-distribution for USPTO-trained route models (see [synthesizability-scoring.md](synthesizability-scoring.md)) |
-| ADMET / PK / transporters | ADMET layer | ✓ Relevant — daraxonrasib has documented transporter/PK liabilities |
+| Predict the drug + CypA + RAS tri-complex | Boltz, Chai-1, or another AF3-class co-folding model | Limited. These models accept multiple chains and a ligand, but 9BG6 already provides the experimental geometry. |
+| Dock daraxonrasib into KRAS alone | Vina, gnina, or smina | Poor. Daraxonrasib binds the composite CypA-RAS interface rather than a KRAS-only pocket. |
+| Estimate mutation effects | OpenFE, Perses, or OpenMM on 9BG6 | Plausible with specialist setup. Protein-mutation free-energy calculations require careful parameterization and sampling. |
+| Rank close analogs | RBFE plus scaffold-constrained enumeration | Good candidate workflow when each analog preserves the CypA-binding core and the RAS-facing contacts. |
+| Generate unrelated glue chemotypes | Pocket2Mol, TargetDiff, or PocketXMol | Low confidence. Their training domains do not establish performance on macrocycles at two-protein interfaces. |
+| Check analog makeability | Retrosynthesis plus synthesizability scoring | Useful as triage. USPTO-trained models can be unreliable for macrocyclic, natural-product-derived chemistry. |
+| Screen ADMET and selectivity | ADMET and target-prediction tools | Relevant for prioritization, subject to each model's endpoint and training-data limits. |
 
-## The pivot — why this is tractable
+## Why the Experimental Structure Matters
 
-Predicting a molecular-glue ternary complex *de novo* is a frontier problem and unreliable. **But we don't have to:** 9BG6 is the experimental answer at 1.66 Å. That flips the question from *"predict the glue"* (hard, untrustworthy) to *"given the complex, perturb one thing and score the change"* — a standard, well-posed free-energy problem. **Everything below starts from 9BG6.** This is the difference between the toolkit being a poor fit and a good one.
+De novo ternary-complex prediction remains uncertain for molecular glues. PDB
+9BG6 supplies the measured geometry, so the following workflow tests defined
+mutations or close analogs on that structure. Each stage starts with 9BG6.
 
-## Demo runbook — perturb & score from 9BG6
+## Demo Runbook
 
-Two perturbation axes from the same crystal: **mutate the protein** ("does this drug still bind the mutant?") and **modify the drug** ("can we make a better analog?").
+The runbook covers two controlled changes: mutate KRAS or change daraxonrasib.
 
-### Stage 0 — Structure prep *(CPU, minutes)*
-- Fetch: `wget https://files.rcsb.org/download/9BG6.cif` (or `.pdb`).
-- Split components: KRAS chain (A), CypA chain (C), ligand `A1AHB`, `GNP`, `MG`.
-- Protein prep: **PDBFixer** (OpenMM) — add hydrogens/caps, protonate at pH 7.4. **Keep GppNHp + Mg²⁺** — they define the ON state the glue requires.
-- Ligand prep: extract `A1AHB`; pull its SMILES from the **CCD / PubChem** (do *not* hand-type a 50-atom macrocycle); parameterize with **OpenFF/GAFF**.
-- ⚠️ First friction point: **GppNHp is a non-standard residue** and the **macrocycle** needs custom parameters — neither is in a default protein force field. Budget time here.
+### Stage 0: Prepare the Structure
 
-### Stage A — Mutant effect: does daraxonrasib survive KRAS G12D / Q61H? *(the "KRAS mutant" question)*
-- Goal: ΔΔG of binding across variants. 9BG6 is already **G12V**; build WT, **G12D**, **Q61H**, etc. on the KRAS chain *in the complex* (PyMOL/ChimeraX mutagenesis, or FoldX/Rosetta).
-- **Quick triage** *(hours, CPU/1 GPU)*: **gmx_MMPBSA** (MM-GBSA) endpoint ΔΔG per variant — cheap ranking. → [binding-affinity-and-fep.md](binding-affinity-and-fep.md)
-- **Rigorous** *(days, GPU)*: **protein-mutation RBFE** with **Perses** (it supports amino-acid mutations) or **OpenFE** — alchemically mutate residue 12/61 in the bound vs. free states.
-- **Built-in sanity check:** because the drug binds *away* from residues 12/61, ΔΔG should be **small** across G12X/Q61X — recapitulating the known pan-mutant profile. If your pipeline reproduces that, it's calibrated; if it predicts a large ΔΔG, suspect your params/sampling, not the biology.
+- Download `9BG6.cif` or `9BG6.pdb` from RCSB PDB.
+- Extract KRAS chain A, CypA chain C, ligand `A1AHB`, `GNP`, and `MG`.
+- Add missing atoms and hydrogens with PDBFixer or a preparation workflow that
+  supports the selected force field. Keep GppNHp and Mg²⁺ because they define
+  the active-state complex.
+- Extract `A1AHB`, get its structure from the PDB Chemical Component
+  Dictionary or PubChem, and parameterize it with OpenFF or GAFF.
+- Review the GppNHp and macrocycle parameters before interpreting energies. A
+  default protein force field might not provide them.
 
-### Stage B — Analog exploration: modify daraxonrasib and rank *(the "explore changes" question)*
-- Goal: rank modifications of daraxonrasib by predicted affinity **in the ternary**.
-- **Enumerate (scaffold-constrained, NOT de novo):** keep the CypA-binding macrocycle core fixed; vary the RAS-facing substituents. **RDKit** reaction enumeration or **REINVENT 4** LibInvent/Mol2Mol with the scaffold locked. → [structure-based-generation.md](structure-based-generation.md). *Do not* reach for pocket de-novo generators here (macrocycle = out of distribution; see Boundaries).
-- **Cheap rank** *(per analog, minutes)*: core-align the analog into the fixed complex (constrained embed), minimize, then **MM-GBSA** (gmx_MMPBSA) or **gnina** CNN rescoring of the held complex. Triage hundreds.
-- **Rigorous rank** *(GPU, ~hours each)*: **relative binding free energy (RBFE)** across the congeneric series with **OpenFE / Perses** in the ternary context — textbook lead-opt, here on a fixed CypA·RAS scaffold.
-- ⚠️ Two-sided constraint: every analog must preserve **CypA binding *and* the RAS-facing surface**. Perturbations that break CypA engagement are physically meaningless — the scoring must hold the CypA contacts.
+### Stage A: Estimate KRAS Mutation Effects
 
-### Stage C — Reality filters *(makeability, ADMET, selectivity)*
-- **Makeability:** **AiZynthFinder** / **RetroScore** ([synthesizability-scoring.md](synthesizability-scoring.md)). ⚠️ macrocyclic, NP-derived chemistry is **out of distribution** for USPTO-trained route models — treat scores as low-confidence and cross-check a chemist.
-- **ADMET:** **ADMET-AI** (local). daraxonrasib has documented transporter/PK liabilities (AACR PK abstract) — the thing to optimize against.
-- **Selectivity / anti-target:** CypA is a broadly expressed chaperone; off-target **CypA binding / immunosuppression** (the sanglifehrin/cyclosporin lineage) is a real anti-target axis — screen analogs for it. → [target-and-selectivity-prediction.md](target-and-selectivity-prediction.md)
+- Build the target variants on the KRAS chain in the complex. PDB 9BG6 already
+  contains G12V; relevant comparisons can include wild type, G12D, and Q61H.
+- Use gmx_MMPBSA for an initial endpoint estimate. See
+  [binding-affinity-and-fep.md](binding-affinity-and-fep.md).
+- Use Perses or OpenFE for protein-mutation free-energy calculations that compare
+  bound and unbound states.
+- Compare the computed mutation trend with published multiselective activity.
+  Investigate parameterization and sampling when the calculation predicts large,
+  unexplained effects for remote mutations.
 
-## What does NOT work here — honest boundaries
+### Stage B: Rank Close Analogs
 
-- **Classical docking of daraxonrasib into KRAS** — wrong model: no canonical RAS pocket; the drug doesn't bind RAS alone.
-- **De novo pocket-conditioned generation** (Pocket2Mol/TargetDiff/DiffSBDD/PocketXMol) — trained on drug-like small molecules in single pockets; a macrocyclic glue spanning a two-protein composite surface is out of distribution. Use scaffold-constrained enumeration instead.
-- **Naive FEP** — GppNHp + Mg²⁺ + macrocycle parameters + a protein–protein interface make this an **expert setup**, not push-button. Budget for parameterization and sampling convergence.
-- **Co-folding to *obtain* the structure** — unnecessary here (9BG6 exists) and unproven on glues.
+- Keep the CypA-binding macrocycle core and vary RAS-facing substituents. Use
+  RDKit reaction enumeration or REINVENT 4
+  LibInvent/Mol2Mol with scaffold constraints. See
+  [structure-based-generation.md](structure-based-generation.md).
+- Align each analog to the fixed core, minimize the complex, and use MM-GBSA or
+  gnina rescoring for an initial rank.
+- Calculate relative binding free energies for a congeneric series with OpenFE
+  or Perses in the ternary context.
+- Check both interfaces. An analog that loses CypA binding no longer tests the
+  intended ternary mechanism.
 
-## Demo results — public-data run (2026-06-13)
+### Stage C: Apply Makeability, ADMET, and Selectivity Filters
 
-A runnable version lives in [`demos/kras-glue/`](../demos/kras-glue/). Both binding-tool families were executed against 9BG6: docking on CPU and co-folding on GPU. The numbers confirm the boundary empirically:
+- Use AiZynthFinder and RetroScore for makeability triage. Treat results for
+  macrocyclic, natural-product-derived chemistry as low confidence, and ask a
+  chemist to review the proposed routes. See
+  [synthesizability-scoring.md](synthesizability-scoring.md).
+- Use ADMET-AI only for endpoints represented by its documented models and
+  training data.
+- Treat CypA engagement as a required design dimension rather than a generic
+  off-target score. See
+  [target-and-selectivity-prediction.md](target-and-selectivity-prediction.md).
+
+## Method Boundaries
+
+- **Classical docking of daraxonrasib into KRAS** does not represent the ternary
+  binding mechanism because daraxonrasib binds the composite CypA-RAS
+  interface.
+- Pocket2Mol, TargetDiff, DiffSBDD, and PocketXMol were trained on drug-like
+  small molecules in single pockets. Their published evaluations do not
+  establish performance for a macrocyclic glue at a two-protein interface.
+- An FEP setup for GppNHp, Mg²⁺, a macrocycle, and a protein-protein interface
+  requires specialist parameterization and convergence checks.
+- Co-folding is unnecessary for this example because 9BG6 provides the
+  experimental structure. Published evaluations do not establish glue
+  prediction performance.
+
+## Public Demo Results (2026-06-13)
+
+The runnable scripts are in [`demos/kras-glue/`](../demos/kras-glue/). The demo
+applies docking and co-folding to 9BG6 as method-routing checks. These outputs
+do not validate a drug-discovery model or predict clinical activity.
 
 | Tool | Test | Result | Verdict |
 |---|---|---|---|
-| smina (docking) | MRTX1133 → KRAS pocket *(control)* | −14.2 kcal/mol, RMSD 0.39 Å | stack works on a real pocket |
-| smina | daraxonrasib → **CypA** alone | −10.3 kcal/mol, 100% native contacts | **presenter** half dockable |
-| smina | daraxonrasib → **KRAS** alone | −6.5 kcal/mol, 18% contacts, pose flees 13.5 Å | **target** half undockable — no pocket |
-| Chai-1 *(co-fold, MSA-free)* | predict the daraxonrasib·CypA·KRAS ternary | CypA-Cα 0.34 Å, **KRAS-Cα 23.3 Å**, ligand 4.1 Å, ipTM 0.63 | folds each protein, **misplaces KRAS 23 Å** — glue geometry not recovered |
+| smina (docking) | MRTX1133 in the KRAS pocket *(control)* | −14.2 kcal/mol, RMSD 0.39 Å | Recovered the reference pocket pose |
+| smina | daraxonrasib with CypA alone | −10.3 kcal/mol, 100% native contacts | Recovered the CypA-side pose |
+| smina | daraxonrasib with KRAS alone | −6.5 kcal/mol, 18% contacts, 13.5 Å displacement | Did not recover a KRAS-only pose |
+| Chai-1 *(co-fold, MSA-free)* | daraxonrasib, CypA, and KRAS | CypA-Cα 0.34 Å, KRAS-Cα 23.3 Å, ligand 4.1 Å, ipTM 0.63 | Folded both proteins but did not recover their relative geometry |
 
-Both tools fail at the same glue-specific step — the **RAS engagement**. Docking finds no RAS pocket (there isn't one); co-folding folds both chains superbly but can't place them in the right relative geometry, and its own **ipTM (0.63) honestly flags the doubt**. This is precisely why the experimental ternary is load-bearing: 9BG6 lets you *skip* the prediction both tools fail at and go straight to perturb-and-score. Full runbook + scripts: [`demos/kras-glue/README.md`](../demos/kras-glue/README.md).
+The KRAS-only docking test and the Chai-1 co-folding test both miss the
+RAS-engagement geometry. Docking finds no stable KRAS-only pose. Chai-1 places
+KRAS 23.3 Å from the experimental frame and reports an ipTM of 0.63. Use 9BG6
+for perturbation studies instead of treating either result as a recovered
+ternary structure. The scripts and compact result files are in
+[`demos/kras-glue/`](../demos/kras-glue/README.md).
 
-## Transfer — when you DON'T have a structure
+## Related Public Ternary Structures
 
-For **zoldonrasib (RMC-9805, KRAS G12D ON-glue)** or the **G12D degraders (e.g., setidegrasib)** where a public ternary may not exist, you're back to *predicting* the complex → **co-folding (Boltz-2 / Chai-1 / AF3-class)** with both protein chains + ligand is the only in-repo option, at the frontier. **Calibrate first:** predict the *daraxonrasib* complex and check RMSD against 9BG6 before trusting any predicted glue you can't crystallize. **We ran exactly this calibration (see measured results above): Chai-1 folded both chains but misplaced KRAS by 23 Å with ipTM 0.63 — it did *not* carry the glue.** That is the honest gate on whether co-folding can carry a glue program, and here it says "not yet."
+[PDB 9CTB](https://www.rcsb.org/structure/9CTB) provides a 1.29 Å structure of
+zoldonrasib (RMC-9805), KRAS G12D, and CypA. RCSB PDB records a deposit date of
+2024-07-24 and a release date of 2025-07-23. This measured ternary geometry
+provides a separate starting point for zoldonrasib method-routing work.
 
-## Tools used (all from this repo)
+When no relevant public structure exists, co-fold the protein chains and ligand,
+then calibrate the same setup on a related complex with an experimental
+structure. The Chai-1 calibration in this demo misplaced KRAS by 23.3 Å, so
+that setup does not support an unmeasured glue geometry.
 
-- Co-folding / docking → [docking-and-cofolding.md](docking-and-cofolding.md) (Boltz-2, Chai-1, gnina)
-- Free energy (MM-GBSA + RBFE, protein-mutation & ligand) → [binding-affinity-and-fep.md](binding-affinity-and-fep.md) (OpenFE, Perses, OpenMM, gmx_MMPBSA)
-- Scaffold-constrained analog enumeration → [structure-based-generation.md](structure-based-generation.md) (REINVENT 4) + RDKit
-- Makeability → [retrosynthesis-planning.md](retrosynthesis-planning.md) (AiZynthFinder) + [synthesizability-scoring.md](synthesizability-scoring.md) (RetroScore)
-- ADMET + selectivity → [admet-prediction.md](admet-prediction.md) (ADMET-AI) + [target-and-selectivity-prediction.md](target-and-selectivity-prediction.md)
-- Licensing before any commercial use → [licensing-and-data.md](licensing-and-data.md)
+## Tool References
 
-**The one-line lesson:** the newest KRAS drugs (tri-complex glues, degraders) defeat the *binary-docking* half of this toolkit, but an experimental ternary structure (9BG6) makes the *free-energy* half — mutation effect and analog ranking — genuinely usable. Know which problem you have before picking the tool.
+- [Docking and co-folding](docking-and-cofolding.md): Boltz, Chai-1, and gnina
+- [Binding affinity and free energy](binding-affinity-and-fep.md): OpenFE,
+  Perses, OpenMM, and gmx_MMPBSA
+- [Structure-based generation](structure-based-generation.md): REINVENT 4 and RDKit
+- [Retrosynthesis planning](retrosynthesis-planning.md) and
+  [synthesizability scoring](synthesizability-scoring.md): AiZynthFinder and
+  RetroScore
+- [ADMET prediction](admet-prediction.md) and
+  [target and selectivity prediction](target-and-selectivity-prediction.md)
+- [Licensing and data terms](licensing-and-data.md)
