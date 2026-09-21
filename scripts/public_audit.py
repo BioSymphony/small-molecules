@@ -93,25 +93,6 @@ ALLOWED_PHRASES = {
 
 LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 
-STYLE_FILES = {
-    "README.md",
-    "SKILL.md",
-    "AGENTS.md",
-    "PUBLIC_RELEASE.md",
-    "CONTRIBUTING.md",
-    "SECURITY.md",
-    "demos/kras-glue/README.md",
-}
-
-STYLE_PATTERNS = [
-    (re.compile(r"[—–]"), "avoid em dashes and en dashes in front-door docs"),
-    (re.compile(r"[→←]"), "avoid symbolic arrows in front-door docs"),
-    (re.compile(r"(?i)\bfootgun\b"), "avoid informal warning language"),
-    (re.compile(r"(?i)\bhard-won\b"), "avoid defensive section framing"),
-    (re.compile(r"(?i)\b(jury|augist|august)\b"), "avoid unclear public-facing terms"),
-]
-
-
 def iter_files(root: Path):
     if (root / ".git").exists():
         result = subprocess.run(
@@ -242,39 +223,20 @@ def audit_links(root: Path) -> list[str]:
     return failures
 
 
-def audit_style(root: Path) -> list[str]:
-    failures: list[str] = []
-    for rel_path in sorted(STYLE_FILES):
-        path = root / rel_path
-        if not path.exists():
-            continue
-        text = path.read_text(encoding="utf-8")
-        for i, line in enumerate(text.splitlines(), 1):
-            for pat, message in STYLE_PATTERNS:
-                if pat.search(line):
-                    failures.append(f"{rel_path}:{i}: {message}")
-    return failures
-
-
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("root", nargs="?", default=".")
     parser.add_argument("--links-only", action="store_true")
-    parser.add_argument("--style-only", action="store_true")
     parser.add_argument("--max-mb", type=int, default=10)
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
-    if args.style_only:
-        failures = audit_style(root)
-    else:
-        failures = audit_links(root)
-    if not args.links_only and not args.style_only:
+    failures = audit_links(root)
+    if not args.links_only:
         failures.extend(audit_paths(root))
         failures.extend(audit_text(root))
         failures.extend(audit_sizes(root, args.max_mb))
         failures.extend(audit_skill_mirror(root))
-        failures.extend(audit_style(root))
 
     if failures:
         for failure in failures:

@@ -2,123 +2,77 @@
 
 # BioSymphony Small Molecules
 
-BioSymphony Small Molecules is an agent skill for choosing open and publicly
-documented tools in small-molecule design.
+BioSymphony Small Molecules is a skill that helps AI coding agents choose tools
+for molecular generation, synthesis planning, docking, binding-affinity
+estimation, and property prediction. Its reference guides compare methods,
+describe setup requirements, and track code, model, and data licenses.
 
-Use the skill with Claude Code, Codex, Symphony, or another agent harness to:
+The repository supplies skill instructions, tool references, and a worked
+example using a public KRAS structure. Install the selected tools and obtain
+their model weights separately.
 
-- generate synthesizable molecules and design analogs
-- plan retrosynthesis and assess reactions, templates, and makeability
-- choose protein-structure, docking, co-folding, and affinity methods
-- choose QSAR, ADMET, selectivity, and pocket-conditioned methods
-- check code, model weights, data, and base-model terms
+## Use the Skill
 
-## Repository Features
-
-| Agent need | What this repository adds |
-|---|---|
-| Pick a starting method | Task routing in [`SKILL.md`](SKILL.md) and the compact tool matrix |
-| Avoid loading too much context | Focused reference files by workflow category |
-| Compare tools quickly | Tool cards with task fit, license notes, weights, data, and status |
-| Connect target work to synthesis | A two-layer loop from target scoring back to makeable molecules |
-| Keep public demos small | A compact KRAS molecular-glue example with public inputs and summaries |
-
-## Agent Flow
-
-```mermaid
-flowchart TD
-    A["User task"] --> B["Open SKILL.md"]
-    B --> C["Identify task category"]
-    C --> D["Load one focused reference"]
-    D --> E["Choose first tool path"]
-    E --> F["Check code, weights, data, and base-model terms"]
-    F --> G["Run or recommend the smallest suitable workflow"]
-    G --> H["Record limits and next decision"]
-```
-
-## Design Loop
-
-```mermaid
-flowchart LR
-    A["Target question"] --> B["Structure, docking, co-folding, affinity"]
-    B --> C["QSAR, ADMET, selectivity"]
-    C --> D["Candidate set"]
-    D --> E["Synthesizable projection and analogs"]
-    E --> F["Retrosynthesis and route checks"]
-    F --> G["Makeable candidates"]
-    G --> B
-    F --> H["License and data review"]
-    B --> H
-```
-
-## How to Use It
-
-Open [`SKILL.md`](SKILL.md). The skill routes by task:
-
-- generate makeable analogs of a hit
-- project a molecule into synthesizable space
-- plan or check a synthesis route
-- dock a ligand or co-fold a protein-ligand complex
-- estimate binding affinity with an ML or free-energy method
-- build QSAR, ADMET, or off-target screens
-- generate molecules into a binding pocket
-- check a tool's license and data terms for product-facing work
-
-The reference files are plain Markdown. They work as agent context and as
-human-readable notes.
-
-For Claude Code-style skill discovery:
+Clone the repository into a directory of your choice:
 
 ```bash
-ln -s "$(pwd)" ~/.claude/skills/small-molecule-design-tools
+git clone https://github.com/BioSymphony/small-molecules.git
+cd small-molecules
 ```
 
-The skill name is `small-molecule-design-tools`.
+Ask your agent to read [SKILL.md](SKILL.md), describe your task, and include the
+available inputs and compute resources. The skill directs the agent to the
+relevant reference before it recommends tools or writes code.
 
-## What Is Included
+For example:
 
-```text
-SKILL.md                         agent entry point and routing table
-references/tool-matrix.md        compact index of tools by task
-references/licensing-and-data.md code, weights, data, and base-model checklist
-references/*.md                  focused tool cards by category
-demos/kras-glue/                 compact public-data demo on PDB 9BG6
-assets/readme-banner.png         selected README banner image
-scripts/public_audit.py          public-release scan for paths, secrets, archives, links, and package drift
+> Read SKILL.md and recommend a CPU workflow to plan a synthesis route for a
+> target SMILES. Specify the model, starting-material stock, and route checks.
+
+> Read SKILL.md and compare tools for growing a fragment in a protein pocket
+> while preserving selected atom coordinates. Explain the required inputs,
+> checkpoint licenses, and pose-validation steps.
+
+### Claude Code Installation
+
+From the cloned repository directory, register the packaged skill in
+[Claude Code's personal skills directory](https://code.claude.com/docs/en/skills):
+
+```bash
+mkdir -p ~/.claude/skills
+ln -s "$(pwd)/skills/small-molecule-design-tools" ~/.claude/skills/small-molecule-design-tools
 ```
+
+Keep the clone in that location so the link remains valid. If a skill with that
+name is already installed, check its location before replacing it.
+
+Invoke it with `/small-molecule-design-tools` followed by your task.
+Other agents can read `SKILL.md` and its linked Markdown references directly.
+
+## Find a Reference
+
+| Task | Reference |
+|---|---|
+| Compare tools across categories | [Tool matrix](references/tool-matrix.md) |
+| Generate molecules with proposed synthesis routes or design analogs | [Synthesizable generation](references/synthesizable-generation.md) |
+| Plan a route to a target molecule and check its starting materials | [Retrosynthesis planning](references/retrosynthesis-planning.md) |
+| Dock ligands, predict complexes, and validate poses | [Docking and co-folding](references/docking-and-cofolding.md) |
+| Estimate affinity or compare binding free energies | [Binding affinity and free energy](references/binding-affinity-and-fep.md) |
+| Predict molecular properties or activity | [QSAR](references/property-and-qsar-prediction.md) and [ADMET](references/admet-prediction.md) |
+| Compare related compounds and predict off-target activity | [Target and selectivity prediction](references/target-and-selectivity-prediction.md) |
+| Generate molecules in a binding pocket | [Structure-based generation](references/structure-based-generation.md) |
+| Use LDDM for docking, fragment editing, or generation | [LDDM](references/lddm.md) |
+| Check code, weights, data, and base-model terms | [Licensing and data](references/licensing-and-data.md) |
+| Explore a worked example using a public KRAS structure | [KRAS molecular-glue example](references/worked-example-kras-glue.md) |
 
 The tool matrix contains 154 indexed rows across 18 categories. Grouped entries
-and cross-references count as one row each.
+and cross-references count as one row each. [SKILL.md](SKILL.md) maps additional
+tasks, including reaction prediction, protein preparation, and chemistry
+language models.
 
-## Start Points
+## Contributing
 
-| Start here | Use it for |
-|---|---|
-| [references/tool-matrix.md](references/tool-matrix.md) | One table across all tool categories |
-| [references/licensing-and-data.md](references/licensing-and-data.md) | Code, weights, data, and base-model terms |
-| [references/synthesizable-generation.md](references/synthesizable-generation.md) | Makeable molecule generation and analog design |
-| [references/retrosynthesis-planning.md](references/retrosynthesis-planning.md) | Multi-step synthesis planning |
-| [references/docking-and-cofolding.md](references/docking-and-cofolding.md) | Docking, co-folding, pose, and affinity tools |
-| [references/binding-affinity-and-fep.md](references/binding-affinity-and-fep.md) | OpenFE, OpenMM, MM-GBSA, and related methods |
-| [references/lddm.md](references/lddm.md) | LDDM capabilities, checkpoint terms, measured limits, and selection guidance |
-| [references/worked-example-kras-glue.md](references/worked-example-kras-glue.md) | Applying the layers to a public KRAS molecular-glue structure |
-
-## Public Repository Boundary
-
-This repository contains documentation, skill instructions, compact public-data
-examples, and small result summaries. It excludes model weights, vendor
-catalogs, non-public scientific data, raw service output, and large generated
-media.
-
-Run the public-release check:
-
-```bash
-make release-check
-```
-
-This command compiles the public Python scripts, checks local Markdown links,
-and scans for local paths, secrets, archives, oversized files, unsafe symlinks,
-and drift between the root references and the packaged skill.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for source requirements and checks.
 
 ## License
 

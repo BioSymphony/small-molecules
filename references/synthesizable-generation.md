@@ -10,6 +10,11 @@ These models generate from building blocks and reaction templates. Each output
 therefore includes a forward synthesis under the model's reaction rules and
 stock assumptions.
 
+After projection changes a molecule, repeat its pose and property calculations
+before comparing it with the input. Record both structures so each score is
+associated with the molecule that produced it. Check the proposed route against
+the selected stock using [route validation](retrosynthesis-planning.md#validate-routes).
+
 ---
 
 ## PrexSyn — *projection over synthesizable space*

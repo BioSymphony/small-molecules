@@ -5,14 +5,14 @@
   },
   "metadata": {
     "version": "0.1.0",
-    "description": "Public-safe small-molecule design skills for open tool routing."
+    "description": "Agent skill for choosing small-molecule design tools for molecular generation, synthesis planning, docking, and property prediction."
   },
   "plugins": [
     {
       "name": "small-molecule-design-tools",
       "displayName": "Small-Molecule Design Tools",
       "source": "./",
-      "description": "Route public-safe small-molecule design tool choices.",
+      "description": "Choose small-molecule design tools and compare their inputs, setup requirements, and licenses.",
       "category": "life-sciences",
       "tags": ["small-molecules", "drug-discovery", "docking"],
       "strict": false,

@@ -1,4 +1,4 @@
 interface:
   display_name: "Small-Molecule Design Tools"
-  short_description: "Small-molecule tool routing"
-  default_prompt: "Use $small-molecule-design-tools to choose open small-molecule design tools."
+  short_description: "Choose tools for small-molecule design"
+  default_prompt: "Use $small-molecule-design-tools to recommend tools for my small-molecule design task, including required inputs, setup, and license terms."

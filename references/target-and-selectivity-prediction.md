@@ -25,6 +25,24 @@ CC BY-SA 3.0.
 
 ---
 
+## Database Search Results
+
+Record the query structure, database, search date, identity settings, similarity
+threshold, and result limit. [PubChem PUG REST](https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest)
+documents the identity modes, search limits, and response codes.
+
+- Label `same_connectivity` results as connectivity matches. For matching
+  stereochemistry and isotopes, request `same_stereo_isotope`.
+- Report HTTP 503 responses and timeouts as unresolved queries. Inspect the
+  response body before treating a not-found response as a search with no matches.
+- If the result count reaches `MaxRecords`, mark the list as potentially
+  truncated. The returned count is not a database-wide total.
+- Keep the requested similarity threshold separate from per-hit scores. A CID
+  list alone does not supply those scores.
+
+Report results from different databases separately, with their search settings.
+Use compound-level assay records to assess target activity.
+
 ## Target and Off-Target Prediction
 
 ### SEA — Similarity Ensemble Approach — **WEB-ONLY; PROPRIETARY ENGINE**

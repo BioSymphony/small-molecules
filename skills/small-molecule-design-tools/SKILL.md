@@ -5,9 +5,8 @@ description: Use when choosing or applying open or publicly documented small-mol
 
 # Small-Molecule Design Tools
 
-This skill routes small-molecule design tasks to suitable open or publicly
-documented tools. It directs the agent to a focused reference and keeps the
-applicable license and data terms visible during tool selection.
+Use this skill to choose small-molecule design tools, compare their required
+inputs and setup, and check their code, model, and data licenses.
 
 Use the skill in two passes:
 
@@ -65,7 +64,7 @@ Target-based design:
   pocket-conditioned generation and pocket detection.
 - [references/lddm.md](references/lddm.md):
   focused review of LDDM capabilities, checkpoint terms, implementation limits,
-  and independent public-structure checks.
+  and validation procedures.
 
 Cross-cutting:
 
@@ -153,14 +152,17 @@ Use these as starting points, then read the relevant reference file for details:
 
 ## Pipeline Pattern
 
-A full design loop crosses both layers:
+Connect candidate design with synthesis planning:
 
 1. Get or predict the receptor structure.
 2. Generate, dock, co-fold, or score candidate molecules for the target.
 3. Filter for affinity, QSAR, ADMET, and selectivity.
 4. Project survivors into synthesizable space.
-5. Plan or validate routes.
-6. Re-check licenses and data terms before deployment.
+5. Re-score any molecules changed by projection, including their poses and
+   predicted properties.
+6. Plan or validate routes and check terminal compounds against the selected
+   stock using [retrosynthesis-planning.md](references/retrosynthesis-planning.md).
+7. Re-check licenses and data terms before deployment.
 
 Load the detailed reference file for install commands, model weights, benchmark
 context, GPU needs, and documented caveats.

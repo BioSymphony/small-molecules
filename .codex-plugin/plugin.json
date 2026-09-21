@@ -1,7 +1,7 @@
 {
   "name": "small-molecule-design-tools",
   "version": "0.1.0",
-  "description": "BioSymphony small-molecule design skills for public-safe tool routing and evaluation.",
+  "description": "Agent skill for choosing small-molecule design tools for molecular generation, synthesis planning, docking, and property prediction.",
   "author": {
     "name": "BioSymphony",
     "url": "https://github.com/BioSymphony"
@@ -13,11 +13,11 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Small-Molecule Design Tools",
-    "shortDescription": "Small-molecule tool routing",
-    "longDescription": "Public-safe small-molecule design skills for choosing and applying open synthesis-planning, docking, affinity, QSAR, ADMET, pocket-finding, and ligand-generation tools.",
+    "shortDescription": "Choose tools for small-molecule design",
+    "longDescription": "Choose tools for molecular generation, synthesis planning, docking, binding-affinity estimation, and property prediction. Compare methods, setup requirements, and code, model, and data licenses.",
     "developerName": "BioSymphony",
     "category": "Research",
     "capabilities": ["Skills"],
-    "defaultPrompt": ["Use $small-molecule-design-tools to choose open small-molecule design tools."]
+    "defaultPrompt": ["Use $small-molecule-design-tools to recommend tools for my small-molecule design task, including required inputs, setup, and license terms."]
   }
 }

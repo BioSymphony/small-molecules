@@ -21,6 +21,10 @@ Before you open a pull request, run the public-release check:
 make release-check
 ```
 
+This command compiles the Python scripts, checks local Markdown links, and
+scans for local paths, secret patterns, archives, oversized files, unsafe
+symlinks, and differences between the root references and packaged skill.
+
 License notes in this repository support an initial review; they are not legal
 advice. When you change a license or model-card claim, cite the primary source
 and record the date you checked it.

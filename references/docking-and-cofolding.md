@@ -34,6 +34,38 @@ separate terms.
 
 ---
 
+## Validate Poses
+
+Use [PoseBusters](https://github.com/maabuu/posebusters) to check molecular
+identity, stereochemistry, geometry, and intermolecular clashes. Select checks
+that match the system, including any intended covalent attachment.
+
+For pose-recovery comparisons:
+
+1. Match the predicted and reference molecular graphs, including bond orders
+   and stereochemistry. Report changed molecules separately from reconstructions.
+2. Measure symmetry-aware heavy-atom RMSD in the receptor coordinate frame.
+   Document the receptor alignment and relevant alternate ligand copies.
+3. Report the number attempted, the number with matching graphs, and the number
+   passing chemical and geometric checks. Count invalid outputs when reporting
+   success over all attempts.
+4. Separate the top-ranked pose from the best-of-N pose, and report N.
+
+### Covalent Poses
+
+[GNINA's covalent docking options](https://github.com/gnina/gnina#usage) specify
+the receptor atom, ligand attachment pattern, and bond order. Resolve attachment
+atoms from the exact files passed to the tool; conversion can change atom order.
+
+For a distance-based clash screen, exclude only the identified bonded pair from
+the nonbonded threshold. Check that bond's length and surrounding geometry
+separately. Keep the pre-reaction compound and bound adduct as distinct
+structures. For energy calculations, use a topology that represents the adduct
+and the force field's bonded exclusions.
+
+When an attachment atom is fixed, its preserved distance checks the constraint.
+Rank candidates using additional pose and interaction measures.
+
 ## Classical or Physics-Based Docking
 
 These tools require a protein structure and a defined pocket. Most run on CPUs

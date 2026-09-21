@@ -156,6 +156,8 @@ round-trip and route-aware scoring, see
 
 ## Choosing a multi-step planner
 
+For output checks, see [Validate Routes](#validate-routes).
+
 - **Open baseline:** **AiZynthFinder** (MIT code, public USPTO model, pip install).
 - **Route planning plus audit reports:** **RENKIN** (MIT; v0.47.0).
 - **Synthesis planning with conditions, forward prediction, and feasibility scoring:** **ASKCOS**.
@@ -167,3 +169,31 @@ round-trip and route-aware scoring, see
 - **Repository without a listed license:** InterRetro.
 
 Each planner calls a single-step model at each node. Select that model from [singlestep-retrosynthesis.md](singlestep-retrosynthesis.md) and validate route outputs with a round-trip check ([synthesizability-scoring.md](synthesizability-scoring.md)).
+
+## Validate Routes
+
+Record the planner version, single-step model, stock snapshot, search limits,
+and molecule-standardization settings with each result. Use the same target
+structures and stock when comparing planners, and report differences in models
+or search budgets.
+
+Classify the result after inspecting the exported route:
+
+| Result | Check |
+|---|---|
+| Target in stock | The target itself matches the selected stock; no reaction is required. |
+| Complete route to stock | At least one reaction connects the target to terminal compounds that all match the selected stock. |
+| Partial route | The exported route contains reactions but has unresolved terminal compounds. |
+| No route within budget | Search completed within its limits without exporting a route. |
+| Execution or export failure | Model loading, search, or route serialization failed; record the failed step. |
+
+Check terminal compounds against the stock independently of the planner's
+success flag. In [SynPlanner 1.7.0](https://github.com/Laboratoire-de-Chemoinformatique/SynPlanner/blob/v1.7.0/synplan/chem/precursor.py),
+`is_building_block` accepts molecules at or below `min_mol_size` without a stock
+lookup; its default threshold is six atoms. Specify whether stock matching
+preserves stereochemistry, isotopes, and salt forms.
+
+Review each reaction for bond changes, reagents, and stereochemical requirements.
+Use [forward prediction and round-trip checks](synthesizability-scoring.md)
+alongside that review. A complete route to stock establishes graph connectivity
+and stock coverage; reaction feasibility requires separate checks.

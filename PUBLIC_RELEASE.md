@@ -20,7 +20,7 @@ small-molecules
 GitHub About text:
 
 ```text
-Agent skill for routing small-molecule design tasks to open and publicly documented tools, focused references, and license-aware implementation paths.
+Agent skill for choosing small-molecule design tools for molecular generation, synthesis planning, docking, and property prediction.
 ```
 
 Suggested topics:
