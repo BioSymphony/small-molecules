@@ -129,7 +129,15 @@ TargetDiff and PocketFlow place MIT text in files named `LICIENCE` and
 
 ---
 
-## New 2026 — multi-task generators & the synthesis-aware exception
+## New 2026 — Multi-Task and Synthesis-Aware Generators
+
+### LDDM — `LPDI-EPFL/lddm` *(2026, unified pocket model)*
+- **Method:** Fragment-masked three-dimensional model for de novo pocket generation, fragment growing and linking, whole or partial docking, programmable generation, and generation over supplied reactions and building blocks.
+- **License:** MIT code. The paper checkpoint, `lddm.ckpt`, is CC BY-NC 4.0 because it includes BindingNet data. The `lddm_CDBB.ckpt` checkpoint is MIT, but the paper does not establish equivalent performance for it.
+- **Paper:** *A Unified 3D Generative Model for Synthesizable Structure-Based Drug Design*, bioRxiv 2026, DOI 10.64898/2026.09.15.751537.
+- **Status:** Early research release. At the 2026-09-21 review it had three commits, no tagged release, no CI, and no automated tests.
+- **Terms:** Enamine REAL assets are separately licensed and are not redistributed upstream. The public reaction-space example uses a much smaller SynSpace-derived set.
+- **Use it when:** one workflow needs pocket generation, docking, fragment editing, or reaction-space proposals around trusted ligand geometry. Validate stereochemistry, pose quality, target compatibility, and every proposed reaction trace independently. See the [focused LDDM review](lddm.md).
 
 ### PocketXMol — `pengxingang/PocketXMol` *(2026, multi-task)*
 - **Method:** Single atom-level generative **foundation** model for pocket-conditioned 3D SBDD, fragment linking/growing, PROTAC design, small-molecule and peptide docking, and conformer generation without task-specific fine-tuning.
@@ -158,6 +166,7 @@ blocks.
 
 - **RxnFlow — `SeonghwanSeo/RxnFlow`** — synthesis-oriented GFlowNet over reaction templates and building blocks. The paper reports 34.8% synthesizable-by-construction output on CrossDocked. Code is MIT; the work appeared at ICLR 2025, and public code activity continued through April 2026.
 - **CGFlow / 3DSynthFlow — `tsa87/cgflow`** — compositional flows that jointly design a synthesis pathway and three-dimensional pose. The paper reports approximately 62% AiZynthFinder success and results on 15 LIT-PCBA targets. Code is MIT; the work appeared at ICML 2025.
+- **LDDM — `LPDI-EPFL/lddm`** — reaction-space mode over supplied building blocks and two-reactant, one-product templates. It records a proposed construction trace. The trace does not establish reaction conditions, yield, selectivity, procurement, or route feasibility.
 - **ShEPhERD — `coleygroup/shepherd`** — equivariant diffusion that generates three-dimensional molecules conditioned on shape, electrostatics, and pharmacophores for bioisostere and scaffold-hopping tasks. Code is MIT; the Hugging Face weights do not state separate terms. The work appeared as an ICLR 2025 oral, and the repository received commits in 2026. It complements the shape and pharmacophore overlay tools in [target-and-selectivity-prediction.md](target-and-selectivity-prediction.md). It does not constrain generation to synthesizable molecules.
 
 ## Choosing
@@ -166,7 +175,9 @@ blocks.
 |---|---|---|
 | 3D pocket generator | **PILOT / e3moldiffusion** (Apache), **OMTRA** (Apache), or **DiffSBDD** (MIT) | Source-code terms listed in card |
 | Multi-task model (SBDD + fragment/linker/PROTAC/docking) | **PocketXMol** | MIT code; CC BY 4.0 weights |
+| Unified generation, docking, fragment editing, and reaction-space proposals | **LDDM** | MIT code; checkpoint terms differ |
 | Synthesizable-by-construction pocket generation | **RxnFlow**, CGFlow | MIT source code |
+| Experimental reaction-space-constrained pocket generation | **LDDM** | Validate trace and selected checkpoint terms |
 | Configurable synthesis-aware reward | **REINVENT 4** (+ AiZynthFinder) or **Saturn** | Apache-2.0 source code |
 | Validity-focused pocket generation | **PocketFlow** | MIT source code in misspelled file |
 | Pocket flexibility / apo pockets | **Apo2Mol** | MIT source code |
@@ -174,7 +185,7 @@ blocks.
 | Distinct restrictive terms | **DecompDiff** (CC BY-NC), **Lingo3DMol** (GPL-3.0) | Check individual license texts |
 
 1. Detect the pocket with fpocket or P2Rank.
-2. Generate candidates with PILOT, DiffSBDD, OMTRA, or PocketXMol.
+2. Generate candidates with PILOT, DiffSBDD, OMTRA, PocketXMol, or LDDM.
 3. Assess synthesis feasibility with PrexSyn or SynFormer plus AiZynthFinder.
 4. Score poses with DiffDock-L, Boltz-1, or SigmaDock.
 5. Use Boltz-2 only as a model-based affinity estimate.

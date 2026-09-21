@@ -12,6 +12,8 @@ Before opening a change:
 - Check code, weights, data, and base-model terms separately.
 - Exclude model weights, non-public data, uncurated generated media, and raw
   service logs.
+- Keep root skill instructions and references synchronized with
+  `skills/small-molecule-design-tools/`.
 
 Before you open a pull request, run the public-release check:
 

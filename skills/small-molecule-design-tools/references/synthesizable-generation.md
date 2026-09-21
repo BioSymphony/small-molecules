@@ -155,6 +155,21 @@ stock assumptions.
 
 ---
 
+## LDDM — *Pocket-Conditioned Reaction-Space Generation*
+
+> Three-dimensional pocket generation over supplied building blocks and
+> reaction templates, with a proposed construction trace for each accepted
+> search path.
+
+- **Repository:** https://github.com/LPDI-EPFL/lddm · **Paper:** bioRxiv [10.64898/2026.09.15.751537](https://doi.org/10.64898/2026.09.15.751537).
+- **License:** MIT code with split checkpoint terms. `lddm_CDBB.ckpt` is MIT; the paper checkpoint, `lddm.ckpt`, is CC BY-NC 4.0 because it includes BindingNet training data.
+- **Inputs and outputs:** Prepared pocket structure, reference ligand, building blocks, and two-reactant, one-product templates produce three-dimensional SDF candidates and proposed construction traces.
+- **Public example:** 44,944 SynSpace-derived building blocks and three reactions. This is much smaller than the separately licensed Enamine REAL setup used in the paper.
+- **Status:** Early research release. The locked environment is Linux and CUDA specific, and the supplied synthesis-space workflow is designed for GPU execution.
+- **Use it when:** pocket geometry must guide a reaction-space search. Confirm reaction applicability, conditions, selectivity, stock availability, and route feasibility independently. See the [focused LDDM review](lddm.md).
+
+---
+
 ## Make-on-demand / combinatorial-library generation
 
 These design over **vendor combinatorial spaces** (Enamine REAL / WuXi GalaXi — tens of billions of make-on-demand compounds) rather than a learned latent space.
@@ -199,4 +214,5 @@ These design over **vendor combinatorial spaces** (Enamine REAL / WuXi GalaXi �
 - **Target-conditioned make-on-demand hit generation:** **SyntheMol** (MIT code; Zenodo artifact terms are separate).
 - **Search billions-scale libraries:** **APEX** (repository and Zenodo records require separate term review).
 - **LLM-based route generation:** **SynLlama** (UC Berkeley Regents non-commercial repository license).
+- **Pocket-conditioned three-dimensional candidate and reaction trace:** **LDDM** (MIT checkpoint available; paper checkpoint is non-commercial).
 - **Validity-focused rather than synthesis-aware:** See [molecular-generation.md](molecular-generation.md) for GenMol, MolReactGen, and related tools.

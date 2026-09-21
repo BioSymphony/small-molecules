@@ -3,7 +3,8 @@
 This matrix indexes tools by task category. Broad source checks were recorded
 on **2026-06-11** for synthesizability entries and **2026-06-13** for
 target-based entries. Changed cards were checked against primary sources on
-**2026-08-30**. These dates do not mean that every unchanged row was rechecked.
+**2026-08-30**; LDDM was checked separately on **2026-09-21**. These dates do
+not mean that every unchanged row was rechecked.
 Check primary repository, model-card, and data terms before use;
 [Licensing and Data Terms](licensing-and-data.md) explains the separate layers.
 
@@ -22,7 +23,7 @@ unreleased · — not applicable
 
 See [synthesizable-generation.md](synthesizable-generation.md).
 
-Output = molecule **with a synthesis route**, or a makeable analog + how to make it. All depend on Enamine building blocks.
+Output = molecule **with a synthesis route**, or a makeable analog + how to make it. Many depend on vendor building blocks.
 
 | Tool | Repository | Code | Weights | License signal | Status |
 |---|---|---|---|---|---|
@@ -33,6 +34,7 @@ Output = molecule **with a synthesis route**, or a makeable analog + how to make
 | **SynCoGen** | `andreirekesh/SynCoGen` | **none** | HF MIT | ⚠️ code unlicensed | ✅ Active (3D) |
 | **SynTwins** | `snu-micc/SynTwins` | **none** | — | ❌ no license | ⚠️ Minimal (training-free) |
 | **SynLlama** | `THGLab/SynLlama` | **UC non-commercial** | Figshare | ❌ non-commercial | ✅ Maintained (research) |
+| **LDDM** | `LPDI-EPFL/lddm` | MIT | MIT `CDBB` / CC BY-NC paper checkpoint | ⚠️ checkpoint and reaction-space terms | ⚠️ Early research release |
 | **SyntheMol** | `swansonk14/SyntheMol` | MIT | Zenodo terms not stated | ⚠️ artifact + vendor terms | ✅ v_2.0.0 (2025-05-12) |
 | **APEX** | `NumerionLabs/apex` | **no `LICENSE` file** | Zenodo terms not stated | ❌ no license grant | ⚠️ 2025 preprint |
 
@@ -306,6 +308,7 @@ license filenames.
 | **P2Rank** | `rdk/p2rank` | MIT | ML pocket detection | ✅ | — |
 | **DoGSiteScorer** | web (ProteinsPlus) | web-only | pocket detection | ❌ | — |
 | **PocketXMol** | `pengxingang/PocketXMol` | MIT | multi-task (SBDD+frag/linker+PROTAC+dock) | ✅ (CC-BY-4.0 weights) | ❌ (2026, Cell) |
+| **LDDM** | `LPDI-EPFL/lddm` | MIT | generation + docking + reaction-space mode | ⚠️ checkpoint terms differ | ✅ reaction-space mode |
 | **OMTRA** | `gnina/OMTRA` | Apache-2.0 | multi-task flow-matching | ✅ | ❌ (2026, gnina lab) |
 | **Saturn** | `schwallergroup/saturn` | Apache-2.0 (detector false-neg) | sample-efficient RL | ✅ | ⚠️ synth-control feature |
 | **RxnFlow** | `SeonghwanSeo/RxnFlow` | MIT | synthesis GFlowNet | ✅ | ✅ **synthesizable by construction** |

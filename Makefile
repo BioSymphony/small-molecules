@@ -3,7 +3,7 @@
 help:
 	@echo "BioSymphony Small Molecules public commands"
 	@echo "  make release-check    Run local public-release checks"
-	@echo "  make audit            Scan for local paths, secrets, and oversized files"
+	@echo "  make audit            Scan paths, secrets, archives, size, and package drift"
 	@echo "  make style            Check front-door public-doc style"
 	@echo "  make py-compile       Compile public Python scripts"
 	@echo "  make markdown-links   Check local markdown links"

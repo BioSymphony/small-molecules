@@ -84,10 +84,10 @@ references/licensing-and-data.md code, weights, data, and base-model checklist
 references/*.md                  focused tool cards by category
 demos/kras-glue/                 compact public-data demo on PDB 9BG6
 assets/readme-banner.png         selected README banner image
-scripts/public_audit.py          public-release scan for local paths, secrets, and links
+scripts/public_audit.py          public-release scan for paths, secrets, archives, links, and package drift
 ```
 
-The tool matrix contains 152 indexed rows across 18 categories. Grouped entries
+The tool matrix contains 154 indexed rows across 18 categories. Grouped entries
 and cross-references count as one row each.
 
 ## Start Points
@@ -100,6 +100,7 @@ and cross-references count as one row each.
 | [references/retrosynthesis-planning.md](references/retrosynthesis-planning.md) | Multi-step synthesis planning |
 | [references/docking-and-cofolding.md](references/docking-and-cofolding.md) | Docking, co-folding, pose, and affinity tools |
 | [references/binding-affinity-and-fep.md](references/binding-affinity-and-fep.md) | OpenFE, OpenMM, MM-GBSA, and related methods |
+| [references/lddm.md](references/lddm.md) | LDDM capabilities, checkpoint terms, measured limits, and selection guidance |
 | [references/worked-example-kras-glue.md](references/worked-example-kras-glue.md) | Applying the layers to a public KRAS molecular-glue structure |
 
 ## Public Repository Boundary
@@ -116,7 +117,8 @@ make release-check
 ```
 
 This command compiles the public Python scripts, checks local Markdown links,
-and scans for local workstation paths, secrets, and oversized files.
+and scans for local paths, secrets, archives, oversized files, unsafe symlinks,
+and drift between the root references and the packaged skill.
 
 ## License
 

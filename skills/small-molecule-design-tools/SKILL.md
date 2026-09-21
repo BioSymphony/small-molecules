@@ -63,6 +63,9 @@ Target-based design:
   off-target, selectivity, shape, and pharmacophore tools.
 - [references/structure-based-generation.md](references/structure-based-generation.md):
   pocket-conditioned generation and pocket detection.
+- [references/lddm.md](references/lddm.md):
+  focused review of LDDM capabilities, checkpoint terms, implementation limits,
+  and independent public-structure checks.
 
 Cross-cutting:
 
@@ -126,7 +129,7 @@ Use these as starting points, then read the relevant reference file for details:
 | QSAR from ChEMBL-style data | Chemprop or DeepChem |
 | Local ADMET triage | ADMET-AI |
 | Broad off-target scan | ChEMBL multitask model plus ESP-Sim where shape overlap matters |
-| Pocket-conditioned generation | REINVENT 4, DiffSBDD, PILOT, Pocket2Mol, or TargetDiff, followed by makeability checks |
+| Pocket-conditioned generation | REINVENT 4, LDDM, DiffSBDD, PILOT, Pocket2Mol, or TargetDiff, followed by makeability checks |
 
 ## Operating Notes
 
@@ -143,6 +146,8 @@ Use these as starting points, then read the relevant reference file for details:
   structure before asking a co-folding model to predict it again.
 - Pair pocket-conditioned generators with a makeability step. Most structure-
   based generators do not guarantee a synthesis route.
+- For LDDM, record the exact checkpoint. The paper checkpoint is labeled
+  non-commercial; the MIT checkpoint requires separate performance validation.
 - Re-check upstream repositories for pre-1.0 models and entries with recent
   verification dates.
 

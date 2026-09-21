@@ -34,10 +34,13 @@ ai-agents, agentic-ai, agent-skills, small-molecules, cheminformatics, drug-disc
 - [ ] No copied `.git` history from another repository.
 - [ ] No `.env`, credentials, tokens, signed URLs, local workstation paths, or
       raw service logs.
+- [ ] No runtime archives, private-key files, source snapshots, run ledgers, or
+      timestamped service-result directories.
 - [ ] No unpublished biological data, non-public structures, non-public molecules,
       non-public assays, raw reads, model weights, or restricted datasets.
 - [ ] No large generated media unless it is reviewed for public release.
 - [ ] `make release-check` passes.
+- [ ] Root `SKILL.md` and `references/` match the packaged skill copies.
 - [ ] Each changed license or status claim cites a primary source and records
       its verification date.
 - [ ] Demo claims are labeled as public-data demos and not drug-discovery output.

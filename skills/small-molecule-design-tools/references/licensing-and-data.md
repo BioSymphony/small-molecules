@@ -100,6 +100,7 @@ license permits a specific use.
 | Tool | Additional term |
 |---|---|
 | PrexSyn | MIT-labeled repository and data/model records; Enamine-derived data. |
+| LDDM | MIT code and `lddm_CDBB.ckpt`; the paper checkpoint, `lddm.ckpt`, is CC BY-NC 4.0. Enamine REAL assets require separate permission. |
 | SynFormer | Apache-2.0 code, but data is **"research purposes only, commercial use requires permissions."** |
 | ReaSyn | Apache-2.0 code, **weights = NVIDIA Open Model License**; + Enamine. |
 | GenMol | Apache-2.0 code; the **NVIDIA Open Model License** applies to the weights. Review its conditions. |
@@ -147,7 +148,7 @@ license permits a specific use.
 
 ## The Enamine dependency
 
-The nine tools in the synthesizable-generation table use **Enamine building
+Several tools in the synthesizable-generation table use **Enamine building
 blocks** and related reaction templates. Enamine sets separate terms for its
 catalogs. Check the terms for the specific catalog and access method that your
 workflow uses.
@@ -156,6 +157,9 @@ workflow uses.
 - **Bundled in-repository** (redistribution of Enamine-derived structures): PrexSyn (precomputed space), SynTwins (150,560 Global Stock blocks), SynCoGen (93 blocks via RGFN — small), SynLlama (~230K blocks, train).
 - **Make-on-demand vendor space:** SyntheMol and APEX design over Enamine REAL
   and WuXi GalaXi. Vendor terms apply separately from the tool's license.
+- **LDDM:** The public example uses a small SynSpace-derived reaction space.
+  The paper's Enamine REAL workflow requires separately licensed reactions and
+  building blocks that are not redistributed upstream.
 - For product-facing work, confirm that the applicable catalog terms cover your
   use of the building-block data and resulting candidate space.
 
@@ -212,7 +216,7 @@ terms separately from the training code and weights.
 | QSAR and property prediction | Chemprop and DeepChem: MIT; molfeat and MoLFormer-XL: Apache-2.0; Uni-Mol: MIT | ChEMBL: CC BY-SA 3.0; TDC terms vary by dataset |
 | ADMET | ADMET-AI: MIT; B3DB: CC0 | Hosted-service terms for DeepPK, ADMETlab, and pkCSM |
 | Off-target and selectivity | ChEMBL multitask model and ESP-Sim: MIT; RDKit: BSD-3 | ChEMBL data: CC BY-SA 3.0; Align-it: GPL-3.0 |
-| Structure-based generation | REINVENT 4 and PILOT: Apache-2.0; DiffSBDD: MIT | DecompDiff: CC BY-NC; Lingo3DMol: GPL-3.0 |
+| Structure-based generation | REINVENT 4 and PILOT: Apache-2.0; DiffSBDD and LDDM code: MIT | LDDM paper checkpoint and DecompDiff: CC BY-NC; Lingo3DMol: GPL-3.0 |
 | LLM and agentic planning | RetroAgent: MIT code and Apache-2.0-tagged checkpoint; project code terms vary by tool | Provider, base-model, training-data, retention, and data-handling terms |
 
 ## Terms review checklist

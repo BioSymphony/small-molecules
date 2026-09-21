@@ -5,15 +5,21 @@ from __future__ import annotations
 
 import argparse
 import re
+import subprocess
 from pathlib import Path
 
 
 TEXT_SUFFIXES = {
     ".cff",
+    ".cfg",
     ".css",
+    ".csv",
     ".html",
     ".in",
+    ".ini",
+    ".ipynb",
     ".json",
+    ".lock",
     ".md",
     ".mol2",
     ".pdb",
@@ -24,7 +30,9 @@ TEXT_SUFFIXES = {
     ".toml",
     ".ts",
     ".tsx",
+    ".tsv",
     ".txt",
+    ".xml",
     ".yaml",
     ".yml",
 }
@@ -37,19 +45,45 @@ SKIP_DIRS = {
     "venv",
     "env",
     "node_modules",
-    "prep",
-    "dock",
-    "cofold_chai",
-    "cofold_boltz",
-    "decoys",
+}
+
+FORBIDDEN_DIRS = {
+    ".runtime",
+    "artifacts",
+    "checkpoints",
+    "internal",
+    "logs",
+    "private",
+    "runs",
+    "source_snapshot",
+}
+
+FORBIDDEN_SUFFIXES = {
+    ".7z",
+    ".gz",
+    ".key",
+    ".p12",
+    ".pem",
+    ".tar",
+    ".tgz",
+    ".zip",
 }
 
 BLOCK_PATTERNS = [
     re.compile(r"/Users/[A-Za-z0-9._-]+/"),
+    re.compile(r"/Volumes/[A-Za-z0-9._ -]+/"),
+    re.compile(r"(?i)[A-Z]:\\Users\\[A-Za-z0-9._-]+\\"),
     re.compile(r"(?i)\bgithub[_-]?\d*/[^\s]*-private\b"),
     re.compile(r"(?i)\b[A-Za-z0-9_.-]+-private\b"),
     re.compile(r"(?i)(api[_-]?key|secret|token|password)\s*[:=]\s*['\"][^'\"\s]{8,}"),
     re.compile(r"(?i)(pod[_ -]?id|network volume id)\s*[:=]"),
+    re.compile(r"-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----"),
+    re.compile(r"\b(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9]{20,}\b"),
+    re.compile(r"\bsk-[A-Za-z0-9_-]{20,}\b"),
+    re.compile(r"\bAKIA[0-9A-Z]{16}\b"),
+    re.compile(r"\bAIza[0-9A-Za-z_-]{35}\b"),
+    re.compile(r"(?i)authorization\s*:\s*bearer\s+[A-Za-z0-9._-]{16,}"),
+    re.compile(r"(?i)(?:X-Amz-Signature|X-Goog-Signature|[?&]sig=)[^&\s]{16,}"),
 ]
 
 ALLOWED_PHRASES = {
@@ -79,15 +113,82 @@ STYLE_PATTERNS = [
 
 
 def iter_files(root: Path):
+    if (root / ".git").exists():
+        result = subprocess.run(
+            [
+                "git",
+                "-C",
+                str(root),
+                "ls-files",
+                "-z",
+                "--cached",
+                "--others",
+                "--exclude-standard",
+            ],
+            check=True,
+            capture_output=True,
+        )
+        for item in result.stdout.split(b"\0"):
+            if not item:
+                continue
+            path = root / item.decode("utf-8", errors="strict")
+            if path.is_file() or path.is_symlink():
+                yield path
+        return
+
     for path in root.rglob("*"):
         if any(part in SKIP_DIRS for part in path.relative_to(root).parts):
             continue
-        if path.is_file():
+        if path.is_file() or path.is_symlink():
             yield path
 
 
 def is_text(path: Path) -> bool:
     return path.suffix.lower() in TEXT_SUFFIXES or path.name in {"Makefile", "LICENSE"}
+
+
+def audit_paths(root: Path) -> list[str]:
+    failures: list[str] = []
+    for path in iter_files(root):
+        rel = path.relative_to(root)
+        if any(part in FORBIDDEN_DIRS for part in rel.parts[:-1]):
+            failures.append(f"{rel}: file is inside a public-excluded directory")
+        if path.suffix.lower() in FORBIDDEN_SUFFIXES:
+            failures.append(f"{rel}: archive or private-key file type is not allowed")
+        if path.is_symlink():
+            try:
+                path.resolve().relative_to(root)
+            except ValueError:
+                failures.append(f"{rel}: symlink resolves outside the repository")
+    return failures
+
+
+def audit_skill_mirror(root: Path) -> list[str]:
+    failures: list[str] = []
+    package = root / "skills" / "small-molecule-design-tools"
+    if not package.exists():
+        return failures
+
+    pairs = [(root / "SKILL.md", package / "SKILL.md")]
+    root_refs = root / "references"
+    package_refs = package / "references"
+    root_names = {path.name for path in root_refs.glob("*.md")}
+    package_names = {path.name for path in package_refs.glob("*.md")}
+    if root_names != package_names:
+        missing = sorted(root_names - package_names)
+        extra = sorted(package_names - root_names)
+        if missing:
+            failures.append(f"packaged skill is missing references: {', '.join(missing)}")
+        if extra:
+            failures.append(f"packaged skill has extra references: {', '.join(extra)}")
+    pairs.extend((root_refs / name, package_refs / name) for name in root_names & package_names)
+
+    for source, packaged in pairs:
+        if not source.exists() or not packaged.exists():
+            failures.append(f"missing mirrored skill file: {source.name}")
+        elif source.read_bytes() != packaged.read_bytes():
+            failures.append(f"packaged skill differs from source: {source.relative_to(root)}")
+    return failures
 
 
 def audit_text(root: Path) -> list[str]:
@@ -169,8 +270,10 @@ def main() -> int:
     else:
         failures = audit_links(root)
     if not args.links_only and not args.style_only:
+        failures.extend(audit_paths(root))
         failures.extend(audit_text(root))
         failures.extend(audit_sizes(root, args.max_mb))
+        failures.extend(audit_skill_mirror(root))
         failures.extend(audit_style(root))
 
     if failures:
