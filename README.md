@@ -65,7 +65,7 @@ Other agents can read `SKILL.md` and its linked Markdown references directly.
 | Check code, weights, data, and base-model terms | [Licensing and data](references/licensing-and-data.md) |
 | Explore a worked example using a public KRAS structure | [KRAS molecular-glue example](references/worked-example-kras-glue.md) |
 
-The tool matrix contains 154 indexed rows across 18 categories. Grouped entries
+The tool matrix contains 156 indexed rows across 18 categories. Grouped entries
 and cross-references count as one row each. [SKILL.md](SKILL.md) maps additional
 tasks, including reaction prediction, protein preparation, and chemistry
 language models.

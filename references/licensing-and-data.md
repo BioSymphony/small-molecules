@@ -74,6 +74,8 @@ license permits a specific use.
 | DeepRetro, Synthelite, LLM-Syn-Planner | MIT | — | — | Selected model-provider terms apply; DeepRetro also offers Pistachio-based models. |
 | RENKIN | MIT | — | user-supplied templates and stock | Route planner and route validator. |
 | Syntheseus | MIT | wraps external models | benchmark datasets | Model and dataset terms vary. |
+| [RetroChimera](singlestep-retrosynthesis.md#retrochimera) | MIT | MIT-labeled Figshare checkpoints | Pistachio / USPTO | Three retro checkpoint records checked on 2026-09-21; data terms are separate. |
+| [ForwardChimeraDeNovo](forward-and-reaction-modeling.md#also-do-forward-prediction-documented-in-single-step-file) | MIT | MIT-labeled Figshare checkpoint | Pistachio | Forward checkpoint record checked on 2026-09-21; data terms are separate. |
 | **Boltz-2** | MIT | **MIT** (HF) | PDB-derived (MIT-released) | Predicts structure and binding affinity. |
 | **Boltz-1** | MIT | **MIT** (HF) | PDB-derived (MIT-released) | Predicts structure. |
 | **Chai-1** | Apache-2.0 | **Apache-2.0** | PDB-derived | Chai changed the weights from its Community License to Apache-2.0 in November 2024. |

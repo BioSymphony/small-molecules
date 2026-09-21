@@ -82,7 +82,7 @@ round-trip and route-aware scoring, see
 > multi-step search algorithms for benchmark comparisons. It is a framework,
 > not a standalone model.
 
-- **Repository:** https://github.com/microsoft/syntheseus (MIT). The sibling `microsoft/retrochimera` repository contains a separate model.
+- **Repository:** https://github.com/microsoft/syntheseus (MIT). [RetroChimera](singlestep-retrosynthesis.md#retrochimera) supplies a compatible single-step model; Syntheseus supplies multi-step search and evaluation.
 - **License:** **MIT** code. Ships no first-party weights — it wraps external single-step models, whose licenses vary; benchmark data (USPTO/PaRoutes) carries upstream terms.
 - **Paper:** *Re-evaluating retrosynthesis algorithms with Syntheseus*, Faraday Discuss. 2025, 256:568 (DOI 10.1039/D4FD00093E); arXiv:2310.19796.
 - **Install and run:** `pip install "syntheseus[all]"` or the full conda environment. Library/CLI; no hosted service. The project environment file pins PyTorch 2.2.2; neural models can use a GPU.

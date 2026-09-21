@@ -34,8 +34,8 @@ Makeability and synthesis:
   multi-step route planners and validators such as AiZynthFinder, RENKIN,
   ASKCOS, Syntheseus, and SynPlanner.
 - [references/singlestep-retrosynthesis.md](references/singlestep-retrosynthesis.md):
-  one-step precursor prediction with ReactionT5v2, RXNGraphormer, GDiffRetro,
-  RetroDiT, ConRetroBert, TempRe, and related models.
+  one-step precursor prediction with RetroChimera, ReactionT5v2, RXNGraphormer,
+  GDiffRetro, RetroDiT, ConRetroBert, TempRe, and related models.
 - [references/agentic-retrosynthesis.md](references/agentic-retrosynthesis.md):
   LLM and agent-assisted synthesis planners, including RetroAgent.
 - [references/forward-and-reaction-modeling.md](references/forward-and-reaction-modeling.md):
@@ -117,7 +117,7 @@ Use these as starting points, then read the relevant reference file for details:
 | Make-on-demand design over Enamine-style libraries | SyntheMol; APEX has no stated repository or artifact license |
 | General de novo molecule generation | GenMol after checking its separate model terms |
 | Multi-step route planning | AiZynthFinder for a local baseline; RENKIN for route validation; ASKCOS when broader planning and conditions are needed |
-| One-step retrosynthesis | ReactionT5v2 |
+| One-step retrosynthesis | ReactionT5v2 for a Transformers workflow; RetroChimera for an ensemble predictor with Syntheseus integration |
 | LLM-assisted route planning | DeepRetro, RetroAgent, or Synthelite, followed by round-trip checks |
 | Reaction templates and data cleanup | RDChiral or rdchiral_plus with rxnutils |
 | ML affinity with MIT-licensed code and weights | Boltz-2 |

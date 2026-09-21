@@ -3,8 +3,8 @@
 This matrix indexes tools by task category. Broad source checks were recorded
 on **2026-06-11** for synthesizability entries and **2026-06-13** for
 target-based entries. Changed cards were checked against primary sources on
-**2026-08-30**; LDDM was checked separately on **2026-09-21**. These dates do
-not mean that every unchanged row was rechecked.
+**2026-08-30**; LDDM and RetroChimera were checked separately on **2026-09-21**.
+These dates do not mean that every unchanged row was rechecked.
 Check primary repository, model-card, and data terms before use;
 [Licensing and Data Terms](licensing-and-data.md) explains the separate layers.
 
@@ -71,6 +71,7 @@ See [singlestep-retrosynthesis.md](singlestep-retrosynthesis.md).
 | Tool | Repository | Code | Weights | USPTO-50K top-1 | Status |
 |---|---|---|---|---|---|
 | **ReactionT5v2** | `sagawatatsuya/ReactionT5v2` | MIT | HF (MIT) | 71.2% (ft) | ✅ Maintained |
+| **RetroChimera** | `microsoft/retrochimera` | MIT | Figshare (MIT) | See checkpoint-specific paper settings | v1.3.0 (2026-09-21) |
 | **RXNGraphormer** | `licheng-xu-echo/RXNGraphormer` | MIT | Figshare | (in paper) | ✅ Active |
 | **GDiffRetro** | `sunshy-1/GDiffRetro` | MIT | SharePoint | (in paper) | ⚠️ Dormant (AAAI 2025) |
 | **RetroDFM-R** | `OpenDFM/RetroDFM-R` | MIT | Apache-2.0-tagged Qwen3 checkpoint | 60.4% (claim) | ⚠️ base/data terms |
@@ -108,6 +109,7 @@ See [forward-and-reaction-modeling.md](forward-and-reaction-modeling.md).
 | **ChemDual** | `JacklinGroup/ChemDual` | Apache-2.0 | ❌ pending | ⚠️ no model released | ⚠️ Watchlist |
 | **Reactron** | — (no repository) | — | — | ❌ no code | ❌ Paper only |
 | *ReactionT5v2 and RXNGraphormer* | *(see single-step section)* | MIT | See the one-step rows | ✅ | Cross-reference |
+| **ForwardChimeraDeNovo** | `microsoft/retrochimera` | MIT | Figshare (MIT) | MIT code and checkpoint; separate data terms | v1.3.0 (2026-09-21) |
 
 ## Reaction-Template and Rule Infrastructure
 

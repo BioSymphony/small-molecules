@@ -25,6 +25,41 @@ Three families appear here: **template-based** (retrieve/rank a reaction templat
 - **Maintenance:** The last recorded repository push was 2025-12-02.
 - **Use it when:** you need a single-step retro model with published Hugging Face weights and no graph-library setup.
 
+## RetroChimera
+
+RetroChimera combines template-localization and SMILES-generation models to
+predict ranked precursors for a product molecule. Use it as a single-step
+predictor or connect it to [Syntheseus](retrosynthesis-planning.md#syntheseus--benchmarkingsearch-framework-pluggable-models)
+for multi-step search with a selected starting-material stock.
+
+- **Repository and paper:** [Microsoft RetroChimera](https://github.com/microsoft/retrochimera);
+  [Chemist-aligned retrosynthesis by ensembling diverse inductive bias models](https://arxiv.org/abs/2412.05269).
+- **Code and checkpoints:** [MIT code](https://github.com/microsoft/retrochimera/blob/bf5ec59eec9ef32911d5167bf7528e3648622be1/LICENSE).
+  The Figshare records for [Pistachio](https://figshare.com/articles/software/RetroChimera_Pistachio_/30591107),
+  [USPTO-50K](https://figshare.com/articles/software/RetroChimera_USPTO-50K_/30601718),
+  and [USPTO-FULL](https://figshare.com/articles/software/RetroChimera_USPTO-FULL_/30597563)
+  checkpoints each state MIT. Check training-data access and redistribution
+  terms separately.
+- **Inputs and outputs:** product SMILES through a Syntheseus `Molecule`;
+  ranked precursor sets with model probabilities. The Python entry point is
+  `RetroChimeraModel`, with `model_dir` pointing to an extracted checkpoint.
+- **Setup:** use the upstream [environment file](https://github.com/microsoft/retrochimera/blob/bf5ec59eec9ef32911d5167bf7528e3648622be1/environment.yml)
+  before `pip install retrochimera==1.3.0`. It pins Python 3.9.7, PyTorch 2.2.2
+  with CUDA 12.1, RDKit 2023.09.6, and PyG 2.5.2. For USPTO-50K, install
+  `"retrochimera[graphium]==1.3.0"`. The package requires Syntheseus 0.8.0 or later.
+- **Inference settings:** the defaults target the Pistachio checkpoint.
+  For USPTO benchmark reproduction, use the paper's Extended Data Tables 3
+  and 4. Upstream recommends at most 5 to 10 predictions per input unless
+  stronger filtering is applied.
+- **Validation:** use consensus mode and reaction-feasibility filtering as
+  described in the [upstream usage notes](https://github.com/microsoft/retrochimera/tree/bf5ec59eec9ef32911d5167bf7528e3648622be1#checkpoints-for-retrochimera-1).
+  Apply [route and stock checks](retrosynthesis-planning.md#validate-routes)
+  after multi-step search.
+- **Release:** checked on 2026-09-21 at commit
+  [`bf5ec59`](https://github.com/microsoft/retrochimera/tree/bf5ec59eec9ef32911d5167bf7528e3648622be1).
+  [Version 1.3.0](https://github.com/microsoft/retrochimera/blob/bf5ec59eec9ef32911d5167bf7528e3648622be1/CHANGELOG.md)
+  adds consensus ensembling, fine-tuning, and the forward-model interface.
+
 ## RXNGraphormer — *unified GNN+Transformer, forward & retro*
 
 > Pretrained framework (GNN + Transformer over ~13M reactions) for cross-task reaction performance prediction (yield, selectivity) **and** synthesis planning, covering both forward and retrosynthesis.
@@ -107,6 +142,8 @@ Three families appear here: **template-based** (retrieve/rank a reaction templat
 
 ## Picking one
 
+- **Ensemble predictor with Syntheseus integration:** RetroChimera, with
+  checkpoint-specific settings and reaction filtering.
 - **Released single-step checkpoint:** ReactionT5v2 (Hugging Face, MIT labels, fine-tuned USPTO-50K weights).
 - **Want forward + retro + yield in one model:** RXNGraphormer.
 - **Want reasoning traces:** RetroDFM-R (review the checkpoint, base-model, and data terms).

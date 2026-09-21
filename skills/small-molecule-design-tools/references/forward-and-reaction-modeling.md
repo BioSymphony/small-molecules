@@ -70,10 +70,18 @@ This test is called a round-trip check; see
 
 ## Also do forward prediction (documented in single-step file)
 
+- **ForwardChimeraDeNovo** uses the SMILES-generation architecture from
+  [RetroChimera](singlestep-retrosynthesis.md#retrochimera) for product prediction.
+  The [Pistachio-trained checkpoint record](https://figshare.com/articles/software/ForwardChimeraDeNovo_Pistachio_/32994914)
+  states MIT, separately from training-data terms. RetroChimera 1.3.0 exposes
+  the forward-model class; see its
+  [release notes](https://github.com/microsoft/retrochimera/blob/bf5ec59eec9ef32911d5167bf7528e3648622be1/CHANGELOG.md).
+  Checked on 2026-09-21.
 - **ReactionT5v2** — `sagawa/ReactionT5v2-forward` (and `-forward-USPTO_MIT`), MIT, HF weights.
 - **RXNGraphormer** — forward + retro + yield/selectivity in one pretrained model, MIT.
 
-See [singlestep-retrosynthesis.md](singlestep-retrosynthesis.md) for both.
+See [singlestep-retrosynthesis.md](singlestep-retrosynthesis.md) for setup and
+model details.
 
 ## Choosing
 
