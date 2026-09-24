@@ -33,7 +33,8 @@ predictor or connect it to [Syntheseus](retrosynthesis-planning.md#syntheseus--b
 for multi-step search with a selected starting-material stock.
 
 - **Repository and paper:** [Microsoft RetroChimera](https://github.com/microsoft/retrochimera);
-  [Chemist-aligned retrosynthesis by ensembling diverse inductive bias models](https://arxiv.org/abs/2412.05269).
+  [Chemist-aligned retrosynthesis by ensembling diverse inductive bias models](https://www.nature.com/articles/s41586-026-11160-9)
+  (Nature, 2026; [methods preprint](https://arxiv.org/abs/2412.05269)).
 - **Code and checkpoints:** [MIT code](https://github.com/microsoft/retrochimera/blob/bf5ec59eec9ef32911d5167bf7528e3648622be1/LICENSE).
   The Figshare records for [Pistachio](https://figshare.com/articles/software/RetroChimera_Pistachio_/30591107),
   [USPTO-50K](https://figshare.com/articles/software/RetroChimera_USPTO-50K_/30601718),
@@ -51,10 +52,12 @@ for multi-step search with a selected starting-material stock.
   For USPTO benchmark reproduction, use the paper's Extended Data Tables 3
   and 4. Upstream recommends at most 5 to 10 predictions per input unless
   stronger filtering is applied.
-- **Validation:** use consensus mode and reaction-feasibility filtering as
-  described in the [upstream usage notes](https://github.com/microsoft/retrochimera/tree/bf5ec59eec9ef32911d5167bf7528e3648622be1#checkpoints-for-retrochimera-1).
-  Apply [route and stock checks](retrosynthesis-planning.md#validate-routes)
-  after multi-step search.
+- **Inference and validation:** the [upstream usage notes](https://github.com/microsoft/retrochimera/tree/bf5ec59eec9ef32911d5167bf7528e3648622be1#checkpoints-for-retrochimera-1)
+  recommend consensus mode and reaction-feasibility filtering. Record the
+  ensemble mode, checkpoint, proposal limit, and filters actually used; these
+  settings determine which predictions reach the planner. Review the reaction
+  chemistry independently. After multi-step search, apply the separate
+  [route and stock checks](retrosynthesis-planning.md#validate-routes).
 - **Release:** checked on 2026-09-21 at commit
   [`bf5ec59`](https://github.com/microsoft/retrochimera/tree/bf5ec59eec9ef32911d5167bf7528e3648622be1).
   [Version 1.3.0](https://github.com/microsoft/retrochimera/blob/bf5ec59eec9ef32911d5167bf7528e3648622be1/CHANGELOG.md)

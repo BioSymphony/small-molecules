@@ -1,8 +1,8 @@
 # Retrosynthesis and Route Planning
 
-These tools search for synthetic routes from a target molecule to purchasable
-starting materials. ASKCOS can also predict reaction conditions and forward
-feasibility. In contrast, the tools in
+These tools search for synthetic routes from a target molecule to a declared
+starting-material inventory. ASKCOS can also predict reaction conditions and
+forward feasibility. In contrast, the tools in
 [synthesizable-generation.md](synthesizable-generation.md) generate a molecule
 and its route together.
 
@@ -37,6 +37,39 @@ round-trip and route-aware scoring, see
 - **Dependencies:** RDKit, NN frameworks (TF/Keras historically, PyTorch/ONNX in later versions). Stock benchmarked on **eMolecules** (~80% coverage) and **ZINC** (~60%). GPU optional.
 - **Maintenance:** Release **v4.4.1** was published in December 2025.
 - **Use it when:** you need an open baseline or a route-derived makeability score. The public USPTO model and stock package provide the documented starting configuration.
+
+### The ZINC stock is a selected snapshot
+
+[ZINC](https://pmc.ncbi.nlm.nih.gov/articles/PMC1360656/) is a UCSF database for virtual
+screening that includes purchasable compounds and supplier information.
+[ZINC20](https://pubmed.ncbi.nlm.nih.gov/33118813/) and
+[ZINC22](https://pubmed.ncbi.nlm.nih.gov/36790087/) expanded the searchable
+space, including make-on-demand compounds. Neither name identifies the
+starting-material list used by a particular route search.
+
+ZINC22 includes both make-on-demand space and [in-stock informer
+layers](https://wiki.docking.org/index.php?title=ZINC22:Layers). The layer guide
+lists `22a` for Enamine in-stock compounds and `22g` for a ZINC20 in-stock
+informer set. It reports a May 2023 last rebuild for `22g` but does not give
+an actual last-refresh date for `22a`. Record the selected layer and its
+verified snapshot or check date; confirm present availability with the supplier.
+
+The [2020 AiZynthFinder paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC7672904/)
+reports an example stock of **17,422,831** ZINC compounds. Its authors selected
+tranches with molecular weight up to 250 Da, logP up to 3.5, and ZINC reactivity
+labels “standard” or “reactive.” The linked [data release](https://figshare.com/articles/dataset/AiZynthFinder_a_fast_robust_and_flexible_open-source_software_for_retrosynthetic_planning/12334577)
+dates the stock to 17 April 2020; its [file metadata](https://api.figshare.com/v2/articles/12334577)
+names `zinc_stock_17_04_20.hdf5`. That file is a filtered snapshot of ZINC,
+separate from the full database and current supplier catalogs.
+In the paper's 100-target illustration, adding Enamine building blocks enabled
+routes for ten additional targets. Route closure depends on the chosen stock.
+
+ZINC's [guidance for earlier releases](https://wiki.docking.org/index.php/ZINC) describes
+screening-focused filters that can omit highly reactive building blocks, and its
+[data terms](https://wiki.docking.org/index.php?title=UCSF_ZINC_License)
+restrict redistribution of major portions. Check target-relevant ingredient
+coverage and current supplier information before using a ZINC-derived stock as
+a purchasing boundary.
 
 ## RENKIN — *route planning and route auditing (MIT; v0.47.0)*
 
@@ -86,9 +119,52 @@ round-trip and route-aware scoring, see
 - **License:** **MIT** code. Ships no first-party weights — it wraps external single-step models, whose licenses vary; benchmark data (USPTO/PaRoutes) carries upstream terms.
 - **Paper:** *Re-evaluating retrosynthesis algorithms with Syntheseus*, Faraday Discuss. 2025, 256:568 (DOI 10.1039/D4FD00093E); arXiv:2310.19796.
 - **Install and run:** `pip install "syntheseus[all]"` or the full conda environment. Library/CLI; no hosted service. The project environment file pins PyTorch 2.2.2; neural models can use a GPU.
-- **Maintenance:** active — release [**v0.8.0**](https://github.com/microsoft/syntheseus/releases/tag/v0.8.0) was published on **2026-08-03**. The release adds a RetroChimera model class, forward-model filtering in the search CLI, resumable single-step evaluations, product/reactant filtering, and stereo removal.
+- **Maintenance:** release [**v0.9.0**](https://github.com/microsoft/syntheseus/releases/tag/v0.9.0) was published on **2026-09-23**. Its [changelog](https://github.com/microsoft/syntheseus/blob/v0.9.0/CHANGELOG.md) records ForwardChimeraDeNovo integration and an update to RetroChimera 1.3.0. Version 0.8.0 added RetroChimera integration and proposal filtering.
 - **Inputs and outputs:** target SMILES + a single-step model + a stock set → routes/search trees + benchmarking metrics.
 - **Use it when:** you need to compare single-step models and search algorithms within one framework. LLM-Syn-Planner uses Syntheseus.
+
+### Published RetroChimera benchmark setup
+
+The [RetroChimera paper](https://arxiv.org/html/2412.05269) integrated its
+single-step model with Syntheseus for multi-step evaluation. Its SimpRetro
+comparison reused a setup with 23.1 million commercially available eMolecules
+building blocks; its separate Pistachio hard-target experiment used Retro*
+with the same building-block set. For the latter experiment, the authors tuned
+Retro*'s policy temperature per model on 151 validation targets before testing
+on 800 targets. These are study-specific search and stock choices, not default
+settings for another target set or inventory. Record them when comparing
+reported route results.
+
+### Repeated intermediates in trees and graphs
+
+Syntheseus 0.9.0's [RetroStar class](https://github.com/microsoft/syntheseus/blob/v0.9.0/syntheseus/search/algorithms/best_first/retro_star.py#L31-L35)
+inherits a [tree requirement](https://github.com/microsoft/syntheseus/blob/v0.9.0/syntheseus/search/algorithms/best_first/base.py#L94-L96),
+and the [search base](https://github.com/microsoft/syntheseus/blob/v0.9.0/syntheseus/search/algorithms/base.py#L69-L104)
+rejects shared molecule nodes for algorithms that require a tree. The same
+intermediate can therefore occupy separate nodes in different branches.
+Syntheseus also has an [AND/OR graph class](https://github.com/microsoft/syntheseus/blob/v0.9.0/syntheseus/search/graph/and_or.py#L53-L67)
+that can share molecule nodes for
+algorithms that permit it; that option does not change RetroStar's tree rule.
+
+[DreamRetroer's released code](https://github.com/osu-zxf/DreamRetroer/blob/ab3eab4c3547322b54e4deb3db66c887cfea2b8a/src/dreamretroer/algorithm/search_tree.py#L50-L68)
+uses a molecule-string lookup to reuse a node when a predicted reactant string
+has appeared earlier in its search graph. Its [paper](https://pmc.ncbi.nlm.nih.gov/articles/PMC11695995/)
+describes shared intermediates in group retrosynthesis. This code-level match
+does not establish that differently written strings for the same chemical
+structure will merge. Record the search representation and identity rule when
+comparing route exports or joining saved predictions.
+
+## Tango* — *search toward specified starting materials*
+
+> A 2025 Retro*-based method for planning routes toward specified building
+> blocks, guided by a cost that combines Tanimoto similarity and fuzzy maximum
+> common substructure similarity.
+
+- **Paper and code:** [Digital Discovery paper](https://doi.org/10.1039/D5DD00130G); [TangoStar](https://github.com/schwallergroup/TangoStar).
+- **License and artifacts:** [MIT code](https://github.com/schwallergroup/TangoStar/blob/667fdd915bc94562139cbcdae25bb1b2ed423aaa/LICENSE); its README links separate pretrained models and data from a [DESP Figshare record](https://doi.org/10.6084/m9.figshare.25956076.v3) labeled CC BY 4.0. Check the specific artifacts before reuse.
+- **Implementation:** the released code is based on DESP; it is not supplied as a Syntheseus plugin. Its [search structure](https://github.com/schwallergroup/TangoStar/blob/667fdd915bc94562139cbcdae25bb1b2ed423aaa/desp/search/data_structures/desp_tree.py#L120-L143) reuses nodes when precursor strings match. Verify molecular identity handling before relying on it to merge equivalent structures.
+- **Use it when:** a route must include specified inputs. The paper's target/start-pair benchmarks do not establish current supplier availability or general route quality. Tango* is distinct from the separate [TANGO constrained-synthesizability reward](https://openreview.net/forum?id=Im90Ziq4M1).
+- **Checked:** 2026-09-24.
 
 ## SynPlanner — *CASP pipeline with curation, rules, MCTS, and GUI*
 
@@ -172,20 +248,47 @@ Each planner calls a single-step model at each node. Select that model from [sin
 
 ## Validate Routes
 
-Record the planner version, single-step model, stock snapshot, search limits,
-and molecule-standardization settings with each result. Use the same target
-structures and stock when comparing planners, and report differences in models
-or search budgets.
+Record the planner version, single-step model and checkpoint, prediction mode,
+stock snapshot, search limits, and molecule-standardization settings with each
+result. Use the same target structures and stock when comparing planners, and
+report differences in models or search budgets.
 
-Classify the result after inspecting the exported route:
+Document where the stock came from, its release or snapshot date, selection
+filters, and any added or excluded molecules. Check the exact identities of
+expected starting materials and the target against the inventory before
+interpreting a search result. If the model includes a reagent among reaction
+reactants, check its inventory identity as well. Membership in a stock file
+does not establish current supplier availability or price. For example,
+[Syntheseus search](https://microsoft.github.io/syntheseus/dev/cli/search/)
+accepts a separate SMILES inventory file; the selected file determines which
+terminal molecules its search can accept.
+
+Separate a single-step precursor query from a multi-step route search. For a
+search, report the algorithm, iteration, model-call and time limits, whether
+the target was solved in the saved graph, and the number of exported routes.
+Count precursor predictions separately. The [Syntheseus custom-model example](https://microsoft.github.io/syntheseus/dev/tutorials/custom_model/#running-search)
+returns a search graph and extracted routes as separate objects and measures
+model calls separately.
+
+Classify the planner output after inspecting its exported routes and saved
+graph, when available:
 
 | Result | Check |
 |---|---|
 | Target in stock | The target itself matches the selected stock; no reaction is required. |
 | Complete route to stock | At least one reaction connects the target to terminal compounds that all match the selected stock. |
 | Partial route | The exported route contains reactions but has unresolved terminal compounds. |
-| No route within budget | Search completed within its limits without exporting a route. |
+| No route within budget | Search ended without a stock-closed route in the planner output; inspect the saved graph if available. |
 | Execution or export failure | Model loading, search, or route serialization failed; record the failed step. |
+
+Record whether each reported route was exported by the planner or assembled
+afterward from reactions in a saved search graph. For an assembled route,
+preserve the original prediction identifiers and every added connection.
+Verify that the connected nodes represent the same molecular structure under
+the stated identity rules, then follow every reaction dependency from the
+exact target to a stock leaf. Inspect the graph beyond the displayed route
+limit when the exported routes do not answer the task. A graph assembly is a
+postprocessed candidate, not a planner-exported route.
 
 Check terminal compounds against the stock independently of the planner's
 success flag. In [SynPlanner 1.7.0](https://github.com/Laboratoire-de-Chemoinformatique/SynPlanner/blob/v1.7.0/synplan/chem/precursor.py),

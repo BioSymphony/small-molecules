@@ -59,7 +59,8 @@ See [retrosynthesis-planning.md](retrosynthesis-planning.md).
 | **AiZynthFinder** | `MolecularAI/aizynthfinder` | MIT | USPTO model (free) | ✅ MIT stack | ✅ v4.4.1 |
 | **RENKIN** | `kent-tokyo/renkin` | MIT | — | ✅ MIT | ✅ v0.47.0 (2026-08-28) |
 | **ASKCOS** | `mlpds_mit/askcosv2` (GitLab) | MIT (v2) | mostly MIT; Reaxys NC; CAS gated | ⚠️ model-specific terms | ✅ Active (heavy deployment) |
-| **Syntheseus** | `microsoft/syntheseus` | MIT | wraps others | ✅ code | ✅ v0.8.0 (2026-08-03) |
+| **Syntheseus** | `microsoft/syntheseus` | MIT | wraps others | ✅ code | ✅ [v0.9.0](https://github.com/microsoft/syntheseus/releases/tag/v0.9.0) (2026-09-23) |
+| **Tango\*** | `schwallergroup/TangoStar` | MIT | separate DESP model/data record | ⚠️ artifact terms | ✅ 2025 constrained search method |
 | **SynPlanner** | `Laboratoire-de-Chemoinformatique/SynPlanner` | MIT | separate data record | ⚠️ data terms | ✅ v1.7.0 (2026-08-25) |
 | **InterRetro** | `MianchuWang/InterRetro` | **none** | — | ❌ no stated license | ⚠️ NeurIPS 2025 |
 | **RetroCast / SynthArena** | `ischemist/project-procrustes` (+`/syntharena`) | MIT | wraps others | ✅ | ✅ Active (2026; route validation) |

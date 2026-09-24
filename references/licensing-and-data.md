@@ -155,6 +155,14 @@ blocks** and related reaction templates. Enamine sets separate terms for its
 catalogs. Check the terms for the specific catalog and access method that your
 workflow uses.
 
+The [Enamine terms, checked on 2026-09-24](https://enamine.net/terms-of-use)
+(sections 3.3 and 15.2–15.3 of the linked terms) require explicit written
+authorization before Enamine-provided catalog data is used, processed, analyzed,
+or modeled in computational systems. Check the current terms and obtain that
+authorization before computational use of data supplied under those terms.
+Determine the provenance and applicable terms separately for data obtained
+through another distributor; do not infer its rights from a tool's code license.
+
 - **Request from Enamine** (not redistributed): SynFormer, ReaSyn, ChemProjector.
 - **Bundled in-repository** (redistribution of Enamine-derived structures): PrexSyn (precomputed space), SynTwins (150,560 Global Stock blocks), SynCoGen (93 blocks via RGFN — small), SynLlama (~230K blocks, train).
 - **Make-on-demand vendor space:** SyntheMol and APEX design over Enamine REAL
