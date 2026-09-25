@@ -152,7 +152,25 @@ has appeared earlier in its search graph. Its [paper](https://pmc.ncbi.nlm.nih.g
 describes shared intermediates in group retrosynthesis. This code-level match
 does not establish that differently written strings for the same chemical
 structure will merge. Record the search representation and identity rule when
-comparing route exports or joining saved predictions.
+comparing route exports or joining saved predictions. Define how that rule
+handles stereochemistry, charge, isotopes, and salts before merging nodes.
+
+[RetroGraph](https://arxiv.org/abs/2206.11477) merges duplicate molecule nodes
+to reduce redundant exploration within and across targets.
+[DESP](https://proceedings.nips.cc/paper_files/paper/2024/hash/cd091a4d8e97157d32940428f902c7b0-Abstract-Conference.html)
+uses bidirectional graph search to plan toward specified starting materials.
+These are established search designs with different goals. To compare one with
+a tree planner, hold the model, stock, filters, and search limits comparable;
+report model calls, expansions, time, and reviewed route quality separately.
+Graph sharing alone does not establish faster search or better routes for a
+different model and inventory.
+
+Inspect the released implementation as well as the paper. At the linked
+DreamRetroer revision, the [reactant parser](https://github.com/osu-zxf/DreamRetroer/blob/ab3eab4c3547322b54e4deb3db66c887cfea2b8a/src/dreamretroer/algorithm/mctsgraph.py#L71-L80)
+converts each dot-separated reactant list to a set, which drops repeated
+entries, while [SynRoute](https://github.com/osu-zxf/DreamRetroer/blob/ab3eab4c3547322b54e4deb3db66c887cfea2b8a/src/dreamretroer/algorithm/syn_route.py#L13-L52)
+records one parent per route-tree occurrence. Check reactant multiplicity and
+whether route export preserves the provenance needed for a shared intermediate.
 
 ## Tango* — *search toward specified starting materials*
 
@@ -289,6 +307,11 @@ the stated identity rules, then follow every reaction dependency from the
 exact target to a stock leaf. Inspect the graph beyond the displayed route
 limit when the exported routes do not answer the task. A graph assembly is a
 postprocessed candidate, not a planner-exported route.
+
+For a route extracted from a shared-node graph, also check that its selected
+reaction dependencies are acyclic and that repeated precursor occurrences have
+not been collapsed. Record which reactions and molecule occurrences the search
+selected, especially if the exported route unfolds a shared node into a tree.
 
 Check terminal compounds against the stock independently of the planner's
 success flag. In [SynPlanner 1.7.0](https://github.com/Laboratoire-de-Chemoinformatique/SynPlanner/blob/v1.7.0/synplan/chem/precursor.py),
