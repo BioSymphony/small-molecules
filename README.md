@@ -2,39 +2,79 @@
 
 # BioSymphony Small Molecules
 
-Give your AI agent a guide to choosing and running small-molecule design tools.
-Start with a protein structure, a compound library, or a target SMILES. The
-guides help your agent choose tools, set them up, and pass outputs between
-them. The upstream packages and services perform the calculations.
+Use your AI agent to design small molecules, investigate binding, and plan the
+next experiment. BioSymphony Small Molecules gives your agent the tool
+knowledge to build and run workflows across molecular generation, docking,
+property prediction, free energy, and synthesis planning.
 
-## Start with your agent
+Start with your research question and the structures, compounds, or assay data
+you have. Your agent uses the guides to choose methods, set up upstream
+software, connect inputs and outputs, and assess what the results support.
 
-Point your agent at [SKILL.md](SKILL.md) or fill in the brackets in this prompt.
+## Start with a research question
+
+Point your agent at [SKILL.md](SKILL.md) with your inputs and compute budget.
 
 ```text
-Read https://github.com/BioSymphony/small-molecules/blob/main/SKILL.md
-
-[Plan or run] a workflow for [task] using [inputs] on [available compute].
-For each step, explain the tool choice and give the command or API, version,
-setup, input and output files, and result checks. Show how outputs feed the
-next tool, including format conversions. Check terms for code, weights, data,
-and base models. For a run, return the results and report any failed steps.
+Use https://github.com/BioSymphony/small-molecules to optimize my hit series.
+Compare analogs using binding predictions, ADMET, and synthesis routes within
+my compute budget. Return a diverse shortlist, the results supporting each
+choice, and a controlled experiment plan to distinguish the leading candidates.
 ```
 
-### Example tasks
+## Research workflows
 
-- **Screen a compound library.** “I have a CSV of compound IDs and SMILES.
-  Run ADMET-AI on CPU. Return endpoint predictions by compound ID and flag
-  molecules the model could not score.”
-- **Design candidates and plan routes.** “I have a receptor PDB, a reference
-  ligand, and one GPU. Plan a DiffSBDD generation run, pose checks, and
-  ADMET screening. Keep candidate IDs when converting SDF records to SMILES.
-  Use PrexSyn to propose alternatives with synthesis pathways. Re-score any
-  changed molecules and plan routes for the shortlisted compounds.”
-- **Plan a route for a known compound.** “I have a target SMILES and a
-  building-block stock. Run AiZynthFinder on CPU, then pass its route JSON and
-  the stock to RENKIN. Report which routes reach the selected stock and which
-  checks lack the data needed to run.”
+| What you want to investigate | Tools your agent can combine | What to ask it to deliver |
+| --- | --- | --- |
+| Which analogs fit a binding pocket and have plausible synthesis routes? | DiffSBDD or LDDM → PoseBusters → ADMET-AI → PrexSyn → re-docking and re-scoring → AiZynthFinder → RENKIN | Candidate structures, pose and property checks, proposed routes, and a shortlist with reasons for each selection. [Design guides](references/structure-based-generation.md) |
+| Which compounds should receive the next docking calculations? | MolPAL with a configured docking objective → pose checks on selected compounds | Successive screening batches, scores by compound ID, and comparison with random selection under the same docking budget. [Active-learning tools](references/property-and-qsar-prediction.md) |
+| Which changes to a hit are worth testing? | REINVENT 4 Mol2Mol → Chemprop trained on assay data → ADMET-AI → synthesis planning | Analog predictions, held-out model performance, property tradeoffs, and a proposed assay panel with controls. [Analog design](references/structure-based-generation.md) and [QSAR](references/property-and-qsar-prediction.md) |
+| How do close analogs compare in predicted binding free energy? | Ligand structures with pose checks → OpenFE → review alongside ADMET and route results | Relative free-energy estimates, uncertainties, convergence checks, and compounds to prioritize for measurement. [Free-energy methods](references/binding-affinity-and-fep.md) |
+| Which synthesis planner works best for my targets and stock? | AiZynthFinder compared with RetroChimera + Syntheseus | Routes, stock coverage, search cost, and failed searches under a common target set, stock, and declared budgets. [Planning and search](references/retrosynthesis-planning.md) |
+| Can a model recover the ligand pose and protein arrangement in a molecular-glue complex? | Experimental ternary structure → smina docking controls → Chai-1 comparison → interface analysis | A comparison of predicted poses with the experimental complex, including ligand contacts and protein placement. [Public KRAS example](references/worked-example-kras-glue.md) |
+
+## Build a design campaign
+
+For a receptor structure and a bound fragment, ask your agent to assemble the
+following workflow. Set the candidate count, required properties, available
+compute, and synthesis stock for your question.
+
+| Step | Work the agent performs | Files and results passed forward |
+| --- | --- | --- |
+| Prepare the study | Inspect receptor chemistry, pocket boundaries, ligand states, and required cofactors. Choose reference compounds and pose controls. | Prepared receptor PDB, reference ligand SDF, pocket definition, and comparison criteria |
+| Propose candidates | Use DiffSBDD for pocket generation or LDDM for fragment editing. Preserve the requested structural constraints. | Candidate SDF records with stable compound IDs |
+| Evaluate candidates | Check molecular identity and geometry with PoseBusters. Export SMILES for ADMET-AI and any task-specific property model. | Pose reports and endpoint predictions joined by compound ID |
+| Explore synthesis options | Use PrexSyn to propose related structures with synthesis pathways. Give changed molecules new IDs linked to their parents. | Proposed structures, synthesis pathways, and parent–candidate mappings |
+| Re-evaluate changed molecules | Generate poses for the changed structures, then repeat pose, property, and any affinity checks used for selection. | Comparable results for the actual structures under consideration |
+| Plan routes and select follow-up | Send selected SMILES to AiZynthFinder and its route-tree JSON to RENKIN with the declared stock. Compare route results with predicted properties. | Candidate shortlist, route files, stock checks, and proposed measurements |
+
+Keep stereochemistry and compound identity consistent across SDF, SMILES, and
+result tables. Treat pose confidence, predicted properties, affinity estimates,
+and measured activity as distinct evidence when choosing the next experiment.
+[Pose checks](references/docking-and-cofolding.md#validate-poses) ·
+[Synthesis projection](references/synthesizable-generation.md) ·
+[Route validation](references/retrosynthesis-planning.md#validate-routes) ·
+[AiZynthFinder–RENKIN handoff](https://kent-tokyo.github.io/renkin/guides/aizynthfinder-audit-demo/)
+
+## Plan experiments that answer the question
+
+Ask your agent to specify the hypothesis, comparison, controls, and how the
+possible results affect your next decision. For a generative campaign, that includes how
+many molecules to sample, how to preserve diversity, and how to evaluate
+survivors. For a property model, it includes the assay endpoint, training data,
+and held-out evaluation. The guides cover pose controls, model validation, and
+route checks. [Docking](references/docking-and-cofolding.md) ·
+[QSAR](references/property-and-qsar-prediction.md) ·
+[Retrosynthesis](references/retrosynthesis-planning.md)
+
+For a hit series, choose a data split that tests generalization across relevant
+chemical series and reserve a test set for final model evaluation. Propose an
+assay panel with reference compounds, candidate structures, and a reason for
+each measurement. [Chemprop training and data splits](https://chemprop.readthedocs.io/en/main/tutorial/cli/train.html)
+
+When requesting a run, ask for the attempted, completed, and failed calculations
+and the number of unique molecules meeting your criteria. Use those results
+to decide whether to expand the search, change a method, or test the shortlist.
 
 ## Tools your agent can use
 
@@ -45,6 +85,8 @@ and base models. For a run, return the results and report any failed steps.
 | Predict a receptor structure | [ColabFold](references/protein-structure-prediction.md) with a protein sequence | Structure models and confidence scores |
 | Find a binding pocket | [P2Rank](references/structure-based-generation.md#p2rank--rdkp2rank) with a receptor structure | Ranked pocket predictions |
 | Design candidates in a pocket | [DiffSBDD](references/structure-based-generation.md#diffsbdd--arneschneuingdiffsbdd) with a receptor PDB and pocket residues or a reference ligand | Candidate structures in 3D |
+| Optimize analogs against selected objectives | [REINVENT 4](references/structure-based-generation.md) with seed molecules or a scaffold and a scoring configuration | Generated molecules and component scores |
+| Edit a fragment within a pocket | [LDDM](references/lddm.md) with a prepared pocket and ligand atom constraints | Candidate structures that preserve selected input atoms |
 | Grow, decorate, or link molecular fragments | [GenMol](references/molecular-generation.md) with a fragment or scaffold | Candidate molecules |
 | Find candidates similar to a query molecule | [PrexSyn](references/synthesizable-generation.md) with a query SMILES or a supported fingerprint | Candidate molecules with proposed synthesis pathways |
 
@@ -64,18 +106,20 @@ and base models. For a run, return the results and report any failed steps.
 | Task | Tool and starting input | Output |
 | --- | --- | --- |
 | Predict an assay endpoint | [Chemprop](references/property-and-qsar-prediction.md) with labeled molecules to train on and new molecules to score | Endpoint predictions for new molecules |
+| Select the next virtual-screening batch | [MolPAL](references/property-and-qsar-prediction.md) with a SMILES pool and a configured scoring objective | Selected compounds and accumulated scores |
 | Screen ADMET endpoints | [ADMET-AI](references/admet-prediction.md) with ligand SMILES | Predicted absorption, distribution, metabolism, excretion, and toxicity endpoints |
 | Compare a candidate with a known off-target ligand | [ESP-Sim](references/target-and-selectivity-prediction.md) with 3D ligand conformers | Shape and electrostatic similarity scores |
 | Propose precursors for one reaction | [ReactionT5v2](references/singlestep-retrosynthesis.md) with a product SMILES and the retrosynthesis checkpoint | Ranked precursor sets |
 | Search for multi-step synthesis routes | [AiZynthFinder](references/retrosynthesis-planning.md) with a target SMILES and a configured model and stock | Ranked routes as route-tree JSON |
-| Check proposed synthesis routes | [RENKIN](references/retrosynthesis-planning.md) with route JSON and a starting-material stock | Route structure, stock coverage, and reaction replay checks |
+| Search with a chosen one-step model | [RetroChimera + Syntheseus](references/retrosynthesis-planning.md) with target SMILES, model settings, and stock | Ranked precursor predictions and multi-step search results |
+| Check proposed synthesis routes | [RENKIN](references/retrosynthesis-planning.md) with route JSON and a starting-material stock | Route structure and stock checks, plus reaction replay where reaction data permits |
 
 Use the [tool matrix](references/tool-matrix.md) to compare alternatives. The
 reference guides link to upstream documentation and describe setup, hardware,
 and method limits. For artifact terms, see the
 [licensing and data guide](references/licensing-and-data.md).
 
-## How tools connect
+## Inspect a docking handoff
 
 The public 1IEP example asks whether CPU docking can recover imatinib’s
 experimental pose. Meeko stores the ligand’s SMILES and atom mapping in the
@@ -92,12 +136,6 @@ the ligand’s bond orders when exporting the poses to SDF.
 Use the docking scores to rank poses and PoseBusters to check geometry,
 clashes, and recovery of the crystal pose. Binding affinity requires a
 separate method. [Affinity and free-energy guide](references/binding-affinity-and-fep.md)
-
-For synthesis planning, pass AiZynthFinder's route-tree JSON and a declared
-building-block stock to RENKIN. RENKIN checks route structure and stock
-membership. Where reaction data permits, it also checks whether each declared
-reaction regenerates the expected product.
-[RENKIN walkthrough with a public route export](https://kent-tokyo.github.io/renkin/guides/aizynthfinder-audit-demo/)
 
 ## More references
 
