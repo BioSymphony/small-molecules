@@ -2,114 +2,131 @@
 
 # BioSymphony Small Molecules
 
-BioSymphony Small Molecules gives AI coding agents a tool knowledge base for
-small-molecule design. An agent can map a task to an upstream tool, prepare the
-tool call with the required inputs and compute, and plan the handoffs from
-generation to scoring, property prediction, and synthesis planning.
+Give your AI agent a guide to choosing and running small-molecule design tools.
+Start with a protein structure, a compound library, or a target SMILES. The
+guides help your agent choose tools, set them up, and pass outputs between
+them. The upstream packages and services perform the calculations.
 
-The repository supplies routing instructions and reference material. It does
-not provide a universal invocation API or bundle every tool and checkpoint.
-Each guide helps an agent decide what to install, what to pass to a tool, what
-the output means, and which tools may use that output next.
+## Start with your agent
 
-## What agents can do
+Point your agent at [SKILL.md](SKILL.md) or fill in the brackets in this prompt.
 
-![Agent workflow: describe the task, use SKILL.md and the tool knowledge base to select tools, chain generation and evaluation steps, then validate outputs and artifact terms.](assets/skill-map.svg)
+```text
+Read https://github.com/BioSymphony/small-molecules/blob/main/SKILL.md
 
-| Capability | What the repository supplies |
-| --- | --- |
-| Select a tool | Task routing, category comparisons, required inputs, and compute requirements |
-| Prepare a tool call | Setup notes, model or checkpoint details, expected outputs, and documented limits |
-| Chain tools | Documented inputs and outputs, candidate handoffs, and format requirements across the workflow |
-| Check the result | Validation steps that separate pose confidence, predicted affinity, makeability, and experimental evidence |
-| Check artifact terms | Separate notes for source code, model weights, data, and base models |
+[Plan or run] a workflow for [task] using [inputs] on [available compute].
+For each step, explain the tool choice and give the command or API, version,
+setup, input and output files, and result checks. Show how outputs feed the
+next tool, including format conversions. Check terms for code, weights, data,
+and base models. For a run, return the results and report any failed steps.
+```
 
-Before each tool call, record:
+### Example tasks
 
-- The selected tool and why it fits the task
-- The input artifact and format
-- The environment, compute, model, checkpoint, or service requirement, when applicable
-- The expected output and the meaning of its scores
-- The validation step, proposed next tool, and any required format conversion
-- The applicable code, weight, data, and base-model terms
+- **Screen a compound library.** “I have a CSV of compound IDs and SMILES.
+  Run ADMET-AI on CPU. Return endpoint predictions by compound ID and flag
+  molecules the model could not score.”
+- **Design candidates and plan routes.** “I have a receptor PDB, a reference
+  ligand, and one GPU. Plan a DiffSBDD generation run, pose checks, and
+  ADMET screening. Keep candidate IDs when converting SDF records to SMILES.
+  Use PrexSyn to propose alternatives with synthesis pathways. Re-score any
+  changed molecules and plan routes for the shortlisted compounds.”
+- **Plan a route for a known compound.** “I have a target SMILES and a
+  building-block stock. Run AiZynthFinder on CPU, then pass its route JSON and
+  the stock to RENKIN. Report which routes reach the selected stock and which
+  checks lack the data needed to run.”
 
-## Example tool chain
+## Tools your agent can use
 
-An agent can assemble a target-to-route workflow from the category guides:
+### Structure and generation
 
-| Stage | Tool task | Start with |
+| Task | Tool and starting input | Output |
 | --- | --- | --- |
-| 1. Prepare the target | Get or predict a receptor structure | [Protein structure prediction](references/protein-structure-prediction.md) |
-| 2. Propose candidates | Generate candidates in a binding pocket | [Structure-based generation](references/structure-based-generation.md) |
-| 3. Evaluate binding | Dock or co-fold generated or supplied compounds, then estimate affinity | [Docking and co-folding](references/docking-and-cofolding.md) and [binding affinity](references/binding-affinity-and-fep.md) |
-| 4. Apply property filters | Predict activity, ADMET, and selectivity | [QSAR](references/property-and-qsar-prediction.md), [ADMET](references/admet-prediction.md), and [selectivity](references/target-and-selectivity-prediction.md) |
-| 5. Preserve makeability | Project selected compounds into synthesizable space and re-score changed structures | [Synthesizable generation](references/synthesizable-generation.md) |
-| 6. Plan the route | Generate or validate routes against the selected starting-material stock | [Retrosynthesis planning](references/retrosynthesis-planning.md) |
+| Predict a receptor structure | [ColabFold](references/protein-structure-prediction.md) with a protein sequence | Structure models and confidence scores |
+| Find a binding pocket | [P2Rank](references/structure-based-generation.md#p2rank--rdkp2rank) with a receptor structure | Ranked pocket predictions |
+| Design candidates in a pocket | [DiffSBDD](references/structure-based-generation.md#diffsbdd--arneschneuingdiffsbdd) with a receptor PDB and pocket residues or a reference ligand | Candidate structures in 3D |
+| Grow, decorate, or link molecular fragments | [GenMol](references/molecular-generation.md) with a fragment or scaffold | Candidate molecules |
+| Find candidates similar to a query molecule | [PrexSyn](references/synthesizable-generation.md) with a query SMILES or a supported fingerprint | Candidate molecules with proposed synthesis pathways |
 
-A supplied compound set can enter at stage 3 or 4. Each stage requires its
-selected upstream package or service and any method, model, checkpoint, or data
-named in the guide. The guides identify candidate handoffs. Verify each
-upstream interface and convert formats when necessary.
+### Docking and binding
 
-## Use the skill
+| Task | Tool and starting input | Output |
+| --- | --- | --- |
+| Prepare files for docking | [Meeko](references/docking-and-cofolding.md) with a receptor PDB and a 3D ligand SDF with explicit hydrogens | Receptor and ligand PDBQT files |
+| Dock a ligand into a known pocket | [AutoDock Vina](references/docking-and-cofolding.md) with prepared receptor and ligand files and a search box | Ranked poses and empirical docking scores |
+| Predict poses with learned docking | [DiffDock-L](references/docking-and-cofolding.md) with a receptor structure and ligand | Ranked poses and pose-confidence scores |
+| Check docked poses | [PoseBusters](references/docking-and-cofolding.md#validate-poses) with docked poses in SDF and a receptor PDB | Per-pose geometry and clash checks |
+| Predict a protein–ligand complex | [Boltz-2](references/docking-and-cofolding.md) with a protein sequence and ligand SMILES or CCD code, typically with a multiple sequence alignment | Predicted complex structure and an optional affinity estimate |
+| Compare binding across related ligands | [OpenFE](references/binding-affinity-and-fep.md) with a prepared receptor PDB and ligand poses in SDF, in the same coordinate frame | Relative binding free-energy estimates |
 
-Clone the repository into a directory of your choice:
+### Properties, selectivity, and synthesis
 
-```bash
+| Task | Tool and starting input | Output |
+| --- | --- | --- |
+| Predict an assay endpoint | [Chemprop](references/property-and-qsar-prediction.md) with labeled molecules to train on and new molecules to score | Endpoint predictions for new molecules |
+| Screen ADMET endpoints | [ADMET-AI](references/admet-prediction.md) with ligand SMILES | Predicted absorption, distribution, metabolism, excretion, and toxicity endpoints |
+| Compare a candidate with a known off-target ligand | [ESP-Sim](references/target-and-selectivity-prediction.md) with 3D ligand conformers | Shape and electrostatic similarity scores |
+| Propose precursors for one reaction | [ReactionT5v2](references/singlestep-retrosynthesis.md) with a product SMILES and the retrosynthesis checkpoint | Ranked precursor sets |
+| Search for multi-step synthesis routes | [AiZynthFinder](references/retrosynthesis-planning.md) with a target SMILES and a configured model and stock | Ranked routes as route-tree JSON |
+| Check proposed synthesis routes | [RENKIN](references/retrosynthesis-planning.md) with route JSON and a starting-material stock | Route structure, stock coverage, and reaction replay checks |
+
+Use the [tool matrix](references/tool-matrix.md) to compare alternatives. The
+reference guides link to upstream documentation and describe setup, hardware,
+and method limits. For artifact terms, see the
+[licensing and data guide](references/licensing-and-data.md).
+
+## How tools connect
+
+The public 1IEP example asks whether CPU docking can recover imatinib’s
+experimental pose. Meeko stores the ligand’s SMILES and atom mapping in the
+PDBQT file. Keep those records through the Vina run so Meeko can reconstruct
+the ligand’s bond orders when exporting the poses to SDF.
+[AutoDock Vina tutorial and input files](https://autodock-vina.readthedocs.io/en/latest/docking_basic.html) ·
+[Meeko export](https://meeko.readthedocs.io/en/develop/export_usage.html) ·
+[PoseBusters CLI](https://posebusters.readthedocs.io/en/latest/cli.html)
+
+![CPU redocking workflow. Meeko writes receptor and ligand PDBQT files and a Vina search box config. AutoDock Vina returns docked poses in PDBQT and empirical docking scores. Meeko exports the poses to SDF. PoseBusters takes the pose SDF and reference files and writes a per-pose CSV report.](assets/skill-map.svg)
+
+[Open the full-size diagram](assets/skill-map.svg)
+
+Use the docking scores to rank poses and PoseBusters to check geometry,
+clashes, and recovery of the crystal pose. Binding affinity requires a
+separate method. [Affinity and free-energy guide](references/binding-affinity-and-fep.md)
+
+For synthesis planning, pass AiZynthFinder's route-tree JSON and a declared
+building-block stock to RENKIN. RENKIN checks route structure and stock
+membership. Where reaction data permits, it also checks whether each declared
+reaction regenerates the expected product.
+[RENKIN walkthrough with a public route export](https://kent-tokyo.github.io/renkin/guides/aizynthfinder-audit-demo/)
+
+## More references
+
+- [Forward reaction modeling](references/forward-and-reaction-modeling.md)
+  covers product prediction and checks for proposed retrosynthetic steps.
+- [Agentic drug design](references/agentic-drug-design.md) compares frameworks
+  that orchestrate multiple tools.
+- [LDDM](references/lddm.md) covers docking, fragment editing, and generation
+  with a single model family.
+- [KRAS molecular-glue example](references/worked-example-kras-glue.md) shows how
+  a public ternary structure changes the choice of modeling method.
+
+<details>
+<summary>Use the packaged skill in Claude Code</summary>
+
+Clone the repository and register the skill in your
+[Claude Code skills directory](https://code.claude.com/docs/en/skills).
+
+```sh
 git clone https://github.com/BioSymphony/small-molecules.git
 cd small-molecules
-```
-
-Ask your agent to read [SKILL.md](SKILL.md). State the task, available inputs,
-compute, and usage constraints. For a multi-tool workflow, ask the agent to name
-each tool's inputs, outputs, method or version, validation step, and artifact
-terms.
-
-For example:
-
-> Read SKILL.md and design a CPU-only tool chain that plans a synthesis route
-> for a target SMILES. For each call, specify the input, output, software or
-> model version, starting-material stock, and route check.
-
-> Read SKILL.md and design a pocket-to-route workflow that grows a fragment,
-> validates the pose and predicted properties, projects selected compounds into
-> synthesizable space, and plans routes. Name the handoff between each tool.
-
-### Install for Claude Code
-
-From the cloned repository directory, register the packaged skill in
-[Claude Code's personal skills directory](https://code.claude.com/docs/en/skills):
-
-```bash
 mkdir -p ~/.claude/skills
-ln -s "$(pwd)/skills/small-molecule-design-tools" ~/.claude/skills/small-molecule-design-tools
+ln -s "$PWD/skills/small-molecule-design-tools" ~/.claude/skills/small-molecule-design-tools
 ```
 
-Keep the clone in that location so the link remains valid. If a skill with that
-name is already installed, check its location before replacing it.
+Invoke `/small-molecule-design-tools` with your task. Codex can use the
+[packaged skill](skills/small-molecule-design-tools/SKILL.md) from the checkout.
 
-Invoke it with `/small-molecule-design-tools` followed by your task.
-Other agents can read `SKILL.md` and its linked Markdown references directly.
-
-## Find a reference
-
-| Task | Reference |
-|---|---|
-| Compare tools across categories | [Tool matrix](references/tool-matrix.md) |
-| Generate molecules with proposed synthesis routes or design analogs | [Synthesizable generation](references/synthesizable-generation.md) |
-| Plan a route to a target molecule and check its starting materials | [Retrosynthesis planning](references/retrosynthesis-planning.md) |
-| Dock ligands, predict complexes, and validate poses | [Docking and co-folding](references/docking-and-cofolding.md) |
-| Estimate affinity or compare binding free energies | [Binding affinity and free energy](references/binding-affinity-and-fep.md) |
-| Predict molecular properties or activity | [QSAR](references/property-and-qsar-prediction.md) and [ADMET](references/admet-prediction.md) |
-| Compare related compounds and predict off-target activity | [Target and selectivity prediction](references/target-and-selectivity-prediction.md) |
-| Generate molecules in a binding pocket | [Structure-based generation](references/structure-based-generation.md) |
-| Coordinate a multi-tool agent workflow | [Agentic drug design](references/agentic-drug-design.md) |
-| Use LDDM for docking, fragment editing, or generation | [LDDM](references/lddm.md) |
-| Check code, weights, data, and base-model terms | [Licensing and data](references/licensing-and-data.md) |
-| Explore a worked example using a public KRAS structure | [KRAS molecular-glue example](references/worked-example-kras-glue.md) |
-
-[SKILL.md](SKILL.md) maps additional tasks, including reaction prediction,
-protein preparation, and chemistry language models.
+</details>
 
 ## Contributing
 
@@ -117,6 +134,5 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for source requirements and checks.
 
 ## License
 
-The repository content uses the MIT License. Each upstream project sets its own
-terms. The reference cards track source code, model weights, data, and base
-models separately because one project can apply different terms to each layer.
+The repository uses the [MIT License](LICENSE). Upstream tools and artifacts
+have their own terms.
