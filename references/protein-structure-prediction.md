@@ -105,6 +105,21 @@ affinity.
 - **Status:** The public repository lists Protenix-v2 and the two v1.0.0 parameter sets.
 - **Terms:** The repository states Apache-2.0 for code and model parameters.
 
+## Receptor And Complex Ensembles
+
+Reviewed **2026-11-15**. [OriDynamics](https://github.com/LG-FrontierAI/oridynamics)
+samples alternative conformations conditioned on molecular partners, including
+small molecules. Its output is an unordered all-atom ensemble.
+[BioEmu-2](https://github.com/microsoft/bioemu2) provides equilibrium sampling
+and a separate learned time-lagged propagation mode. Its preview model card
+warns that sample frequencies are uncalibrated.
+
+See [molecular potentials and simulation](molecular-potentials-and-simulation.md)
+for their checkpoints, MSA and auxiliary-data requirements, physicality checks,
+and license layers. For docking against an ensemble, retain the identity of
+each receptor conformation and assess whether the intended binding site survives
+preparation.
+
 ## Choosing
 
 | Need | Pick | Why |

@@ -57,10 +57,40 @@ retrosynthesis check or a synthetic-accessibility score from
 - **Maintenance:** The repository has two commits; no independent evaluation is listed.
 - **Use it when:** you are studying fast VQ-latent graph generation; the repository's code license remains unstated.
 
+## LUMOS
+
+[LUMOS](https://github.com/egg5154/LUMOS/tree/214c7f451a867b9c7cbe9a67f8c1706baf650f34)
+combines a molecular autoencoder, diffusion generation and optical predictors
+for fluorophore design. The [January 2026 paper](https://arxiv.org/abs/2601.13564)
+and released checkpoints cover property-conditioned generation and molecular
+optimization. Checked on 2026-11-15 (UTC).
+
+- **Inputs and outputs:** molecule and solvent SMILES → absorption/emission
+  wavelengths, log extinction coefficient and PLQY estimates. Generation
+  workflows produce candidate fluorophore SMILES; evaluate their synthesis
+  separately.
+- **Assets and terms:** Apache-2.0 source. [Zenodo 18295513](https://zenodo.org/records/18295513)
+  supplies checkpoint and data archives under CC BY 4.0. Keep archive licensing
+  separate from source and training-data provenance.
+- **Setup:** create the supplied LUMOS environment, restore checkpoints and
+  configure paths before calling prediction or generation scripts. GPU4PySCF
+  calculations and optional ADMET-AI use separate environments. Hybrid optical
+  prediction additionally needs precomputed TD-DFT results.
+
+## Related Editing and Optical Tools
+
+- [SynCraft-Core](synthesizable-generation.md#syncraft-core) proposes executable
+  molecular edits with an external LLM and a separate route evaluator.
+- [MoleCode](chemical-language-models.md#molecode) converts molecules into an
+  explicit graph-text representation for editing and structural comparison.
+- [SyntheFluor-RL](synthesizable-generation.md#synthefluor-rl) generates optical
+  candidates over an explicit reaction and building-block space.
+
 ## Choosing
 
 | Need | Start with | Limit |
 |---|---|---|
+| Solvent-aware fluorophore generation and prediction | **LUMOS** | Separate optical model assets and synthesis assessment |
 | De novo, linker, scaffold, or lead optimization | **GenMol** | Add a synthesizability filter; weight terms differ from code terms |
 | Small autoregressive SMILES or SMARTS model | **MolReactGen** | Dormant repository |
 | SMILES validity correction | **SmiSelf** | The repository has no `LICENSE` file |

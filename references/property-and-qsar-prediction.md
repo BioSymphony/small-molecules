@@ -97,16 +97,12 @@ fine-tuning and validation.
 - **Paper:** Ahmad et al., arXiv:2209.01712 (2022); orig. arXiv:2010.09885.
 - **Terms:** Source code is MIT; the listed checkpoints do not state a weights license.
 
-## Uni-Mol — `deepmodeling/Uni-Mol`
-- **Method and output:** **3D molecular representation learning** that uses conformers
-  rather than only SMILES for property prediction, docking, and QSAR. Uni-Mol
-  Docking v2 is documented in
-  [docking-and-cofolding.md](docking-and-cofolding.md).
-- **Code and weights license:** **MIT** (verify per-checkpoint for the largest models).
-- **Paper:** Zhou et al., *ICLR* 2023; Uni-Mol2: *NeurIPS* 2024.
-- **Installation and hardware:** `pip install unimol-tools`. GPU recommended (3D models are heavier); needs conformer generation.
-- **Status:** Active.
-- **Terms:** Source code and the documented checkpoint terms are MIT; check an individual checkpoint before use.
+## Uni-Mol / Uni-Mol2 — 3D Representations and Fine-Tuning
+
+- **Task and output:** Molecular structures/conformers → embeddings or predictions from a trained property head. The [Uni-Mol toolkit](https://github.com/deepmodeling/Uni-Mol/tree/main/unimol_tools) accepts SMILES or atoms and coordinates and provides conformer generation, representation extraction, and supervised classification/regression.
+- **Artifacts and setup:** `pip install unimol-tools` is the toolkit path. [Uni-Mol2](https://github.com/deepmodeling/Uni-Mol/tree/main/unimol2) provides a separate Uni-Core workflow and [84M–1.1B checkpoints](https://huggingface.co/dptech/Uni-Mol2). Match model size, preprocessing, and fine-tuned head; a pretrained checkpoint alone does not define an ADMET endpoint. GPU resources depend on the selected size.
+- **Terms:** MIT source and Uni-Mol2 project declaration; check the selected checkpoint card and training-data provenance. Uni-Mol Docking v2 has a separate task contract in [docking-and-cofolding.md](docking-and-cofolding.md).
+- **Reviewed:** 2026-11-15 (UTC).
 
 ---
 
@@ -123,6 +119,46 @@ fine-tuning and validation.
 - **Paper:** arXiv:2506.15792 (Jun 2025, **revised Feb 2026**).
 - **Status:** The repository received commits in June 2026.
 
+## Monroe — Molecular Embeddings
+
+- **Task and output:** SMILES → a 720-dimensional graph embedding. The [encoder example](https://github.com/blazejba/Monroe) restores the encoder only. Downstream predictions require labeled embeddings and a predictor such as the documented TabPFN route.
+- **Artifacts and setup:** Python 3.12, `uv`, and editable installation are documented. Retrieve `checkpoint/weights.pt` through Git LFS with its `config.json`. The encoder combines molecular graphs and conformer features; record conformer generation when comparing results.
+- **Terms:** MIT project license. TabPFN access, weights, and downstream data have separate terms.
+- **Reviewed:** 2026-11-15 (UTC).
+
+## Mol-JEPA — Multimodal Embeddings
+
+- **Task and output:** SMILES batches → global 512-dimensional CLS embeddings, 12 predicted modality embeddings, and intermediate modality representations. These are features for downstream predictors, rather than measured ADMET or affinity values.
+- **Artifacts and setup:** The [source](https://github.com/Boehringer-Ingelheim/mol-jepa) and [model card](https://huggingface.co/Flogrammer/Mol-JEPA) document PyTorch, PyG, Transformers, RDKit, and molfeat. Hugging Face inference uses custom code through `trust_remote_code=True`; inspect and pin that code with the checkpoint. Training data downloads are separate from inference assets.
+- **Terms:** Source and released model declare CC BY-NC 4.0. Upstream modality models and datasets keep their own terms.
+- **Reviewed:** 2026-11-15 (UTC).
+
+## Multi-Fluor — Solvent-Aware Optical Properties
+
+- **Task and output:** Solute SMILES plus solvent SMILES → absorption/emission maxima in nm, fluorescence quantum yield (0–1), and log10 molar absorptivity. [Source and interface](https://github.com/MolAstra/Multi-Fluor), [paper](https://doi.org/10.1016/j.dyepig.2026.114071).
+- **Artifacts and setup:** The v1.0.0 inference/evaluation release fixes the version50 checkpoint. Download [resources](https://zenodo.org/records/21698869) with the supplied manifest and checksums. The documented GPU environment uses Python 3.11, PyTorch 2.6, CUDA 12.4, and DGL 2.5. `serve` accepts molecule–solvent pairs; `eval` requires the model's preprocessed LitData contract. Training code is excluded.
+- **Terms:** PolyForm Noncommercial 1.0.0 project code; Apache/BSD vendored components; CC BY 4.0 resource deposit. These grants cover different artifacts.
+- **Use limits:** Match the training domain and solvent. Predictions for probe structures do not establish reaction mechanisms or experimental spectra.
+- **Reviewed:** 2026-11-15 (UTC).
+
+## TADF-PL — Photoluminescence Prediction
+
+- **Task and output:** TADF molecule SMILES → predicted photoluminescence energy in eV and wavelength in nm. [Source](https://github.com/Dingyun-Huang/tadf-photoluminescence-ml-prediction), [paper](https://doi.org/10.1021/acs.jcim.6c00425).
+- **Artifacts and setup:** The source includes `model_archive/model_8_layer_28_h.pt`, data, configuration, and split definitions. Run `run_inference.py` from `src/gnn`, with explicit model/configuration paths. Python 3.10–3.12 and a CPU dependency installation are documented; CUDA is optional. The [inference code](https://github.com/Dingyun-Huang/tadf-photoluminescence-ml-prediction/blob/5e90f6b6fd3dc987cce7f8d09d12d14c7cc906d1/src/gnn/run_inference.py) recomputes missing legacy normalization statistics from configured data splits. Preserve those files together.
+- **Terms:** MIT project declaration; no distinct checkpoint/data grant was identified. Literature source material retains its own terms.
+- **Use limits:** This endpoint estimates a PL maximum. It does not quantify full optical profiles or device performance.
+- **Reviewed:** 2026-11-15 (UTC).
+
+## ChemProFlow — Microbial Transport Associations
+
+- **Task and output:** SMILES → thresholded transport-candidate labels, TCDB mechanism classes, and microorganisms encoding matching transport systems. The [pipeline](https://github.com/brsynth/chemproflow) calibrates internally; its default CSV reports labels rather than calibrated transport probabilities. [Paper](https://doi.org/10.1038/s42004-026-02269-z).
+- **Artifacts and setup:** Install from conda-forge/bioconda and obtain the [prebuilt data/model deposit](https://doi.org/10.57745/QXBLVM). Pair transport and mechanism checkpoints with their encoders, calibrator, thresholds, equivalence map, and organism catalog. Check filenames against the exact deposit version before using the README command.
+- **Terms:** MIT source; Etalab 2.0 deposit. TCDB, Rhea, ChEBI, and BioCyc provenance requires separate review.
+- **Use limits:** These are microbial transport hypotheses. The source standardizer assigns the first enumerated stereoisomer to unspecified centers; retain the intended molecular identity. Organism associations do not measure uptake rates or human bioavailability.
+- **Reviewed:** 2026-11-15 (UTC).
+
+For measurement-to-structure tasks, see [analytical chemistry models](analytical-chemistry-models.md). For molecular/text generation, see [multimodal chemical models](multimodal-chemical-models.md).
+
 ## Choosing
 
 | Need | Pick | License |
@@ -133,7 +169,11 @@ fine-tuning and validation.
 | Datasets + benchmarks to train/evaluate on | **PyTDC** | MIT code / ⚠️ data per-dataset |
 | Featurization into sklearn or your own NN | **molfeat** (Apache) / **scikit-mol** (LGPL) | ✅ / ⚠️ copyleft |
 | Pretrained embeddings (no generation) | **MoLFormer-XL** (Apache) / **Uni-Mol** (MIT, 3D) | ✅ |
-| Foundation encoder to fine-tune (2026) | **CheMeleon** (Chemprop plug-in) | MIT code; check weights record |
+| Foundation encoder to fine-tune | **CheMeleon**, **Uni-Mol2**, or **KERMT** ([ADMET card](admet-prediction.md)) | Check each checkpoint and training dataset |
+| Embeddings for a downstream predictor | **Monroe** or **Mol-JEPA** | MIT project / CC BY-NC 4.0 |
+| Solvent-dependent optical endpoints | **Multi-Fluor** | PolyForm NC code; CC BY 4.0 resources |
+| TADF photoluminescence maximum | **TADF-PL** | MIT project; preserve data/configuration |
+| Microbial transport-system associations | **ChemProFlow** | MIT source; Etalab 2.0 deposit |
 | Active-learning virtual screening | **MolPAL** | MIT ✅ (stale) |
 
 See [licensing-and-data.md](licensing-and-data.md) for the code, weight, and data terms.

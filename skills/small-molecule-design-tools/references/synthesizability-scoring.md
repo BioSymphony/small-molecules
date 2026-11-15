@@ -50,12 +50,31 @@ They require more compute and provide evidence tied to a proposed route.
 - **Maintenance:** The last recorded repository push was in June 2026.
 - **Use it when:** you need depth-limited route triage over many candidates. The GPL-3.0 code license and AiZynthFinder dependency are separate from route data and model terms.
 
+## RetroTAC
+
+[RetroTAC](https://github.com/ribesstefano/RetroTAC/tree/3c12035403670c897cb02463741ca49c2b6a4f6d)
+predicts a route-derived accessibility score for PROTAC SMILES. Training labels
+reward route depth and balanced fragment joining from ShallowTree searches.
+Inference returns a score and ensemble spread without running route search.
+Checked on 2026-11-15 (UTC).
+
+- **Assets:** the [public ensemble](https://huggingface.co/ailab-bio/RetroTAC)
+  contains 27 members: 13 GNN, seven MLP and seven XGBoost models.
+  `RetroTAC.from_pretrained("ailab-bio/RetroTAC", device="cpu")` loads them;
+  lazy loading reduces simultaneous memory use while preserving the ensemble.
+- **Setup and terms:** Python ≥3.12. Source is MIT; the Hugging Face card has no
+  separate checkpoint grant. Resolve weight permission before use. A separate
+  HTTP server supports REINVENT integration when dependency stacks conflict.
+- **Interpretation:** a low training label may reflect a planner time/depth
+  limit. Predictions are unclipped, and member spread is uncalibrated.
+  Performance on PROTACs does not establish performance on unrelated scaffolds.
+
 ## Scope caveat — macrocycles & natural-product scaffolds
 
-Every scorer and planner described in this reference was trained on
-USPTO-style drug-like reaction corpora. Macrocyclizations, complex polycyclic
-natural products, and stereochemically dense structures fall outside that
-distribution and can receive over-pessimistic or meaningless scores.
+Training scope differs by scorer and planner. RetroTAC targets PROTACs; many
+reaction models use USPTO-style drug-like corpora. Macrocyclizations, complex
+polycyclic natural products, and stereochemically dense structures can fall
+outside a model's training distribution and receive unreliable scores.
 Daraxonrasib is a sanglifehrin-derived macrocycle, so a chemist must review its
 route-aware score. Treat a low score for a macrocyclic or natural-product
 scaffold as an out-of-scope result rather than proof that the molecule cannot be
@@ -65,6 +84,7 @@ made. See the [KRAS(ON) glue worked example](worked-example-kras-glue.md).
 
 | Need | Start with | Limit |
 |---|---|---|
+| PROTAC accessibility surrogate | **RetroTAC** | Resolve weight terms; score and spread provide no explicit route |
 | Planner-independent check without labels | **Round-trip score** with ReactionT5v2-forward or RXNGraphormer | Tests whether a forward model recovers the target |
 | Route-aware screen over many candidates | **shallow-tree** | GPL-3.0; depth-limited AiZynthFinder search |
 | Route-aware score for generator output | **RetroScore** | Check the separate weight and data terms |

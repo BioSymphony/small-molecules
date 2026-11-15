@@ -6,9 +6,11 @@ analog and a proposed route. In contrast,
 [retrosynthesis-planning.md](retrosynthesis-planning.md) plans a route for a
 fixed target molecule.
 
-These models generate from building blocks and reaction templates. Each output
-therefore includes a forward synthesis under the model's reaction rules and
-stock assumptions.
+Most tools here generate from building blocks and reaction templates, returning
+a construction route under explicit rules and stock assumptions. SynCraft-Core
+instead proposes structural edits and needs a separate planner to assess the
+resulting analogue. S3-GFN applies soft synthesis constraints during SMILES
+post-training.
 
 After projection changes a molecule, repeat its pose and property calculations
 before comparing it with the input. Record both structures so each score is
@@ -68,6 +70,87 @@ the selected stock using [route validation](retrosynthesis-planning.md#validate-
 - **Use it when:** you need a citable published method or specifically need the **SynFormer-D** property-optimization variant.
 
 ---
+
+## SyntheFluor-RL
+
+SyntheFluor-RL extends [SyntheMol](https://github.com/swansonk14/SyntheMol/tree/60302339148339355fc3e568ce200ed06207f99c)
+with fluorescence objectives and an expanded reaction space. The
+[January 2026 paper](https://arxiv.org/abs/2601.07145) describes candidate
+fluorophores generated with construction provenance. Checked on 2026-11-15 (UTC).
+
+- **Inputs and outputs:** allowed building blocks, reaction templates and
+  optical rewards → candidate SMILES with their construction steps. The
+  expanded collection has 70 reactions.
+- **Prediction contract:** the [fluorescence guide](https://github.com/swansonk14/SyntheMol/blob/60302339148339355fc3e568ce200ed06207f99c/docs/rl/fluorescence.md)
+  uses Chemprop 1.6.1 graph/MLP models with molecular features and four solvent
+  descriptors. Absorption and emission are regressions; PLQY is a classifier
+  for **PLQY >0.5**. Its output is a class probability rather than a numerical
+  quantum-yield estimate.
+- **Assets and terms:** MIT source; [Zenodo 18203970](https://zenodo.org/records/18203970)
+  provides property models, processed data and generation inputs under
+  CC BY 4.0. Check vendor building-block rights separately. Restore the matching
+  feature files, solvent descriptors and model ensemble before scoring.
+
+## RxnFlow 2.1.1
+
+[RxnFlow](https://github.com/SeonghwanSeo/RxnFlow/tree/8f7c9975a4f8f12e79c9753428a4c0d71de3563a)
+trains a GFlowNet over a prepared building-block library, reaction definitions
+and a user-defined reward. Sampling returns molecules and construction routes.
+MIT source; stock and scoring-model terms are separate. Checked on 2026-11-15 (UTC).
+
+- **Setup:** Python ≥3.10, PyTorch and RDKit. `scripts/prepare.py` builds the
+  synthesis environment; examples train rewards or external conditioning;
+  `scripts/sample.py` consumes a trained checkpoint. The supplied example stock
+  contains 5,000 ZINC blocks. Default `explore` rules include 26 bimolecular
+  reactions, four unimolecular transformations and compatibility constraints.
+- **Breaking change:** the [November 11 v2.1.1 release](https://github.com/SeonghwanSeo/RxnFlow/releases/tag/v2.1.1)
+  changes graph features and model weights. Checkpoints from v2.1.0 and earlier
+  cannot load; train a new model. Prepared v2.0/v2.1 environments remain
+  supported, except those with unsupported bond types need rebuilding.
+- **Selection:** earlier RxnFlow checkpoints and results refer to their own
+  model version. The v2.1.1 README documents training before sampling and
+  supplies no replacement pretrained policy link.
+
+## S3-GFN
+
+[S3-GFN](https://github.com/hyeonahkimm/s3gfn/tree/43aa7b310e9e03ef71ea0bd0cce501a48b6e2d52)
+post-trains a SMILES generator with a soft synthesis constraint and separate
+accepted/rejected replay buffers. It produces candidate SMILES; synthesis
+acceptance depends on the configured evaluator. The source snapshot is dated
+June 2, 2026. Checked on 2026-11-15 (UTC).
+
+- **Setup:** the tested environment uses Python 3.10 and PyTorch 2.5.1/CUDA 12.1.
+  `python -m s3gfn.train` accepts `seh` or `vina:<receptor>` objectives.
+  `--use_retrosynthesis` requires a prepared reaction/stock environment;
+  otherwise acceptance uses an SA threshold, default 4.0. Docking additionally
+  needs Uni-Dock and prepared receptor files.
+- **Assets and terms:** [MIT source](https://github.com/hyeonahkimm/s3gfn/blob/43aa7b310e9e03ef71ea0bd0cce501a48b6e2d52/LICENSE)
+  initializes from the [Apache-2.0-tagged GP-MoLFormer-Uniq](https://huggingface.co/ibm-research/GP-MoLFormer-Uniq).
+  The repository supplies training code without a trained S3-GFN checkpoint
+  download. Its [data guide](https://github.com/hyeonahkimm/s3gfn/blob/43aa7b310e9e03ef71ea0bd0cce501a48b6e2d52/data/README.md)
+  documents ZINCFrag inputs and separate Enamine catalog access. Preserve
+  inherited-code and data terms.
+- **Use:** compare soft synthesis constraints with unconstrained molecular
+  optimization. Record the stock, route-check limits or SA threshold; generated
+  SMILES alone provide no construction route.
+
+## SynCraft-Core
+
+[SynCraft-Core](https://github.com/catalystforyou/SynCraft-Core/tree/557703e110b26a354afed2955ded5217837f6692)
+uses an external LLM to propose explicit atom and bond edits for an input
+molecule. RDKit applies the edit JSON; a separate planner evaluates the edited
+analogue. MIT source, checked on 2026-11-15 (UTC).
+
+- **Inputs and outputs:** molecule SMILES and retrieved example pairs → edit
+  operations and revised molecular structures. Interaction-aware mode adds
+  receptor/ligand information through Vina and PLIP.
+- **Setup:** Python ≥3.10, RDKit and OpenBabel; configure an external model and
+  the planner/stock separately. The repository publishes no bespoke LLM weights.
+  Backend service, model and planner assets retain their own terms.
+- **Use:** retain an explicit structural edit record when improving an
+  analogue's predicted makeability. Check scaffold retention, stereochemistry
+  and the revised route. Editing changes the target identity; evaluate the
+  resulting analogue's properties again.
 
 ## ChemProjector — *archived; historical predecessor*
 
@@ -211,6 +294,12 @@ These design over **vendor combinatorial spaces** (Enamine REAL / WuXi GalaXi �
 ---
 
 ## Quick pick (generation side)
+
+- **Train over custom reactions and rewards:** **RxnFlow 2.1.1**; earlier
+  checkpoints require retraining.
+- **Reaction-constrained fluorophore design:** **SyntheFluor-RL**.
+- **Explicit structural edits with an external model:** **SynCraft-Core**;
+  evaluate the edited analogue with a separate planner.
 
 - **Project a molecule into synthesizable space:** **PrexSyn** (repository and Hugging Face data record labeled MIT; Enamine-derived data is separate).
 - **Makeable analogs, no GPU/training, research:** **SynTwins**.

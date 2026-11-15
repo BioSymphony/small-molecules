@@ -11,6 +11,11 @@ Start with your research question and the structures, compounds, or assay data
 you have. Your agent uses the guides to choose methods, set up upstream
 software, connect inputs and outputs, and assess what the results support.
 
+The [November 2026 tool updates](references/tool-update-2026-11.md) add optical
+prediction, spectrum interpretation, biosynthetic-cluster models, molecular
+simulation, and evaluation methods. The guide also identifies release changes
+that affect checkpoint and environment compatibility.
+
 ## Start with a research question
 
 Point your agent at [SKILL.md](SKILL.md) with your inputs and compute budget.
@@ -32,6 +37,9 @@ choice, and a controlled experiment plan to distinguish the leading candidates.
 | How do close analogs compare in predicted binding free energy? | Ligand structures with pose checks → OpenFE → review alongside ADMET and route results | Relative free-energy estimates, uncertainties, convergence checks, and compounds to prioritize for measurement. [Free-energy methods](references/binding-affinity-and-fep.md) |
 | Which synthesis planner works best for my targets and stock? | AiZynthFinder compared with RetroChimera + Syntheseus | Routes, stock coverage, search cost, and failed searches under a common target set, stock, and declared budgets. [Planning and search](references/retrosynthesis-planning.md) |
 | Can a model recover the ligand pose and protein arrangement in a molecular-glue complex? | Experimental ternary structure → smina docking controls → Chai-1 comparison → interface analysis | A comparison of predicted poses with the experimental complex, including ligand contacts and protein placement. [Public KRAS example](references/worked-example-kras-glue.md) |
+| Which dyes have useful optical properties in a chosen solvent? | Multi-Fluor or a suitable optical predictor → domain and endpoint checks | Absorption/emission predictions and other supported optical endpoints for each solute/solvent pair. [Optical models](references/property-and-qsar-prediction.md) |
+| Which molecular structures could explain a measured spectrum? | MS-GPT for known-formula MS/MS; UltraNMR or NMRTrans for their supported NMR inputs | Ranked candidates, required formula/modality checks, and comparisons with reference compounds. [Analytical models](references/analytical-chemistry-models.md) |
+| Which alternative conformations might a protein–ligand complex adopt? | OriDynamics or BioEmu-2 → frame and geometry checks | Conformational ensembles with model-specific interpretation of time and populations. [Molecular simulation](references/molecular-potentials-and-simulation.md) |
 
 ## Build a design campaign
 
@@ -118,6 +126,20 @@ Use the [tool matrix](references/tool-matrix.md) to compare alternatives. The
 reference guides link to upstream documentation and describe setup, hardware,
 and method limits. For artifact terms, see the
 [licensing and data guide](references/licensing-and-data.md).
+
+### Optical Properties, Spectra, and Molecular Simulation
+
+| Task | Tool and Starting Input | Output |
+| --- | --- | --- |
+| Predict solvent-dependent optical properties | [Multi-Fluor](references/property-and-qsar-prediction.md) with solute and solvent SMILES | Absorption/emission maxima, quantum yield, and log molar absorptivity |
+| Propose structures from MS/MS | [MS-GPT](references/analytical-chemistry-models.md) with a spectrum, molecular formula, and matching model assets | Ranked connectivity candidates |
+| Predict NMR peak lists | [PRISM](references/analytical-chemistry-models.md) with molecular SMILES and the forward H1/C13 models | Predicted proton and carbon peak lists |
+| Propose a metabolite from a biosynthetic cluster | [DeepSeMS](references/multimodal-chemical-models.md) with an annotated cluster and Pfam assets | Ranked metabolite structures and ensemble consensus |
+| Calculate molecular energy and forces | [AIMNet2](references/molecular-potentials-and-simulation.md) with supported elements, coordinates, and net charge | Energy and atomic forces in the model's declared units |
+| Prepare molecular features in batches | [cuik-molmaker or nvMolKit](references/molecular-compute-infrastructure.md) with the library's SMILES or RDKit inputs | Features, similarities, or conformers through CPU/GPU-specific interfaces |
+
+Use the [evaluation guide](references/model-evaluation-and-benchmarks.md) to
+choose matched baselines, preserve chemical splits, and check a first result.
 
 ## Inspect a docking handoff
 

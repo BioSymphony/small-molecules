@@ -9,6 +9,30 @@ The watchlist records two distinct gaps:
 - **No stated license:** A public repository exists, but no license grant is
   visible for the code or artifacts.
 
+## November 2026 Release Changes
+
+Checked **2026-11-15**. These entries replace the older source-status claims
+for the named tools.
+
+| Tool | Available Artifacts | Remaining Requirement |
+|---|---|---|
+| **ChemCensor 1.4.0** | Source and evaluation assets | Independent-benchmark-only terms exclude synthesis-workflow ranking, filtering, rewards, and training, including noncommercial use; see [planning](retrosynthesis-planning.md) |
+| **AOT\*** | Public source | No source license file identified despite an MIT badge; see [agentic planning](agentic-retrosynthesis.md) |
+| **Retro-R1** | MIT source | A released trained planner policy was not identified; linked one-step assets are separate |
+| **RetroReasoner** | Evaluation source and released model cards | Source/test-data grants and missing training/OOD assets remain unresolved; see [single-step models](singlestep-retrosynthesis.md) |
+| **OneADMET** | Prediction scripts and model-archive download | Archive entries contain Git LFS pointers; recover actual model bytes and reconcile deposit/source terms; see [ADMET](admet-prediction.md) |
+| **RetroTAC ensemble** | MIT source and public 27-member ensemble | A separate checkpoint grant was not identified; see [scoring](synthesizability-scoring.md) |
+| **LCMS2Yield** | Source and bundled predictor | README license declaration and separate model/data terms need confirmation; measured LC-UV data and a standard are required |
+| **Mol-1 base** | Source and downloadable base checkpoint | Confirm the named weight grant; constrained-model benchmark results require their separate artifact; see [co-folding](docking-and-cofolding.md) |
+
+**FLOWR.root** has an MIT core license and named CC BY 4.0 checkpoint artifacts
+in its [Zenodo deposit](https://zenodo.org/records/20069588). Its visualization
+UI has separate restricted terms. Use the
+[structure-based generation card](structure-based-generation.md).
+
+**S3-GFN** now has MIT training code, and **SyntheFluor-RL** has a documented
+released workflow. Both have [generation cards](synthesizable-generation.md).
+
 ## No public code (paper only)
 
 | Tool | What it is | Paper | Why watch / status |
@@ -87,7 +111,6 @@ public code.
 | Tool | Category | Repository | Blocker |
 |---|---|---|---|
 | **MATCHA** | docking (flow-matching) | `LigandPro/Matcha` | Code and weights are **CC BY-NC 4.0**. |
-| **FLOWR.root** | SBDD and affinity | `jule-c/flowr_root` | The README says MIT, but the repository has no `LICENSE` file; weights are linked from Google Drive. |
 | **GatorAffinity** | affinity | `AIDD-LiLab/GatorAffinity` | code MIT but **checkpoints non-commercial** (CC-BY-NC-SA); preprint only. |
 | **DiffSMol** | SBDD | `ninglab/DiffSMol` | **PolyForm Noncommercial** license (not permissive); 2023/24 vintage. |
 | **Suiren-1.0** | 3D foundation model | `golab-ai/Suiren-Foundation-Model` | **Modified MIT** (UI-attribution clause if >1k MAU / >$10k/mo); organic-only; 1.8B 3D model, arXiv:2603.21942 (Mar 2026). |
@@ -97,14 +120,14 @@ public code.
 **Code with pre-1.0 or incomplete artifact terms:** **FragNet** (`pnnl/FragNet`, custom Battelle/PNNL terms), **UQ4DD** (`MolecularAI/uq4dd`, Apache, UQ benchmark with censored-label focus), **GLACIER** (`eemokey/glacier`, MIT, distilled encoder, Jun 2026), **TerraMax** (`terraytherapeutics/terramax`, Apache, batch Bayesian optimization, single-commit), **MolMiner** (`raulorteg/molminer`, Apache, fragment-based generation), **ReACT-Drug** (`YadunandanRaman/ReACT-Drug`, MIT, template-RL generation), **MolFORM** (`daiheng-zhang/SBDD-MolFORM`, MIT, checkpoint terms to confirm), **SynthLadder** (`SergeiNikolenko/SynthLadder`, no license, agentic synthesis benchmark).
 
 **Paper-only / no public code (concept worth tracking):**
-- *Retrosynthesis:* **CREED / ChemCensor** (Insilico Medicine, ICML 2026 — LLM-retro benchmark rethink + ~6.4M validated reactions), **AOT\*** (LLM AND-OR tree search, Sep 2025), **Retro-R1** (RL agentic retro, NeurIPS 2025), **RetroReasoner** (round-trip-reward reasoning LLM, Mar 2026), **SCR** (margin-calibrated classifier guidance, May 2026), **MolReAct** (RL+LLM template actions, Apr 2026).
+- *Retrosynthesis:* **SCR** (margin-calibrated classifier guidance, May 2026) and **MolReAct** (RL+LLM template actions, April 2026). ChemCensor, AOT*, Retro-R1, and RetroReasoner have source releases; their remaining requirements are listed in the November table.
 - *Selectivity and DTI:* **OmniBind** predicts promiscuity across 15,405 human
   proteins from SMILES; its paper is CC BY-NC, and no code is public. **PIGLET**
   studies proteome-wide knowledge-graph DTI; its February 2026 bioRxiv paper
   links no public code.
 - *Agentic:* **Mozi, ToolMol, OrchestRA, FROGENT, PharmAgents** — see [agentic-drug-design.md](agentic-drug-design.md).
 
-**Not added:** NovoExpert-1/-2 (cited GitHub 404s), TITAN-BBB, SMILES-Mamba, EvoEGF-Mol, S3-GFN, FragmentGPT (no code); ChemFM / MAMMAL / EPT (2026 journal dates but 2024–25 models, some with NC weights); mCLM (May-2025, no code); SyntheFluor-RL (fluorophore-specific).
+**Earlier findings retained unless separately updated:** NovoExpert-1/-2 (cited GitHub 404s), TITAN-BBB, SMILES-Mamba, EvoEGF-Mol, FragmentGPT (no code found); ChemFM / MAMMAL / EPT (2026 journal dates but 2024–25 models, some with NC weights); mCLM (May 2025, no code found). S3-GFN and SyntheFluor-RL are covered in the generation guide.
 
 ## How to use this list
 

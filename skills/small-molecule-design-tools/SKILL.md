@@ -1,6 +1,6 @@
 ---
 name: small-molecule-design-tools
-description: Use when choosing or applying open or publicly documented small-molecule design, synthesis-planning, docking, binding-affinity, QSAR, ADMET, pocket-finding, or ligand-generation tools for work with public or synthetic data.
+description: Use when choosing or applying open or publicly documented small-molecule design, synthesis-planning, docking, binding-affinity, QSAR, ADMET, optical-property, spectrum-interpretation, molecular-simulation, or ligand-generation tools for work with public or synthetic data.
 ---
 
 # Small-Molecule Design Tools
@@ -21,6 +21,10 @@ weights, data, and base-model terms often differ for the same upstream project.
 
 Start with [references/tool-matrix.md](references/tool-matrix.md) when the user
 wants a broad comparison across categories.
+
+Use [November 2026 tool updates](references/tool-update-2026-11.md) for recent
+release changes and additional tasks, including optical properties, spectra,
+biosynthetic clusters, and molecular simulation.
 
 Makeability and synthesis:
 
@@ -58,6 +62,14 @@ Target-based design:
   QSAR, activity, property, and active-learning screens.
 - [references/admet-prediction.md](references/admet-prediction.md):
   ADMET, hERG, BBB, CYP, and locally runnable predictors.
+- [references/analytical-chemistry-models.md](references/analytical-chemistry-models.md):
+  MS/MS and NMR interpretation, spectrum prediction, and LC-UV quantification.
+- [references/multimodal-chemical-models.md](references/multimodal-chemical-models.md):
+  molecular token models, scientific grammars, and annotated BGC-to-metabolite prediction.
+- [references/molecular-potentials-and-simulation.md](references/molecular-potentials-and-simulation.md):
+  molecular energies, forces, conformational ensembles, solvent, and simulation interfaces.
+- [references/molecular-compute-infrastructure.md](references/molecular-compute-infrastructure.md):
+  CPU/GPU molecular featurization, similarity, and conformer operations.
 - [references/target-and-selectivity-prediction.md](references/target-and-selectivity-prediction.md):
   off-target, selectivity, shape, and pharmacophore tools.
 - [references/structure-based-generation.md](references/structure-based-generation.md):
@@ -67,6 +79,9 @@ Target-based design:
   and validation procedures.
 
 Cross-cutting:
+
+- [references/model-evaluation-and-benchmarks.md](references/model-evaluation-and-benchmarks.md):
+  matched baselines, chemical splits, pose-ranking and generation benchmarks, and first functional checks.
 
 - [references/agentic-drug-design.md](references/agentic-drug-design.md):
   agent frameworks that orchestrate generation, scoring, ADMET, and affinity
@@ -99,6 +114,13 @@ Use the user's actual task to choose the first reference:
 | Co-fold a protein-ligand complex from sequence and ligand | `docking-and-cofolding.md` |
 | Estimate binding affinity | `binding-affinity-and-fep.md` |
 | Build a QSAR or property model | `property-and-qsar-prediction.md` |
+| Predict optical properties | `property-and-qsar-prediction.md` |
+| Interpret MS/MS or NMR spectra | `analytical-chemistry-models.md` |
+| Propose metabolites from an annotated biosynthetic cluster | `multimodal-chemical-models.md` |
+| Calculate molecular energies or forces | `molecular-potentials-and-simulation.md` |
+| Sample protein–ligand conformational ensembles | `molecular-potentials-and-simulation.md` |
+| Prepare features or conformers in batches | `molecular-compute-infrastructure.md` |
+| Compare predictive models or generated molecules | `model-evaluation-and-benchmarks.md` |
 | Screen ADMET risk | `admet-prediction.md` |
 | Screen off-target or selectivity risk | `target-and-selectivity-prediction.md` |
 | Generate molecules into a pocket | `structure-based-generation.md` |
@@ -126,7 +148,11 @@ Use these as starting points, then read the relevant reference file for details:
 | Classical CPU docking | AutoDock Vina |
 | Physics-based relative free energy | OpenFE |
 | QSAR from ChEMBL-style data | Chemprop or DeepChem |
-| Local ADMET triage | ADMET-AI |
+| Local ADMET triage | ADMET-AI or a released OpenADMET endpoint model |
+| Adapt a molecular backbone to labeled assay data | KERMT or Chemprop; match the assay head and checkpoint |
+| Solvent-aware optical prediction | Multi-Fluor after checking its code and resource terms |
+| MS/MS with a known molecular formula | MS-GPT with its corrected encoder/adapter assets |
+| Molecular energies and forces | AIMNet2 or HyFF after matching elements, charge, spin, and reference method |
 | Broad off-target scan | ChEMBL multitask model plus ESP-Sim where shape overlap matters |
 | Pocket-conditioned generation | REINVENT 4, LDDM, DiffSBDD, PILOT, Pocket2Mol, or TargetDiff, followed by makeability checks |
 
@@ -149,6 +175,8 @@ Use these as starting points, then read the relevant reference file for details:
   non-commercial; the MIT checkpoint requires separate performance validation.
 - Re-check upstream repositories for pre-1.0 models and entries with recent
   verification dates.
+- For functional checks, use a small input set and preserve native model
+  settings. Use the full published protocol for benchmark comparisons.
 
 ## Pipeline Pattern
 

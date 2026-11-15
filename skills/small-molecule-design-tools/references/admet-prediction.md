@@ -8,8 +8,9 @@ drug-induced liver injury.
 Use these predictors to rank candidates and identify follow-up tests. Confirm
 important predictions experimentally. Also distinguish local packages from
 hosted services. Most hosted entries do not publish local source code or
-weights. ADMET-AI and OpenADMET publish local artifacts, but their code, weight,
-and training-data terms remain separate.
+weights. ADMET-AI and OpenADMET publish local endpoint predictors. KERMT provides a
+pretrained encoder that needs endpoint-specific fine-tuning. Check code,
+weights, and training-data terms separately.
 
 ADMET-AI uses Chemprop models trained on TDC datasets. For general property
 models, see [property-and-qsar-prediction.md](property-and-qsar-prediction.md).
@@ -84,19 +85,37 @@ selectivity analysis, see
 
 ---
 
-## OpenADMET — `OpenADMET/openadmet-models` and `openadmet-toolkit` *(2026 consortium release)*
-- **Method and output:** Open-science ADMET consortium shipping local models with downloadable Apache-2.0 weights. Endpoints include Caco-2 permeability (A→B / B→A), LogD, human and mouse plasma-protein binding, microsomal clearance, multitask **CYP** (1A2/2D6/3A4/2C9), and **PXR activation**. The encoder is **CheMeleon** (see [property-and-qsar-prediction.md](property-and-qsar-prediction.md)).
-- **Code and weights:** **Apache-2.0** for the models repository, toolkit, and listed weights. The permeability model v2 was available in June 2026.
-- **Context:** ASAP–Polaris–OpenADMET blind challenge (*JCIM* 2026, 10.1021/acs.jcim.5c02030).
-- **Status:** Public code activity continued through June 2026. The toolkit is pre-1.0 and uses conda rather than pip.
-- **Terms:** Check the underlying data and CheMeleon checkpoint terms separately.
+## OpenADMET — Local Endpoint Models
+
+- **Task and output:** SMILES CSV → endpoint-specific prediction columns through `openadmet predict`. The [CYP CheMeleon v1 card](https://huggingface.co/openadmet/cyp1a2-cyp2d6-cyp3a4-cyp2c9-chemeleon-v1) specifies four continuous pIC50 outputs: CYP1A2, CYP2D6, CYP3A4, and CYP2C9. Labels are per-compound means of ChEMBL37 IC50-derived `pchembl_value`; these differ from binary inhibition and time-dependent inhibition.
+- **Other endpoints:** The [model collection](https://huggingface.co/openadmet) includes Caco-2, protein binding, clearance, hERG, and PXR models. The [LogD surrogate-pretrained model](https://huggingface.co/openadmet/logd-chemprop_foundation_surrogate-v1) is a distinct ExpansionRx challenge-trained artifact; select its endpoint and configuration explicitly.
+- **Artifacts and setup:** Download the complete model's `anvil_training` directory through Git LFS. Use the [CPU or GPU environment](https://github.com/OpenADMET/openadmet-models) and the card's CSV example; `--accelerator cpu` is documented.
+- **Terms:** Model cards declare Apache-2.0. The code's [LICENSE](https://github.com/OpenADMET/openadmet-models/blob/0f4cf24dd8f0b1c73e5df4cbb469a402281604dc/LICENSE) is Apache-2.0 although its README says MIT. Training datasets and foundation checkpoints retain separate terms.
+- **Reviewed:** 2026-11-15 (UTC).
+
+## KERMT v2 — Pretrained Graph Encoder
+
+- **Task and output:** SMILES → molecular representations, followed by predictions from a separately fine-tuned endpoint head. The [NV-KERMT-70M-v2 model card](https://huggingface.co/nvidia/NV-KERMT-70M-v2) explicitly requires labeled endpoint data for downstream ADMET fine-tuning. Its pretrained backbone does not supply a general ready-to-use CYP panel.
+- **Artifacts and setup:** Keep `kermt_contrastive_v2.0.pt` with all three released atom, bond, and SMILES vocabularies. The [source](https://github.com/NVIDIA-BioNeMo/KERMT) documents Docker/conda, labeled train/validation/test CSVs, fine-tuning, and prediction from a fine-tuned checkpoint. It recommends NVIDIA Volta or newer GPUs with at least 32 GB VRAM.
+- **Terms:** Apache-2.0 source; NVIDIA Open Model License weights and vocabulary bundle. Review the selected training datasets separately.
+- **Reviewed:** 2026-11-15 (UTC).
+
+## OneADMET — Model Archive Requires Repair
+
+- **Task and output:** SMILES → 1,533 endpoint values plus applicability-domain flags, according to the [author deposit](https://doi.org/10.57745/A5TH1S) and [paper](https://doi.org/10.1021/acs.jmedchem.6c00049). Preserve each endpoint's definition and units.
+- **Artifact gap:** The published `model.zip` contains 1,553 Git LFS pointer files instead of model bytes. Its `model/model_OneADMET.pt` points to an 8,290,166-byte object. Recover the actual main checkpoint and applicability-domain models before attempting inference. Archive SHA-256: `007b84b43a96a9c6d71ad333f1bc26a6dfafd6f1a3291a216dde68c660f463e3`.
+- **Setup and terms:** The deposit supplies a Chemprop environment, prediction script, and 20-molecule fixture. Its metadata declares Etalab 2.0; its README claims MIT and links a license file absent from the deposit. Resolve those artifact-specific terms and the `.tab`/`.csv` filename mismatch.
+- **Reviewed:** 2026-11-15 (UTC).
+
+For microbial transport associations, see [ChemProFlow](property-and-qsar-prediction.md#chemproflow--microbial-transport-associations). For endpoint-model search protocols, see [ADMET-EvO](agentic-drug-design.md#admet-evo--endpoint-model-research).
 
 ## Choosing
 
 | Need | Pick | Terms |
 |---|---|---|
 | Local, broad ADMET (hERG/BBB/CYP) | **ADMET-AI** | MIT code and bundled weights; TDC data terms |
-| Second local ADMET source (2026) | **OpenADMET** (+ CheMeleon encoder) | Apache-2.0 code and weights |
+| Specific local ADMET endpoint | **OpenADMET**, using the exact endpoint card | Apache-2.0 LICENSE and model cards; data separate |
+| Train a multitask ADMET model on your labels | **KERMT v2** | Apache-2.0 code; NVIDIA weight terms |
 | BBB data for a custom model | **B3DB** | CC0-1.0 dataset |
 | Benchmark backbone / training data | **TDC** | MIT code; per-dataset data terms |
 | Physchem + drug-likeness lookup | **SwissADME** | Hosted service; CC BY 4.0 results under site terms |

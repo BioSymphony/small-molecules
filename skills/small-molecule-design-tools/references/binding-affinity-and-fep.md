@@ -116,6 +116,32 @@ model for the selected endpoint and chemical domain.
   provide one packaged workflow for setup, simulation, analysis, and reporting.
 - **Terms:** Source code and the bundled checkpoint are MIT.
 
+## BFEE3 — Absolute Binding Free-Energy Preparation
+
+Reviewed **2026-11-15**. [BFEE3](https://github.com/fhh2626/BFEE3) prepares
+simulation inputs and analyzes absolute binding free energies through geometric
+or alchemical routes. Supply a prepared complex, compatible topology and force
+field, and the required restraint definitions. The external MD engine performs
+the sampling.
+
+BFEE3 supports NAMD for both routes and GROMACS for the geometric route.
+Its README specifies NAMD 3+ or GROMACS 2024+, compatible Colvars versions,
+and **NumPy <2.3** for ParmEd compatibility. The conda package remains named
+`BFEE2`; use the upstream installation instructions despite the BFEE3 project
+name. Source is [GPL-3.0](https://github.com/fhh2626/BFEE3/blob/main/LICENSE);
+engines, force fields, and optional AI services have separate terms.
+
+**Lucid DDM**, abbreviated LDDM in BFEE3, is an alchemical double-decoupling
+method. It is distinct from the [LPDI LDDM generator](lddm.md). See the
+[Lucid DDM paper](https://www.nature.com/articles/s43588-025-00821-w) for the
+method. Report restraint corrections, sampling convergence, and uncertainty
+with the free-energy estimate.
+
+For learned energies, forces, and hybrid ML/MM systems, use
+[molecular potentials and simulation](molecular-potentials-and-simulation.md).
+Those interfaces require a free-energy protocol before their energies can
+support an affinity calculation.
+
 ## Choosing
 
 | Need | Pick | Notes |

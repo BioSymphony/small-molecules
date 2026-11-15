@@ -338,6 +338,53 @@ structures. Check released model artifacts separately from the code.
 > Discovery* (arXiv:2603.05532), reports reduced affinity performance outside
 > its evaluated domain. Confirm important rankings with FEP or experiments.
 
+## Mol-1 — Released Base Co-Folding Model
+
+Reviewed **2026-11-15**. [Mol-1](https://github.com/molence/Mol-1) accepts
+JSON descriptions of proteins, nucleic acids, ligands, ions, and optional
+covalent bonds. It writes CIF complexes and per-sample confidence JSON.
+Use the released `mol-1-base.pt` for base-model comparisons. The
+[technical report](https://github.com/molence/Mol-1/blob/main/assets/report.pdf)
+and benchmark figures also describe **Mol-1-constraint**; those results require
+that variant's checkpoint and conditioning inputs. The inspected upstream
+quick-start documents the base checkpoint.
+
+- **Setup:** Install the repository's CPU, CUDA, or CUDA 12 extra, download
+  reference data and the base checkpoint, then use `mol pred`. Protein MSA
+  search uses ColabFold unless alignments are supplied. Template search adds
+  HMMER, kalign, and template resources.
+- **Outputs:** Ranking is per seed. `plddt` and `chain_plddt` use different
+  scales; consult the [output format](https://github.com/molence/Mol-1/blob/main/docs/output_format.md).
+- **Terms:** [Source license](https://github.com/molence/Mol-1/blob/main/LICENSE)
+  is Apache-2.0. An [issue reply](https://github.com/molence/Mol-1/issues/5#issuecomment-6574928682)
+  states that weights are Apache-2.0, but the reply has no GitHub maintainer
+  association. Confirm checkpoint-specific terms before relying on that assertion.
+  Reference databases and hosted MSA services retain separate terms.
+
+## nvDock — All-Atom Docking In A Known Pocket
+
+Reviewed **2026-11-15**. [nvDock](https://github.com/NVIDIA-BioNeMo/nvDock)
+takes a receptor structure, ligand definition, and known pocket. Its diffusion
+model generates poses; a separate confidence model ranks them. Download both
+models from the [nvDock model repository](https://huggingface.co/nvidia/nvDock).
+The source specifies Python ≥3.10.11, PyTorch ≥2.6, CUDA libraries, and
+cuEquivariance ≥0.8; follow its preprocessing and inference configuration.
+
+Specify `pocket_center_x`, `pocket_center_y`, and `pocket_center_z` independently
+of the withheld pose, using floating-point values such as `12.0`. The
+[inference source](https://github.com/NVIDIA-BioNeMo/nvDock/blob/main/src/bionemo/diffdock/data/inference.py)
+constructs a tensor without forcing a floating dtype and calls `randn_like`
+even when pocket noise is zero. Integer centers can therefore fail.
+
+If the center is absent, the same source derives the pocket from the input
+ligand's coordinates. Using a crystal ligand through that fallback supplies
+reference-pose information. Record that setup separately from prospective
+known-pocket docking. Confidence ranks poses; it does not measure affinity.
+
+The [license notice](https://github.com/NVIDIA-BioNeMo/nvDock/blob/main/LICENSE)
+states Apache-2.0 for source and the **NVIDIA Open Model Agreement** for models,
+with additional MIT attribution. Review training-data and model terms separately.
+
 ## Choosing
 
 | Need | Start with | Limits and terms |

@@ -144,6 +144,42 @@ Use compound-level assay records to assess target activity.
 
 ---
 
+## Representation-Based Screening
+
+### DrugCLIP — Pocket–Ligand Retrieval
+
+Reviewed **2026-11-15**. [DrugCLIP](https://github.com/bowen-gao/DrugCLIP)
+encodes three-dimensional pockets and ligand conformers into a shared space
+and ranks a library by representation similarity. Inputs include atom types,
+coordinates, dictionaries, and LMDB records. Outputs are retrieval scores and
+ranked candidates. Dock shortlisted molecules separately to obtain poses.
+
+The README links checkpoints and datasets and uses the Uni-Mol environment
+with **RDKit 2022.9.5**. Preserve its conformer generation and pocket
+preprocessing when comparing scores. The [NeurIPS 2023 paper](https://arxiv.org/abs/2310.06367)
+describes training and screening benchmarks.
+
+The [license file](https://github.com/bowen-gao/DrugCLIP/blob/main/LICENSE)
+states **Apache-2.0 source**, with **CC BY-NC 4.0 for model weights and generated
+outputs**. This supersedes the README's stale MIT badge. Training and benchmark
+datasets retain their source terms.
+
+### PWRules / PWScore — Sequence Words And Ligand Fragments
+
+Reviewed **2026-11-15**. [PWRules](https://github.com/TianBoxue-lab/PWRules)
+extracts protein-word–fragment pairing rules. PWScore takes a FASTA sequence,
+protein-word mapping, rule library, and SMILES library to rank molecules.
+The [paper](https://arxiv.org/abs/2604.16550) describes the learning and rule
+extraction method; the repository provides a Python 3.9+ installation recipe.
+
+The quick-start uses a **limited demo rule library** and precomputed word
+mapping. Its training example is a simplified framework. Confirm access to the
+full rules and matching representation pipeline before attempting to reproduce
+published screening results. Code is [MIT](https://github.com/TianBoxue-lab/PWRules/blob/main/LICENSE),
+but the README describes demo data as intended for academic research and
+validation; check those data terms separately. PWScore is a screening score,
+not a calibrated affinity or selectivity measurement.
+
 ## Choosing (for a selectivity / anti-target screen)
 
 | Need | Pick | License |

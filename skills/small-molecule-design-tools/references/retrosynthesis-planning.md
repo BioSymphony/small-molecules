@@ -248,6 +248,40 @@ whether route export preserves the provenance needed for a shared intermediate.
 - **Maintenance:** The repository received commits in June 2026.
 - **Use it when:** you need validity-aware route comparisons alongside Syntheseus.
 
+## DianShi-RetroPlanSystem
+
+The [DianShi multi-step workflows](https://github.com/DianShiGroup/DianShi-RetroStepLM/tree/30d9ba55d8c55eadc64172b4966095c5415112b0/multi_step)
+combine a target, an inventory and two separately served models to search for
+stock-closed synthesis trees. Checked on 2026-11-15 (UTC).
+
+- **Models:** shipped configurations pair Qwen3.5-397B-A17B-FP8 for planning with
+  [DianShi Direct](singlestep-retrosynthesis.md#dianshi-retrosteplm-direct) for
+  single-step proposals. The latter uses no retrieval. A separate rdchiral
+  template gate validates proposals and SCScore reranks them.
+- **Setup:** choose RetroAgent, Retro-R1-modified or DianShi-RetroPlanSystem-v0;
+  each has its own environment and configuration. Supply planner and step-model
+  endpoints, templates, SCScore assets and a standardized building-block stock.
+- **Terms:** original code is Apache-2.0; inherited components retain their
+  notices. The [asset card](https://huggingface.co/datasets/DianShiGroup/DianShi-RetroPlanSystem-Assets)
+  assigns Apache-2.0 to templates and PatMol-150, eMolecules terms to its
+  23-million-entry stock, and original terms to inherited benchmarks.
+
+## ChemCensor 1.4.0: Benchmark Evaluation
+
+[ChemCensor](https://github.com/insilicomedicine/ChemCensor/tree/3d9eeab1326a789c15f1fbdd9839377ac8b9946d)
+checks reaction-center and functional-group patterns against an SQLite precedent
+database. It accepts a proposed reaction and returns an integer precedent-support
+score from 0 to 5. Python ≥3.12 and the separate database are required.
+Checked on 2026-11-15 (UTC).
+
+The [license](https://github.com/insilicomedicine/ChemCensor/blob/3d9eeab1326a789c15f1fbdd9839377ac8b9946d/LICENSE)
+permits independent benchmarking and evaluation only. Its restrictions cover the
+software, scoring method and generated results. They expressly prohibit workflow
+integration, ranking, filtering, rewards, training, data curation and use in
+retrosynthesis or forward-synthesis systems, including noncommercial research.
+A planner or generation loop needs separate permission before incorporating
+ChemCensor scores. Source availability alone does not grant that use.
+
 ## Choosing a multi-step planner
 
 For output checks, see [Validate Routes](#validate-routes).

@@ -11,6 +11,46 @@ Three families appear here: **template-based** (retrieve/rank a reaction templat
 
 ---
 
+## DianShi-RetroStepLM-Direct
+
+DianShi Direct predicts single-step reactants with a Qwen3-4B-Base-derived model.
+The released checkpoint uses no retrieval. Keep the paper's retrieval-assisted
+experiments separate from this release.
+
+- **Sources:** [Apache-2.0 source](https://github.com/DianShiGroup/DianShi-RetroStepLM/tree/30d9ba55d8c55eadc64172b4966095c5415112b0),
+  [model card and weights](https://huggingface.co/DianShiGroup/DianShi-RetroStepLM-Direct),
+  and [October 29, 2026 paper](https://arxiv.org/abs/2610.40249).
+  Checked on 2026-11-15 (UTC).
+- **Input and output:** atom-wise product SMILES → synthon and leaving-group
+  labels, then dot-separated reactant SMILES inside `<answer>` tags.
+- **Setup:** Python ≥3.10, RDKit and vLLM. Use the supplied atom-wise converter,
+  intermediate-label prompt and answer extractor. The native example enables
+  thinking and uses beam width 10 with 1,024 generated tokens.
+- **Terms:** the checkpoint is tagged Apache-2.0. Base-model, inherited code and
+  [planning assets](https://huggingface.co/datasets/DianShiGroup/DianShi-RetroPlanSystem-Assets)
+  require separate checks.
+- **Planning:** the full workflows additionally serve a separate
+  Qwen3.5-397B-A17B-FP8 planner. See [multi-step planning](retrosynthesis-planning.md#dianshi-retroplansystem).
+
+## C3LM
+
+The public C3LM checkpoint performs single-step retrosynthesis with an
+LFM2-2.6B model trained by supervised fine-tuning on CREED and USPTO-full.
+
+- **Source:** [Insilico Medicine model card](https://huggingface.co/insilicomedicine/C3LM/blob/5101e6fb9cf8eb29c41b8695d81846c0aba066b2/README.md),
+  checked on 2026-11-15 (UTC). The card identifies SFT training; later C3LM-family
+  reinforcement-learning results describe separate experiments.
+- **Input and output:** product SMILES encoded with `<sm_...>` tokens → reactant
+  SMILES extracted from the chemistry chat response. Preserve the card's
+  tokenization and decoding helpers when adapting inference.
+- **Setup:** PyTorch and Transformers; the card loads BF16 weights with automatic
+  device placement. Native generation uses temperature 0.3, `min_p=0.15`,
+  repetition penalty 1.05 and 512 new tokens.
+- **Terms:** the card declares LFM Open License 1.0. Review the
+  [LFM2 base license](https://huggingface.co/LiquidAI/LFM2-2.6B/blob/main/LICENSE),
+  including its commercial revenue condition, and the training-data terms.
+  The public weights carry a different grant from Apache-2.0 or MIT models.
+
 ## ReactionT5v2 — *HF multi-task model*
 
 > T5 text-to-text transformer pretrained on the Open Reaction Database, served as task-specific checkpoints for forward prediction, **retrosynthesis**, and yield. The retro checkpoint is the single-step model.
@@ -138,12 +178,44 @@ for multi-step search with a selected starting-material stock.
 - **Maintenance:** The repository was updated on 2026-05-25.
 - **Use it when:** you want to inspect or extend a compact reaction-prediction training recipe and can provide the base model, datasets, and checkpoint.
 
+## RetroReasoner
+
+[RetroReasoner](https://github.com/KU-AGI/RetroReasoner/tree/7b441bcc8fcec270bda42790bb452d932ace053e)
+predicts single-step reactants after a disconnection rationale. The September 3,
+2026 source snapshot provides evaluation code for the RL-trained model and
+500 in-distribution ORDerly reactions. Checked on 2026-11-15 (UTC).
+
+- **Weights:** [RetroReasoner-RL](https://huggingface.co/KU-AGI/RetroReasoner-RL)
+  and [RetroReasoner-RoundTrip-8B](https://huggingface.co/KU-AGI/RetroReasoner-RoundTrip-8B)
+  are released Qwen3-8B derivatives tagged Apache-2.0. The latter predicts
+  products from reactants for round-trip scoring. SFT weights, training code,
+  ablations and out-of-distribution splits are outside the stated release.
+- **Code and data terms:** no source license is present in the checked tree.
+  The [test-set record](https://huggingface.co/datasets/KU-AGI/RetroReasoner-data)
+  has no dataset card declaring terms. Resolve these layers separately from
+  checkpoint permission.
+- **Setup:** use the repository prompts and vLLM serving configuration. Native
+  evaluation uses greedy prediction at temperature 0.0 and 100 samples at
+  temperature 1.2. Template diversity additionally requires the vendored
+  DGL/localmapper stage; shared GPU memory with forward serving can silently
+  undercount templates. A complete benchmark needs both model-serving and
+  mapping environments. Round-trip recovery measures forward-model agreement.
+
 ## Also single-step, documented elsewhere
+
+- **Uni-Mol3** provides 3D-tokenized retrosynthesis alongside forward and
+  condition tasks; see [reaction modeling](forward-and-reaction-modeling.md#uni-mol3)
+  for checkpoint and inference preparation.
 
 - **RetroDFM-R** — 8B reasoning LLM for single-step retro (reasoning trace + reactants); the README reports 60.4% top-1 on USPTO-50K without augmentation. MIT repository code, an Apache-2.0-tagged Qwen3-based checkpoint, and separate base and data terms. See its cards in [retrosynthesis-planning.md](retrosynthesis-planning.md) and [chemical-language-models.md](chemical-language-models.md).
 - **ReactionT5v2 / RXNGraphormer** also do forward prediction — see [forward-and-reaction-modeling.md](forward-and-reaction-modeling.md).
 
 ## Picking one
+
+- **Direct 4B chemistry LM:** DianShi Direct, preserving its atom-wise prompt
+  and native beam configuration.
+- **Compact SFT chemistry LM:** C3LM, with LFM weight terms and model-specific
+  SMILES tokens.
 
 - **Ensemble predictor with Syntheseus integration:** RetroChimera, with
   checkpoint-specific settings and reaction filtering.

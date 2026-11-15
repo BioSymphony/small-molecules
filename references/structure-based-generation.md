@@ -169,6 +169,45 @@ blocks.
 - **LDDM — `LPDI-EPFL/lddm`** — reaction-space mode over supplied building blocks and two-reactant, one-product templates. It records a proposed construction trace. The trace does not establish reaction conditions, yield, selectivity, procurement, or route feasibility.
 - **ShEPhERD — `coleygroup/shepherd`** — equivariant diffusion that generates three-dimensional molecules conditioned on shape, electrostatics, and pharmacophores for bioisostere and scaffold-hopping tasks. Code is MIT; the Hugging Face weights do not state separate terms. The work appeared as an ICLR 2025 oral, and the repository received commits in 2026. It complements the shape and pharmacophore overlay tools in [target-and-selectivity-prediction.md](target-and-selectivity-prediction.md). It does not constrain generation to synthesizable molecules.
 
+## FLOWR.root — Generation And Affinity Heads
+
+Reviewed **2026-11-15**. [FLOWR.root](https://github.com/jule-c/flowr_root/tree/739a33c2aab74d074dd24605b9a2e34dc809ae9c)
+uses flow matching for pocket-conditioned ligand generation, fragment editing,
+and affinity prediction. Its structure-based interface takes a protein PDB/CIF
+and a reference ligand to define the pocket. Generated SDF files can include
+predicted pIC50, pKi, pKd, and pEC50. These are distinct model endpoints.
+
+Use the Python 3.12 `uv` environment and the selected CPU/GPU extra. Match the
+checkpoint to the task: the README distinguishes joint generation/affinity,
+structure-only, and ligand-only models. It warns about clashes and affinity
+head generalization outside the training distribution. Preserve preprocessing,
+reference-ligand conditioning, and repair settings when comparing results.
+
+Core source is [MIT](https://github.com/jule-c/flowr_root/blob/739a33c2aab74d074dd24605b9a2e34dc809ae9c/LICENSE).
+The [FLOWR.ui license](https://github.com/jule-c/flowr_root/blob/739a33c2aab74d074dd24605b9a2e34dc809ae9c/flowr_vis/LICENSE)
+permits use within an organization but prohibits redistribution and public
+mirrors. The [Zenodo deposit](https://zenodo.org/records/20069588) declares
+CC BY 4.0 and lists joint v2.2, ligand-only, and SPINDR checkpoints. Check other
+downloads and underlying training datasets separately. The
+[paper](https://www.nature.com/articles/s41467-026-74130-9) identifies
+additional proprietary fine-tuning datasets that are unavailable publicly.
+
+## Preparing And Evaluating Generated Geometries
+
+Conformer generation and energy minimization serve different purposes from
+pocket-conditioned molecular generation. Use
+[molecular compute infrastructure](molecular-compute-infrastructure.md) for
+batched conformers, fingerprints, and graph features. Use
+[molecular potentials and simulation](molecular-potentials-and-simulation.md)
+for supported energy and force models. Preserve the generated molecular graph,
+stereochemistry, and atom mapping through either step.
+
+A lower model energy establishes an ordering under that potential and its
+conditions. Binding affinity additionally depends on receptor, solvent, and
+sampling. Use [binding-affinity-and-fep.md](binding-affinity-and-fep.md) for
+free-energy workflows. BFEE3's Lucid DDM abbreviation refers to an alchemical
+method and is distinct from the LPDI LDDM generator described here.
+
 ## Choosing
 
 | Need | Pick | License |

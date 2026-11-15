@@ -8,6 +8,44 @@ This test is called a round-trip check; see
 
 > Release status differs among these tools: **DeepMech** publishes code and weights; **ProPreT5** publishes MIT code without weights; **ChemDual** publishes code without a released model; **Reactron** is paper-only.
 
+## SmartReact
+
+[SmartReact](https://github.com/MolecularAI/smartreact/tree/a87275ab83f7d0726d1c0756369ea99dcb84b71b)
+enumerates products from pairs of reactant SMILES using named reaction rules.
+It supplies 9,770 templates across 37 reaction classes, with no learned weights.
+Code and bundled rules use Apache-2.0. Checked on 2026-11-15 (UTC).
+
+- **Interface:** install `smartreact==2.0.1` with Python ≥3.10 and RDKit, then use
+  `ReactionEnumerator().enumerate_pair(a, b)`. Results include the reaction
+  name, reactants and canonical product SMILES. Batch and streaming APIs are
+  available.
+- **Version:** the [changelog](https://github.com/MolecularAI/smartreact/blob/a87275ab83f7d0726d1c0756369ea99dcb84b71b/CHANGELOG.md)
+  dates 2.0.1 to September 23, 2026. Version 2.0 corrects stereochemistry in
+  several reaction families; 2.0.1 repairs invalid-product cases. Main also
+  includes unreleased reactant-order controls.
+- **Use:** enumerate a rule-defined space from selected building blocks. Review
+  cleaning settings, stereochemistry and duplicate products. Rule applicability
+  provides no yield or condition prediction.
+
+## Uni-Mol3
+
+[Uni-Mol3](https://github.com/LirongWu/Uni-Mol3/tree/6afe86d9632b10729640a5bc82357c8e594f288b)
+models reactions with 3D molecular tokens and a T5 architecture. Its source
+release dates to July 2025; the March 24, 2026 revision updates checkpoint
+links. Checked on 2026-11-15 (UTC).
+
+- **Tasks:** reactants and conditions → products; product → reactants; reactants
+  and products → conditions; complete reaction → yield.
+- **Assets:** the README links a tokenizer, molecular and reaction pretraining
+  weights, and forward, retrosynthesis and condition checkpoints. It lists no
+  yield-specific checkpoint. MIT source and separately hosted checkpoint/data
+  terms require distinct review; Pistachio datasets require licensed access.
+- **Setup:** Uni-Core, PyTorch >2.0 and RDKit 2022.09.5. Prepare conformers,
+  tokenized molecules and LMDB data before generation. The repository provides
+  preprocessing and training scripts; an application needs an inference adapter
+  for its input/output format. Keep this preparation separate from installing
+  the earlier Uni-Mol property or docking tools.
+
 ## DeepMech — *mechanism prediction with released weights*
 
 > Graph-based framework that predicts elementary reaction steps with atom and
@@ -84,6 +122,10 @@ See [singlestep-retrosynthesis.md](singlestep-retrosynthesis.md) for setup and
 model details.
 
 ## Choosing
+
+- **Enumerate products from named rules:** SmartReact 2.0.1.
+- **3D-tokenized forward, retro or condition tasks:** Uni-Mol3, after checkpoint
+  permission and preprocessing review.
 
 - **Forward validation of generated routes (round-trip):** ReactionT5v2-forward (MIT-labeled Hugging Face weights) or RXNGraphormer.
 - **Mechanism-level prediction:** **DeepMech** (published checkpoint and data record).

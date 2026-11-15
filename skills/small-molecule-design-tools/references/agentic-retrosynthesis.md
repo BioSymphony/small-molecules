@@ -61,6 +61,24 @@ corpora, stock set, and external model services.
 - **Data and dependencies:** the README identifies eMolecules building blocks and DESP/Retro* single-step assets, plus SCScore. These assets have terms separate from the repository code and checkpoint.
 - **Use it when:** you want structured-memory search with a released policy and can provide the accompanying chemistry tools and data.
 
+## Retro-R1 and AOT*: Source Status
+
+Both methods have public source. Their remaining setup and permission gaps
+change how you can use them. Checked on 2026-11-15 (UTC).
+
+- **Retro-R1:** [MIT source](https://github.com/GenSI-THUAIR/Retro-R1/tree/36193196146fc7564be53020ca241782b531b390)
+  includes training and evaluation around Retro* and a modified `verl` stack.
+  Target SMILES, specialist one-step models, templates and stock feed an LLM
+  route-planning environment. The README links one-step weights and describes
+  training and exporting a policy; it does not identify a downloadable trained
+  LLM planner checkpoint. Plan for training or obtain the missing policy.
+- **AOT\*:** [public search source](https://github.com/ShawnKS/AOTstar/tree/cd40318f1bea9a153c43f81b09aac996f606c4d7)
+  integrates LLM-proposed routes into an AND-OR tree with template validation.
+  `unified_search.py` accepts targets and an OpenAI-compatible endpoint, then
+  writes route trees and search traces. Supply the separate runtime bundle,
+  stock and scoring resources. The README shows an MIT badge, but the checked
+  repository has no license file; resolve source permission before reuse.
+
 ## Watchlist (code or artifact status incomplete)
 
 These methods have incomplete public code, weights, or license information. The watchlist records their public code, weight, and license status.

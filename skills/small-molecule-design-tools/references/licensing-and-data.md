@@ -16,6 +16,28 @@ base model. Check each layer before you select or distribute the tool.
 4. **Base model:** For a fine-tuned model, check the original model's terms and
    the derivative's terms.
 
+## Selected Artifact Terms: November 2026
+
+Checked **2026-11-15**. The linked cards cite the source and artifact records
+for these labels.
+
+| Tool | Source and Artifact Terms | Selection Detail |
+|---|---|---|
+| [KERMT v2](admet-prediction.md) | Apache-2.0 source; NVIDIA Open Model License weights and vocabularies | The backbone and a task-specific fine-tuned model are separate artifacts |
+| [OpenADMET](admet-prediction.md) | Apache-2.0 source LICENSE and selected model cards; source README says MIT | Use the actual LICENSE and selected endpoint card |
+| [C3LM](chemical-language-models.md) | Released SFT model uses LFM Open 1.0 | Retain the base-model and derivative terms |
+| [Multi-Fluor](property-and-qsar-prediction.md) | PolyForm Noncommercial 1.0 code; CC BY 4.0 resource deposit | Code and resource grants differ |
+| [LUMOS](molecular-generation.md) / [SyntheFluor-RL](synthesizable-generation.md) | Apache-2.0 or MIT source respectively; named model/resource deposits CC BY 4.0 | Vendor chemical spaces retain their own terms |
+| [ChemCensor 1.4.0](retrosynthesis-planning.md) | Independent Benchmarking and Evaluation Purposes Only | Excludes workflow ranking/filtering, reward, training, and synthesis-system use, including noncommercial work |
+| [DrugCLIP](target-and-selectivity-prediction.md) | Apache-2.0 source; CC BY-NC 4.0 weights and generated outputs | The README's MIT badge does not describe the weight/output grant |
+| [nvDock](docking-and-cofolding.md) | Apache-2.0 source; NVIDIA Open Model Agreement weights | Read the selected pose and confidence model terms |
+| [FLOWR.root](structure-based-generation.md) | MIT core; named Zenodo checkpoints CC BY 4.0; separately restricted UI | Core, model deposit, and visualization UI have different grants |
+| [DeepSeMS](multimodal-chemical-models.md) | Apache-2.0 source; CC BY 4.0 model/resource deposit | Retain Pfam and underlying dataset notices |
+| [BioMatrix / LOGOS](multimodal-chemical-models.md) | BioMatrix source/model cards Apache-2.0; LOGOS source Apache-2.0 and model card CC BY 4.0 | Tokenizers, base models, and corpora need their own checks |
+| [BFEE3](binding-affinity-and-fep.md) | GPL-3.0 source | MD engines, force fields, and assistant services have separate terms |
+| [OneADMET](admet-prediction.md) | Etalab 2.0 deposit metadata and MIT README declaration differ | Recover actual model blobs and reconcile the artifact grant |
+| [AOT*](agentic-retrosynthesis.md) / [RetroReasoner](singlestep-retrosynthesis.md) / [RetroTAC](synthesizability-scoring.md) | Source or checkpoint grants remain unresolved for the named artifact | A model-card tag does not supply a missing source license |
+
 ## Common license labels
 
 - **MIT and Apache-2.0:** These licenses grant broad permissions subject to

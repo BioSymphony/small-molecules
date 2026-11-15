@@ -62,7 +62,28 @@ AGPL-3.0 weights, or no stated code license. Review each layer separately. See
 - **Terms:** The project publishes no code or weight license, and the stated base-model terms are research-only.
 - **Use it for:** Research into multimodal molecule-image chemistry when training is feasible.
 
+## MoleCode
+
+[MoleCode](https://github.com/AtomFlow-AI/MoleCode/tree/a4df3b04552b829ff816467b9620757a5dad765b)
+converts SMILES or MOL structures to explicit graph text with persistent atom
+identifiers and converts that text back through RDKit. It also provides polymer
+and Markush representations. MIT source, checked on 2026-11-15 (UTC).
+
+- **Interface:** Python ≥3.9, RDKit and NetworkX; install `molecode`. The library
+  exposes `mol_to_mermaid`, `mermaid_to_mol` and `mol_to_smiles`; its examples
+  cover round trips and structural edits.
+- **Model requirements:** conversion needs no learned weights. Model reasoning
+  or image-reading examples require a separately configured LLM with its own
+  access and terms.
+- **Use:** preserve atom identities in an edit request and compare the returned
+  graph with the input. Check charged, chiral and E/Z structures through a
+  round trip before relying on representation fidelity in a workflow.
+
 ## Also LLM-based, documented elsewhere
+
+- **DianShi Direct / C3LM** offer released single-step checkpoints with distinct
+  Qwen3-4B/Apache-2.0 and LFM2-2.6B/LFM terms. See
+  [single-step models](singlestep-retrosynthesis.md).
 
 - **RetroDFM-R** — 8B reasoning LLM for single-step retrosynthesis. The
   repository code is MIT; the checkpoint is tagged Apache-2.0 and identifies

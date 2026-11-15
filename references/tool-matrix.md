@@ -19,11 +19,54 @@ design.
 Status legend: ✅ active · ⚠️ limited or uncertain · ❌ archived, superseded, or
 unreleased · — not applicable
 
+## November 2026 Additions
+
+These entries were checked on **2026-11-15**. The
+[November guide](tool-update-2026-11.md) explains task selection and release
+changes; each category card records its artifact and environment requirements.
+
+| Tool | Task and Guide | Required Input or Setup Detail |
+|---|---|---|
+| **KERMT v2** | [Molecular representations and supervised adaptation](admet-prediction.md) | Backbone plus vocabularies; labeled data and a fine-tuned head for endpoint predictions |
+| **OpenADMET CYP / LogD models** | [Endpoint prediction](admet-prediction.md) | Complete released endpoint directory; CYP outputs are four ChEMBL-derived pIC50 values |
+| **Monroe / Mol-JEPA** | [Molecular representations](property-and-qsar-prediction.md) | Matching encoder/configuration; downstream assay prediction requires its own model |
+| **DianShi Direct** | [Single-step retrosynthesis](singlestep-retrosynthesis.md) | Released 4B model; multistep search uses a separate 397B planner and assets |
+| **C3LM** | [Chemical language model](chemical-language-models.md) | Released compact SFT checkpoint; LFM Open 1.0 terms and molecular tokenizer |
+| **RxnFlow 2.1.1** | [Reaction-constrained generation](synthesizable-generation.md) | Updated graph features require retraining earlier checkpoints |
+| **S3-GFN** | [Synthesis-aware post-training](synthesizable-generation.md) | MIT training code and a separate GP-MoLFormer base; soft constraints, with no released trained policy identified |
+| **SyntheFluor-RL / LUMOS** | [Synthesis-aware optical search](synthesizable-generation.md) / [optical generation](molecular-generation.md) | Task-specific property models, molecular space, and generation assets |
+| **SynCraft / MoleCode** | [Molecular edits](synthesizable-generation.md) / [graph interfaces](molecular-generation.md) | Explicit molecular graph/edit contract; SynCraft uses external model/planning components |
+| **SmartReact / Uni-Mol3** | [Reaction modeling](forward-and-reaction-modeling.md) | Rule-based reactant enumeration or model-specific reaction preprocessing |
+| **ChemCensor 1.4.0** | [Retrosynthesis evaluation](retrosynthesis-planning.md) | Independent-benchmark-only terms exclude workflow ranking, filtering, rewards, and training |
+| **AOT* / Retro-R1** | [Agentic retrosynthesis](agentic-retrosynthesis.md) | Source exists; source-grant or trained-policy gaps remain |
+| **RetroReasoner** | [Single-step reasoning](singlestep-retrosynthesis.md) | Released checkpoint cards and evaluation source; source/data terms and full training assets remain unresolved |
+| **RetroTAC** | [PROTAC route-score surrogate](synthesizability-scoring.md) | Released ensemble and isolated scorer environment; checkpoint terms require confirmation |
+| **Multi-Fluor / TADF-PL** | [Optical properties](property-and-qsar-prediction.md) | Exact optical endpoint and matched checkpoint/configuration; Multi-Fluor needs solute and solvent |
+| **ChemProFlow** | [Microbial transport associations](property-and-qsar-prediction.md) | Prebuilt models, encoders, calibrator, thresholds, and organism mapping |
+| **MS-GPT** | [MS/MS structure candidates](analytical-chemistry-models.md) | Known formula, corrected MIST encoder, matching adapter and decoder |
+| **UltraNMR / PRISM / NMRTrans** | [NMR models](analytical-chemistry-models.md) | PRISM inverse inference requires preprocessed tensors; NMRTrans requires matched branch/checkpoint; UltraNMR uses task-specific heads |
+| **LCMS2Yield / NMRexp** | [Analytical measurements and data](analytical-chemistry-models.md) | Measured LC-UV/internal-standard data, or literature peak-list records |
+| **DeepSeMS** | [BGC-to-metabolite candidates](multimodal-chemical-models.md) | Annotated cluster, Pfam assets, vocabularies, and ten-model ensemble |
+| **BioMatrix / LOGOS** | [Multimodal chemical models](multimodal-chemical-models.md) | Exact token grammar, tokenizer, task scripts, and model assets |
+| **ADMET-EvO** | [Endpoint-model research](agentic-drug-design.md) | Labeled endpoint data, model-search configuration, frozen selection, and held-out evaluation |
+| **Mol-1 / nvDock** | [Co-folding and known-pocket docking](docking-and-cofolding.md) | Released base model or pose/confidence models; independently specified pocket for nvDock |
+| **FLOWR.root** | [Structure-based generation](structure-based-generation.md) | MIT core, separately restricted UI, named CC BY 4.0 checkpoint deposit |
+| **DrugCLIP / PWRules** | [Retrieval and sequence-based ranking](target-and-selectivity-prediction.md) | Pocket/conformer records or sequence words and rule assets; DrugCLIP weights/outputs have NC terms |
+| **AIMNet2 / HyFF / UBio-MolFM / ResFF** | [Molecular potentials](molecular-potentials-and-simulation.md) | Supported chemistry, units, charge/spin convention, connectivity, and matching configuration |
+| **OpenMM-ML / ALCHEMI Toolkit** | [Simulation interfaces](molecular-potentials-and-simulation.md) | Separately selected models, force fields, datasets, and compatible engine packages |
+| **OriDynamics / BioEmu-2** | [Conformational ensembles](molecular-potentials-and-simulation.md) | Complete auxiliary assets; unordered sampling and learned time propagation have distinct interpretation |
+| **BFEE3** | [Absolute binding free energy](binding-affinity-and-fep.md) | Prepared topology/restraints and compatible MD engine; Lucid DDM is separate from the LDDM generator |
+| **nvMolKit / cuik-molmaker** | [Molecular compute libraries](molecular-compute-infrastructure.md) | Matched RDKit, package, and CUDA/CPU builds |
+| **FewShot4Chem / embedding benchmark / representation limits** | [Predictive evaluation](model-evaluation-and-benchmarks.md) | Matched baselines, splits, and model-selection rules |
+| **Pyrite / MolGenBench** | [Pose-ranking and generation benchmarks](model-evaluation-and-benchmarks.md) | Allowed features, structure-level scoring, and full task-specific sampling protocol |
+
 ## Synthesizable Generation, Projection, and Analogs
 
 See [synthesizable-generation.md](synthesizable-generation.md).
 
-Output = molecule **with a synthesis route**, or a makeable analog + how to make it. Many depend on vendor building blocks.
+These tools generate candidates, project analogs, or apply synthesis-related
+constraints. Each card states whether the output includes a reaction path,
+proposed route, or molecular edits. Many depend on vendor building blocks.
 
 | Tool | Repository | Code | Weights | License signal | Status |
 |---|---|---|---|---|---|

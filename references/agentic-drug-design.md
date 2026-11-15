@@ -41,6 +41,13 @@ Before you select a framework:
 
 ---
 
+## ADMET-EvO — Endpoint-Model Research
+
+- **Task and output:** Labeled endpoint datasets and task specifications → model-search proposals, frozen finalist recipes, and evaluation artifacts. The [MIT source](https://github.com/OTeam-AI4S/ADMET-EvO) provides a local rules planner and optional language-model backend. [Paper](https://arxiv.org/abs/2609.10121).
+- **Artifacts and setup:** Editable Python installation exposes the search/finalize CLI and protocol checks. CPU/GPU requirements depend on the selected predictor. Endpoint models, caches, molecule-level exports, and blind submissions are excluded from the release; reconstruct the named dataset/model recipes before attempting reproduction. TDC data, optional pretrained models, and external backends retain separate terms.
+- **Evidence limits:** The authors' [release status](https://github.com/OTeam-AI4S/ADMET-EvO/blob/045869ca6d0b4c17a3530b4dd6665f6f835d3130/docs/release_status_2026-08-23.md) records a failed predictive noninferiority comparison with expanded AutoML and a failed policy promotion test. Its displayed-page rank estimates are frozen snapshots. Independent expert validation and OpenADMET blind performance remain incomplete in that release. Use its protocols as research components; aggregate ranks do not establish predictive superiority.
+- **Reviewed:** 2026-11-15 (UTC).
+
 ## Watchlist (paper-only or no usable license)
 
 - **Mozi** (arXiv:2603.03655, March 2026) — multi-agent workflow over Vina, AF3, DiffSBDD, ADMET-AI, REINVENT4, and **LigUnity**. The project page and `OpenMol/DD100` benchmark are public; no model code is published.
